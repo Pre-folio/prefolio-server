@@ -3,14 +3,14 @@ version: "3"
 services:
   backend-dev:
     image: prefolio/prefolio-server-dev:dev
-    container_name: prefolio-backend-dev
-    hostname: prefolio-backend-dev
+    container_name: backend-dev
+    hostname: backend-dev
     expose:
       - "8080"
 
   nginx:
     depends_on:
-      - prefolio-backend-dev
+      - backend-dev
     restart: always
     build:
       dockerfile: Dockerfile
