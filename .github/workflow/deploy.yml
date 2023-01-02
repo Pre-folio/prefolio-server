@@ -1,0 +1,66 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 기본 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # JDK version 설정
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 그래들 캐싱
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Make application-dev.properties
+        run: |
+          touch ./src/main/resources/application-dev.properties
+          echo "$PROPERTIES_DEV" > ./src/main/resources/application-dev.properties
+        env:
+          PROPERTIES_DEV: ${{ secrets.PROPERTIES_DEV }}
+
+      # Gradle build
+      - name: Build with Gradle
+        run: ./gradlew bootJar
+
+      # Spring 어플리케이션 Docker Image 빌드
+      - name: Build Docker Image For Spring
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/prefolio .
+          docker push ${{ secrets.DOCKER_USERNAME }}/prefolio
+
+      # 서버에서 Docker 이미지 실행
+      - name: EC2 Docker Run
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker rm -f $(docker ps -qa)
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/prefolio
+            docker pull ${{ secrets.DOCKER_USERNAME }}/prefolio
+            docker-compose up -d
