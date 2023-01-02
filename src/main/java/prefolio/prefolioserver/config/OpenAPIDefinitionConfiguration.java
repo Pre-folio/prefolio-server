@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Configuration
 public class OpenAPIDefinitionConfiguration {
     @Component
-    @Profile("prd")
+    @Profile("dev")
     @OpenAPIDefinition(servers = @Server(url = "https://prefolio.net"))
     public static class PrdOpenAPIDefinitionConfiguration {
     }
 
     @Component
     @Profile("local")
-    @OpenAPIDefinition(servers = @Server(url = "https://localhost:8080"))
+    @OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
     public static class LocalOpenAPIDefinitionConfiguration {
     }
 }
