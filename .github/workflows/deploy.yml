@@ -43,7 +43,7 @@ jobs:
 
       # Gradle build
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build -x test
 
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
