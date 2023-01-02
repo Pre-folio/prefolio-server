@@ -48,9 +48,9 @@ jobs:
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST_DEV }}
+          host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.KEY_DEV }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
             sh ~/srv/ubuntu/config/scripts/deploy.sh
             sudo docker stop $(sudo docker ps -a -q)
