@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import prefolio.prefolioserver.domain.Post;
-import prefolio.prefolioserver.dto.AddPostRequestDTO;
+import prefolio.prefolioserver.dto.AddPostDTO;
 import prefolio.prefolioserver.dto.MainPostDTO;
 import prefolio.prefolioserver.dto.PostDTO;
 import prefolio.prefolioserver.dto.PostIdDTO;
@@ -66,8 +65,8 @@ public class PostController {
             )
     })
     @PostMapping("/")
-    public String addPost(@RequestBody AddPostRequestDTO addPostRequestDTO) {
-        return postService.savePost(addPostRequestDTO);
+    public String addPost(@RequestBody AddPostDTO addPostDTO) {
+        return postService.savePost(addPostDTO);
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 한 개 조회 메서드입니다.")

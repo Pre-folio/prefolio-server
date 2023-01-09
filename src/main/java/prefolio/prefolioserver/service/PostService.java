@@ -1,10 +1,10 @@
 package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.dto.AddPostRequestDTO;
+import prefolio.prefolioserver.dto.AddPostDTO;
 
 @Service
 public interface PostService {
 
-    String savePost(AddPostRequestDTO addPostRequestDTO);
+    String savePost(AddPostDTO addPostDTO);
 }
