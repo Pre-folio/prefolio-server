@@ -2,14 +2,16 @@ package prefolio.prefolioserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import jakarta.servlet.http.Part;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.sql.Date;
 
-@Getter
 @Entity
+@Getter
 @Table(name = "Post")
 @NoArgsConstructor
 public class Post {
@@ -28,13 +30,11 @@ public class Post {
     @Column
     private String title;
 
-    @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date startDate;
+    @Column(name = "start_date")
+    private String startDate;
 
-    @Column
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date endDate;
+    @Column(name = "end_date")
+    private String endDate;
 
     @Column
     private Integer contribution;
@@ -42,11 +42,11 @@ public class Post {
     @Column
     private String tools;
 
-    @Column
-    private String part_tag;
+    @Column(name = "part_tag")
+    private String partTag;
 
-    @Column
-    private String act_tag;
+    @Column(name = "act_tag")
+    private String actTag;
 
     @Column
     private String contents;
@@ -54,16 +54,50 @@ public class Post {
     @Column
     private Integer hits;
 
-    @Column
+    @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date created_at;
+    private Date createdAt;
 
-    @Column
+    @Column(name = "updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date updated_at;
+    private Date updatedAt;
 
-    @Column
+    @Column(name = "deleted_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date deleted_at;
+    private Date deletedAt;
 
+    @Builder
+    public Post(
+            Long id,
+//            User user,
+            String thumbnail,
+            String title,
+            String startDate,
+            String endDate,
+            Integer contribution,
+            String tools,
+            String partTag,
+            String actTag,
+            String contents,
+            Integer hits,
+            Date createdAt,
+            Date updatedAt,
+            Date deletedAt
+    ) {
+        this.id = id;
+//        this.user = user;
+        this.thumbnail = thumbnail;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.contribution = contribution;
+        this.tools = tools;
+        this.partTag = partTag;
+        this.actTag = actTag;
+        this.contents = contents;
+        this.hits = hits;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+    }
 }

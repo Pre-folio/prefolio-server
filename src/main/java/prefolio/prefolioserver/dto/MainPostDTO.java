@@ -1,8 +1,6 @@
 package prefolio.prefolioserver.dto;
 
 import lombok.Getter;
-import prefolio.prefolioserver.domain.ActTag;
-import prefolio.prefolioserver.domain.PartTag;
 import prefolio.prefolioserver.domain.Post;
 
 import java.sql.Date;

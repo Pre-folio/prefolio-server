@@ -2,11 +2,7 @@ package prefolio.prefolioserver.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
-import prefolio.prefolioserver.domain.ActTag;
-import prefolio.prefolioserver.domain.PartTag;
 import prefolio.prefolioserver.domain.Post;
-
-import java.sql.Date;
 
 public class AddPostRequestDTO {
 
@@ -26,10 +22,10 @@ public class AddPostRequestDTO {
     private String tools;
 
     @NotEmpty
-    private PartTag partTag;
+    private String partTag;
 
     @NotEmpty
-    private ActTag actTag;
+    private String actTag;
 
     @NotEmpty
     private String contents;
@@ -42,8 +38,8 @@ public class AddPostRequestDTO {
             String endDate,
             Integer contribution,
             String tools,
-            PartTag partTag,
-            ActTag actTag,
+            String partTag,
+            String actTag,
             String contents
     ) {
         this.thumbnail = thumbnail;
