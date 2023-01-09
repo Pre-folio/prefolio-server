@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import prefolio.prefolioserver.domain.Post;
 
-public class AddPostRequestDTO {
+public class AddPostDTO {
 
     private String thumbnail;
 
@@ -31,7 +31,7 @@ public class AddPostRequestDTO {
     private String contents;
 
     @Builder
-    public AddPostRequestDTO(
+    public AddPostDTO(
             String thumbnail,
             String title,
             String startDate,
