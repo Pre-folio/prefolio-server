@@ -10,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import prefolio.prefolioserver.domain.Post;
+import prefolio.prefolioserver.dto.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.MainPostDTO;
 import prefolio.prefolioserver.dto.PostDTO;
 import prefolio.prefolioserver.dto.PostIdDTO;
@@ -53,7 +55,6 @@ public class PostController {
         return "getSearchPosts";
     }
 
-
     @Operation(summary = "글 작성", description = "글 작성 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(
@@ -65,8 +66,8 @@ public class PostController {
             )
     })
     @PostMapping("/")
-    public String addPost(HttpServletRequest request) {
-        return "addPost";
+    public String addPost(@RequestBody AddPostRequestDTO addPostRequestDTO) {
+        return postService.savePost(addPostRequestDTO);
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 한 개 조회 메서드입니다.")
