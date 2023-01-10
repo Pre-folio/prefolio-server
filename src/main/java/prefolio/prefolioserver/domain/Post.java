@@ -3,6 +3,7 @@ package prefolio.prefolioserver.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.servlet.http.Part;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,7 +70,7 @@ public class Post {
     @Builder
     public Post(
             Long id,
-//            User user,
+            User user,
             String thumbnail,
             String title,
             String startDate,

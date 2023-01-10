@@ -7,18 +7,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import prefolio.prefolioserver.dto.AddPostDTO;
-import prefolio.prefolioserver.dto.MainPostDTO;
-import prefolio.prefolioserver.dto.PostDTO;
-import prefolio.prefolioserver.dto.PostIdDTO;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.web.bind.annotation.*;
+import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.service.PostService;
 
-@Controller
+@RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
@@ -35,6 +29,7 @@ public class PostController {
                     ))
     })
     @GetMapping("/all")
+    @ResponseBody
     public String getAllPosts(HttpServletRequest request) {
         return "getAllPosts";
     }
@@ -50,6 +45,7 @@ public class PostController {
             )
     })
     @GetMapping("/search")
+    @ResponseBody
     public String getSearchPosts(HttpServletRequest request) {
         return "getSearchPosts";
     }
@@ -60,13 +56,14 @@ public class PostController {
                     responseCode = "200",
                     description = "글 생성 성공",
                     content = @Content(
-                            schema = @Schema(implementation = PostIdDTO.class)
+                            schema = @Schema(implementation = CommonResponseDTO.class)
                     )
             )
     })
     @PostMapping("/")
-    public String addPost(@RequestBody AddPostDTO addPostDTO) {
-        return postService.savePost(addPostDTO);
+    @ResponseBody
+    public CommonResponseDTO<AddPostDTO.Response> addPost(@RequestBody AddPostDTO.Request addPostRequest) {
+        return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 한 개 조회 메서드입니다.")
@@ -80,6 +77,7 @@ public class PostController {
             )
     })
     @GetMapping("/:post_id")
+    @ResponseBody
     public String getPost(HttpServletRequest request) {
         return "getPost";
     }
@@ -95,6 +93,7 @@ public class PostController {
             )
     })
     @GetMapping("/:user_id")
+    @ResponseBody
     public String getUserPosts(HttpServletRequest request) {
         return "getUserPosts";
     }
@@ -110,6 +109,7 @@ public class PostController {
             )
     })
     @GetMapping("/scraps")
+    @ResponseBody
     public String getScrapPosts(HttpServletRequest request) {
         return "getScrapPosts";
     }
@@ -125,6 +125,7 @@ public class PostController {
             )
     })
     @GetMapping("/likes/:post_id")
+    @ResponseBody
     public String clickLike(HttpServletRequest request) {
         return "clickLike";
     }
@@ -140,7 +141,11 @@ public class PostController {
             )
     })
     @GetMapping("/scraps/:post_id")
+    @ResponseBody
     public String clickScrap(HttpServletRequest request) {
         return "clickScrap";
+    }
+
+    private class Resonse {
     }
 }

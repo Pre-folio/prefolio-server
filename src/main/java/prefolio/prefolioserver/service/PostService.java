@@ -6,5 +6,5 @@ import prefolio.prefolioserver.dto.AddPostDTO;
 @Service
 public interface PostService {
 
-    String savePost(AddPostDTO addPostDTO);
+    AddPostDTO.Response savePost(AddPostDTO.Request addPostDTO);
 }
