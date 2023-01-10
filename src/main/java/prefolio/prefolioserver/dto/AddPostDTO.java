@@ -1,70 +1,57 @@
 package prefolio.prefolioserver.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotEmpty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.Post;
 
 public class AddPostDTO {
 
-    private String thumbnail;
-
-    @NotEmpty
-    private String title;
-
-    @NotEmpty
-    private String startDate;
-
-    @NotEmpty
-    private String endDate;
-
-    private Integer contribution;
-
-    private String tools;
-
-    @NotEmpty
-    private String partTag;
-
-    @NotEmpty
-    private String actTag;
-
-    @NotEmpty
-    private String contents;
-
+    @Getter
     @Builder
-    public AddPostDTO(
-            String thumbnail,
-            String title,
-            String startDate,
-            String endDate,
-            Integer contribution,
-            String tools,
-            String partTag,
-            String actTag,
-            String contents
-    ) {
-        this.thumbnail = thumbnail;
-        this.title = title;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.contribution = contribution;
-        this.tools = tools;
-        this.partTag = partTag;
-        this.actTag = actTag;
-        this.contents = contents;
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Request {
+        private String thumbnail;
+        private String title;
+        private String startDate;
+        private String endDate;
+        private Integer contribution;
+        private String tools;
+        private String partTag;
+        private String actTag;
+        private String contents;
+
+        /* Dto -> Entity */
+        public Request (Post post) {
+            this.thumbnail = post.getThumbnail();
+            this.title = post.getTitle();
+            this.startDate = post.getStartDate();
+            this.endDate = post.getEndDate();
+            this.contribution = post.getContribution();
+            this.tools = post.getTools();
+            this.partTag = post.getPartTag();
+            this.actTag = post.getActTag();
+            this.contents = post.getContents();
+        }
     }
 
-    public Post toEntity() {
-        return Post.builder()
-                .id(toEntity().getId())
-                .thumbnail(thumbnail)
-                .title(title)
-                .startDate(startDate)
-                .endDate(endDate)
-                .contribution(contribution)
-                .tools(tools)
-                .partTag(partTag)
-                .actTag(actTag)
-                .contents(contents)
-                .build();
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Response {
+
+//        @Column(name = "id")
+        private Long postId;
+
+        /* Entity -> Dto */
+        public Response(Post post) {
+            this.postId = post.getId();
+        }
     }
+
 }
