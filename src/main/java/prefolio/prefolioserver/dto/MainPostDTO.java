@@ -11,8 +11,8 @@ public class MainPostDTO {
     private Long id;
     private String thumbnail;
     private String title;
-    private PartTag partTag;
-    private ActTag actTag;
+    private String partTag;
+    private String actTag;
     private Integer hits;
     private Date createdAt;
 
