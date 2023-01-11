@@ -1,2 +1,2 @@
 # prefolio-server
-prefolio 서버
+prefolio server
