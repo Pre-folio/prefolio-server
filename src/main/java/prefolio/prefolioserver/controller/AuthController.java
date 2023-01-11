@@ -18,17 +18,17 @@ public class AuthController {
 
     private final UserService userService;
 
-    @Operation(summary = "유저 정보 저장", description = "유저 정보 저장 메서드입니다.")
+    @Operation(summary = "카카오 인가 코드", description = "소셜로그인 - 카카오 인가 코드 발급 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "저장 성공",
+                    description = "인가 코드 발급",
                     content = @Content(
                             schema = @Schema(implementation = CommonResponseDTO.class)
                     )
             )
     })
-    @PostMapping("/join")
+    @GetMapping("/kakao")
     @ResponseBody
     public CommonResponseDTO<UserInfoDTO.Response> userInfo(@RequestBody UserInfoDTO.Request userInfoRequest) {
         return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.saveUserInfo(userInfoRequest));
