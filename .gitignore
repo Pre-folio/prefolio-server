@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 !**/src/main/resources/application.properties
 src/main/resources/application.properties
-node_modules
+node_modules/
 
 ### STS ###
 .apt_generated
