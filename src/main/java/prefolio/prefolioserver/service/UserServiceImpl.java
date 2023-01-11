@@ -4,13 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.UserInfoDTO;
-import prefolio.prefolioserver.repository.AuthRepository;
+import prefolio.prefolioserver.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
                 .refreshToken(userInfoRequest.getRefreshToken())
                 .build();
         System.out.println("user Entity = " + user.getNickname());
-        User savedUser = authRepository.saveAndFlush(user);
+        User savedUser = userRepository.saveAndFlush(user);
         return new UserInfoDTO.Response(savedUser);
     }
 }
