@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.User;
 
-import java.sql.Date;
-
 public class UserInfoDTO {
 
     @Getter
@@ -25,6 +23,7 @@ public class UserInfoDTO {
         private Integer grade;
 
         private String refreshToken;
+
         /* Dto -> Entity */
         public Request (User user) {
             this.type = user.getType();
