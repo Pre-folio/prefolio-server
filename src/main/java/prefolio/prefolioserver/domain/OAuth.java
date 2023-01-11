@@ -18,9 +18,13 @@ public class OAuth {
     @Column
     private String email;
 
+    @Column
+    private Boolean isMember;
+
     @Builder
-    public OAuth(Long id, String email) {
+    public OAuth(Long id, String email, Boolean isMember) {
         this.id = id;
         this.email = email;
+        this.isMember = isMember;
     }
 }
