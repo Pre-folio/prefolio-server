@@ -22,7 +22,7 @@ public class Post {
     private Long id;
 
 //    @ManyToOne
-//    @JoinColumn(name="userId", nullable = false)
+//    @JoinColumn(name="user_id", nullable = false)
 //    private User user;
 
     @Column
@@ -70,7 +70,7 @@ public class Post {
     @Builder
     public Post(
             Long id,
-            User user,
+//            User user,
             String thumbnail,
             String title,
             String startDate,
