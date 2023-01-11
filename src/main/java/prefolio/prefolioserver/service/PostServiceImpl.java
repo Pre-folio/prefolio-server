@@ -44,40 +44,40 @@ public class PostServiceImpl implements PostService{
         return null;
     }
 
-    @Override
-    public ClickLikeDTO.Response clickLike(Long postId, Boolean isLiked) {
-        Post post = postRepository.findById(postId).get();
-        User user = clickLikeRequest.getUser();
-        // 좋아요 누름
-        if (isLiked == Boolean.TRUE) {
-            Like like = Like.builder().user(user)
-                    .post(post)
-                    .build();
-            likeRepository.save(like);
-        } else { // 좋아요 취소
-            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            likeRepository.delete(like);
-        }
-        Long likes = likeRepository.countByPostId(postId);
-        return new ClickLikeDTO.Response(likes, isLiked);
-    }
-
-    @Override
-    public ClickScrapDTO.Response clickScrap(Long postId, Boolean isScrapped) {
-        Post post = postRepository.findById(postId).get();
-        User user = clickScrapRequest.getUser();
-        // 스크랩 누름
-        if (isScrapped == Boolean.TRUE) {
-            Scrap scrap = Scrap.builder().user(user)
-                    .post(post)
-                    .build();
-            scrapRepository.save(scrap);
-        } else { // 스크랩 취소
-            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            scrapRepository.delete(scrap);
-        }
-        Long scraps = scrapRepository.countByPostId(postId);
-        return new ClickScrapDTO.Response(scraps, isScrapped);
-    }
+//    @Override
+//    public ClickLikeDTO.Response clickLike(Long postId, Boolean isLiked) {
+//        Post post = postRepository.findById(postId).get();
+//        User user = clickLikeRequest.getUser();
+//        // 좋아요 누름
+//        if (isLiked == Boolean.TRUE) {
+//            Like like = Like.builder().user(user)
+//                    .post(post)
+//                    .build();
+//            likeRepository.save(like);
+//        } else { // 좋아요 취소
+//            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
+//            likeRepository.delete(like);
+//        }
+//        Long likes = likeRepository.countByPostId(postId);
+//        return new ClickLikeDTO.Response(likes, isLiked);
+//    }
+//
+//    @Override
+//    public ClickScrapDTO.Response clickScrap(Long postId, Boolean isScrapped) {
+//        Post post = postRepository.findById(postId).get();
+//        User user = clickScrapRequest.getUser();
+//        // 스크랩 누름
+//        if (isScrapped == Boolean.TRUE) {
+//            Scrap scrap = Scrap.builder().user(user)
+//                    .post(post)
+//                    .build();
+//            scrapRepository.save(scrap);
+//        } else { // 스크랩 취소
+//            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
+//            scrapRepository.delete(scrap);
+//        }
+//        Long scraps = scrapRepository.countByPostId(postId);
+//        return new ClickScrapDTO.Response(scraps, isScrapped);
+//    }
 
 }

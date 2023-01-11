@@ -13,7 +13,7 @@ public interface PostService {
 
     GetPostDTO.Response findPostById(Long postId);
 
-    ClickLikeDTO.Response clickLike(Long postId, Boolean isLiked);
-
-    ClickScrapDTO.Response clickScrap(Long postId, Boolean isScrapped);
+//    ClickLikeDTO.Response clickLike(Long postId, Boolean isLiked);
+//
+//    ClickScrapDTO.Response clickScrap(Long postId, Boolean isScrapped);
 }

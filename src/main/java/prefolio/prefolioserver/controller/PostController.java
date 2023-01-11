@@ -115,42 +115,42 @@ public class PostController {
         return "getScrapPosts";
     }
 
-    @Operation(summary = "좋아요 버튼 누르기", description = "좋아요 누름/취소 메서드입니다.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "SUCCESS",
-                    content = @Content(
-                            schema = @Schema(implementation = ClickLikeDTO.Response.class)
-                    )
-            )
-    })
-    @GetMapping("/likes/{postId}")
-    @ResponseBody
-    public CommonResponseDTO<ClickLikeDTO.Response> clickLike(
-            @PathVariable(name = "postId") Long postId,
-            @RequestParam(name = "isLiked") Boolean isLiked
-    ) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(postId, isLiked));
-    }
-
-    @Operation(summary = "스크랩 버튼 누르기", description = "스크랩 누름/취소 메서드입니다.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "조회 성공",
-                    content = @Content(
-                            schema = @Schema(implementation = ClickScrapDTO.Response.class)
-                    )
-            )
-    })
-    @GetMapping("/scraps/{postId}")
-    @ResponseBody
-    public CommonResponseDTO<ClickScrapDTO.Response> clickScrap(
-            @PathVariable(name = "postId") Long postId,
-            @RequestParam(name = "isScrapped") Boolean isScrapped
-    ) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(postId, isScrapped));
-    }
+//    @Operation(summary = "좋아요 버튼 누르기", description = "좋아요 누름/취소 메서드입니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(
+//                    responseCode = "200",
+//                    description = "SUCCESS",
+//                    content = @Content(
+//                            schema = @Schema(implementation = ClickLikeDTO.Response.class)
+//                    )
+//            )
+//    })
+//    @GetMapping("/likes/{postId}")
+//    @ResponseBody
+//    public CommonResponseDTO<ClickLikeDTO.Response> clickLike(
+//            @PathVariable(name = "postId") Long postId,
+//            @RequestParam(name = "isLiked") Boolean isLiked
+//    ) {
+//        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(postId, isLiked));
+//    }
+//
+//    @Operation(summary = "스크랩 버튼 누르기", description = "스크랩 누름/취소 메서드입니다.")
+//    @ApiResponses(value = {
+//            @ApiResponse(
+//                    responseCode = "200",
+//                    description = "조회 성공",
+//                    content = @Content(
+//                            schema = @Schema(implementation = ClickScrapDTO.Response.class)
+//                    )
+//            )
+//    })
+//    @GetMapping("/scraps/{postId}")
+//    @ResponseBody
+//    public CommonResponseDTO<ClickScrapDTO.Response> clickScrap(
+//            @PathVariable(name = "postId") Long postId,
+//            @RequestParam(name = "isScrapped") Boolean isScrapped
+//    ) {
+//        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(postId, isScrapped));
+//    }
 
 }
