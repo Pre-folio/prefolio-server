@@ -8,7 +8,7 @@ import prefolio.prefolioserver.repository.AuthRepository;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService{
+public class UserServiceImpl implements UserService {
 
     private final AuthRepository authRepository;
 

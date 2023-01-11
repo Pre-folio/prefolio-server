@@ -1,20 +1,20 @@
 package prefolio.prefolioserver.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.dto.CommonResponseDTO;
-import prefolio.prefolioserver.dto.UserInfoDTO;
-import prefolio.prefolioserver.service.UserService;
+        import io.swagger.v3.oas.annotations.Operation;
+        import io.swagger.v3.oas.annotations.media.Content;
+        import io.swagger.v3.oas.annotations.media.Schema;
+        import io.swagger.v3.oas.annotations.responses.ApiResponse;
+        import io.swagger.v3.oas.annotations.responses.ApiResponses;
+        import lombok.RequiredArgsConstructor;
+        import org.springframework.web.bind.annotation.*;
+        import prefolio.prefolioserver.dto.CommonResponseDTO;
+        import prefolio.prefolioserver.dto.UserInfoDTO;
+        import prefolio.prefolioserver.service.UserService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @RequiredArgsConstructor
-public class AuthController {
+public class UserController {
 
     private final UserService userService;
 
