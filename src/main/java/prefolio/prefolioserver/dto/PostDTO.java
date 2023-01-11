@@ -1,8 +1,6 @@
 package prefolio.prefolioserver.dto;
 
 import lombok.Getter;
-import prefolio.prefolioserver.domain.ActTag;
-import prefolio.prefolioserver.domain.PartTag;
 import prefolio.prefolioserver.domain.Post;
 
 import java.sql.Date;
@@ -13,8 +11,8 @@ public class PostDTO {
     private Long id;
     private String thumbnail;
     private String title;
-    private PartTag partTag;
-    private ActTag actTag;
+    private String partTag;
+    private String actTag;
     private Integer hits;
     private Date createdAt;
 
