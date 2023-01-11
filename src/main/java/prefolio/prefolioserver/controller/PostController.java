@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.service.PostService;
@@ -70,16 +69,18 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "글 생성 성공",
+                    description = "게시글 조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = PostDTO.class)
+                            schema = @Schema(implementation = CommonResponseDTO.class)
                     )
             )
     })
-    @GetMapping("/:post_id")
+    @GetMapping("/{postId}")
     @ResponseBody
-    public String getPost(HttpServletRequest request) {
-        return "getPost";
+    public CommonResponseDTO<GetPostDTO.Response> getPost(
+            @PathVariable(name = "postId") Long postId
+    ) {
+        return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(postId));
     }
 
     @Operation(summary = "유저 게시글 모두 조회", description = "유저 게시글을 모두 조회하는 메서드입니다.")
@@ -92,7 +93,7 @@ public class PostController {
                     )
             )
     })
-    @GetMapping("/:user_id")
+    @GetMapping("/{userId}")
     @ResponseBody
     public String getUserPosts(HttpServletRequest request) {
         return "getUserPosts";
@@ -118,16 +119,19 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "조회 성공",
+                    description = "SUCCESS",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = ClickLikeDTO.Response.class)
                     )
             )
     })
-    @GetMapping("/likes/:post_id")
+    @GetMapping("/likes/{postId}")
     @ResponseBody
-    public String clickLike(HttpServletRequest request) {
-        return "clickLike";
+    public CommonResponseDTO<ClickLikeDTO.Response> clickLike(
+            @PathVariable(name = "postId") Long postId,
+            @RequestParam(name = "isLiked") Boolean isLiked
+    ) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(postId, isLiked));
     }
 
     @Operation(summary = "스크랩 버튼 누르기", description = "스크랩 누름/취소 메서드입니다.")
@@ -136,16 +140,17 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = ClickScrapDTO.Response.class)
                     )
             )
     })
-    @GetMapping("/scraps/:post_id")
+    @GetMapping("/scraps/{postId}")
     @ResponseBody
-    public String clickScrap(HttpServletRequest request) {
-        return "clickScrap";
+    public CommonResponseDTO<ClickScrapDTO.Response> clickScrap(
+            @PathVariable(name = "postId") Long postId,
+            @RequestParam(name = "isScrapped") Boolean isScrapped
+    ) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(postId, isScrapped));
     }
 
-    private class Resonse {
-    }
 }
