@@ -19,11 +19,11 @@ public class OAuth {
     private String email;
 
     @Column
+
     private Boolean isMember;
 
     @Builder
-    public OAuth(Long id, String email, Boolean isMember) {
-        this.id = id;
+    public OAuth(String email, Boolean isMember) {
         this.email = email;
         this.isMember = isMember;
     }

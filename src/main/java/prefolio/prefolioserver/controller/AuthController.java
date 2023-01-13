@@ -8,21 +8,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
-import prefolio.prefolioserver.dto.UserJoinDTO;
-import prefolio.prefolioserver.service.UserService;
+import prefolio.prefolioserver.dto.KakaoLoginDTO;
+import prefolio.prefolioserver.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final AuthService authService;
 
-    @Operation(summary = "카카오 인가 코드", description = "소셜로그인 - 카카오 인가 코드 발급 메서드입니다.")
+    @Operation(summary = "카카오 로그인", description = "소셜로그인 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "인가 코드 발급",
+                    description = "kakao 로그인 성공",
                     content = @Content(
                             schema = @Schema(implementation = CommonResponseDTO.class)
                     )
@@ -30,8 +30,11 @@ public class AuthController {
     })
     @GetMapping("/kakao")
     @ResponseBody
-    public CommonResponseDTO<UserJoinDTO.Response> userInfo(@RequestBody UserJoinDTO.Request userInfoRequest) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(userInfoRequest));
+    public CommonResponseDTO<KakaoLoginDTO.Response> kakaoLogin(
+            @RequestParam(name = "code") String code
+    ) {
+        System.out.println("code = " + code);
+        return CommonResponseDTO.onSuccess("kakao 로그인 성공", authService.kakaoLogin(code));
     }
 
 }
