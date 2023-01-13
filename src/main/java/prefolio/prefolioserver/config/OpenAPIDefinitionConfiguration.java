@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class OpenAPIDefinitionConfiguration {
     @Component
     @Profile("dev")
-    @OpenAPIDefinition(servers = @Server(url = "https://prefolio.net"))
+    @OpenAPIDefinition(servers = @Server(url = "https://api.prefolio.net"))
     public static class PrdOpenAPIDefinitionConfiguration {
     }
 
