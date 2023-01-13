@@ -18,7 +18,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "카카오 인가 코드", description = "소셜로그인 - 카카오 인가 코드 발급 메서드입니다.")
+    @Operation(summary = "카카오 로그인", description = "소셜로그인 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -31,7 +31,7 @@ public class AuthController {
     @GetMapping("/kakao")
     @ResponseBody
     public CommonResponseDTO<KakaoLoginDTO.Response> kakaoLogin(
-            @RequestParam String code
+            @RequestParam(name = "code") String code
     ) {
         System.out.println("code = " + code);
         return CommonResponseDTO.onSuccess("kakao 로그인 성공", authService.kakaoLogin(code));
