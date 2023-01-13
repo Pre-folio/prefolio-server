@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "Like")
+@Table(name = "prefoliodb.Like")
 @NoArgsConstructor
 public class Like {
 
