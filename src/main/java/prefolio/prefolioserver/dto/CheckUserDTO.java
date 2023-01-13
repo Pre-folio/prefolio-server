@@ -20,21 +20,15 @@ public class CheckUserDTO {
         /* Dto -> Entity */
         public Request (User user) {
             this.nickname = user.getNickname();
-
         }
     }
 
     @Getter
     @Builder
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Response {
 
-        public void setIs_used(boolean is_used) {
-            this.is_used = is_used;
-        }
-
-        private boolean is_used;
+        private Boolean is_used;
 
         /* Entity -> Dto */
         public Response(Boolean is_used) {this.is_used = is_used;}

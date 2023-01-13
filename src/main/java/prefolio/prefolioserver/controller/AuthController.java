@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
-import prefolio.prefolioserver.dto.UserInfoDTO;
+import prefolio.prefolioserver.dto.UserJoinDTO;
 import prefolio.prefolioserver.service.UserService;
 
 @RestController
@@ -30,8 +30,8 @@ public class AuthController {
     })
     @GetMapping("/kakao")
     @ResponseBody
-    public CommonResponseDTO<UserInfoDTO.Response> userInfo(@RequestBody UserInfoDTO.Request userInfoRequest) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.saveUserInfo(userInfoRequest));
+    public CommonResponseDTO<UserJoinDTO.Response> userInfo(@RequestBody UserJoinDTO.Request userInfoRequest) {
+        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(userInfoRequest));
     }
 
 }
