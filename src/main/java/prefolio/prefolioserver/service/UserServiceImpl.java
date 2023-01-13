@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.Like;
 import prefolio.prefolioserver.domain.OAuth;
+import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.CheckUserDTO;
 import prefolio.prefolioserver.dto.GetUserInfoDTO;
@@ -62,8 +63,12 @@ public class UserServiceImpl implements UserService {
         if(user.isEmpty())
             return new GetUserInfoDTO.Response();
 
-        Long countScrap = scrapRepository.countByUserId(userId).get();
-        Long countLike = likeRepository.countByUserId(userId).get();
-        return new GetUserInfoDTO.Response(user.get(), countScrap, countLike);
+        Optional<Long> countScrap = scrapRepository.countByUserId(userId);
+        Optional<Long> countLike = likeRepository.countByUserId(userId);
+
+        if(countScrap.isEmpty() && countLike.isEmpty())
+            return new GetUserInfoDTO.Response(user.get(),0L,0L);
+
+    return new GetUserInfoDTO.Response(user.get(), countScrap.get(), countLike.get());
     }
 }
