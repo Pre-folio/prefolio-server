@@ -9,5 +9,6 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
 
     public Optional<Scrap> findByUserIdAndPostId(Long userId, Long postId);
     public Long countByPostId(Long postId);
+    public Optional<Long> countByUserId(Long userId);
 
 }

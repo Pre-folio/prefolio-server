@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.User;
 
-public class UserInfoDTO {
+public class GetUserInfoDTO {
 
     @Getter
     @Builder
@@ -24,13 +24,20 @@ public class UserInfoDTO {
 
         private String refreshToken;
 
+        private Long countScrap;
+
+        private Long countLike;
+
+
         /* Dto -> Entity */
-        public Request (User user) {
+        public Request (User user, Long countScrap, Long countLike) {
             this.type = user.getType();
             this.nickname = user.getNickname();
             this.profileImage = user.getProfileImage();
             this.grade = user.getGrade();
             this.refreshToken = user.getRefreshToken();
+            this.countScrap = countScrap;
+            this.countLike = countLike;
         }
     }
 
@@ -41,8 +48,27 @@ public class UserInfoDTO {
     public static class Response {
 
         private Long userId;
+        private String type;
+        private String nickname;
+        private String profileImage;
+        private Integer grade;
+        private String refreshToken;
+
+        private Long countScrap;
+
+        private Long countLike;
+
 
         /* Entity -> Dto */
-        public Response(User user) {this.userId = user.getId();}
+        public Response(User user, Long countScrap, Long countLike) {
+            this.userId = user.getId();
+            this.type = user.getType();
+            this.nickname = user.getNickname();
+            this.profileImage = user.getProfileImage();
+            this.grade = user.getGrade();
+            this.refreshToken = user.getRefreshToken();
+            this.countScrap = countScrap;
+            this.countLike = countLike;
+        }
     }
 }

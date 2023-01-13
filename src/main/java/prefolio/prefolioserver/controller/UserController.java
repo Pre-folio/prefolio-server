@@ -9,7 +9,8 @@ package prefolio.prefolioserver.controller;
         import org.springframework.web.bind.annotation.*;
         import prefolio.prefolioserver.dto.CheckUserDTO;
         import prefolio.prefolioserver.dto.CommonResponseDTO;
-        import prefolio.prefolioserver.dto.UserInfoDTO;
+        import prefolio.prefolioserver.dto.GetUserInfoDTO;
+        import prefolio.prefolioserver.dto.UserJoinDTO;
         import prefolio.prefolioserver.service.UserService;
 
 @RestController
@@ -31,11 +32,11 @@ public class UserController {
     })
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<UserInfoDTO.Response> userInfo(@RequestBody UserInfoDTO.Request userInfoRequest) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.saveUserInfo(userInfoRequest));
+    public CommonResponseDTO<UserJoinDTO.Response> userJoin(@RequestBody UserJoinDTO.Request userJoinRequest) {
+        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(userJoinRequest));
     }
 
-    @Operation(summary = "유저 닉네임 중복", description = "유저 정보 저장 메서드입니다.")
+    @Operation(summary = "유저 닉네임 중복", description = "유저 닉네임 중복 확인 메서드입니다.")
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -55,10 +56,24 @@ public class UserController {
     @PostMapping("/nickname")
     @ResponseBody
     public CommonResponseDTO<CheckUserDTO.Response> checkUser(@RequestBody CheckUserDTO.Request checkUserRequest) {
-        if(!userService.checkUser(checkUserRequest.getNickname()).is_used()){
-            return CommonResponseDTO.onSuccess("닉네임 사용 가능", new CheckUserDTO.Response());
+        return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(checkUserRequest));
+    }
 
-        }
-        return CommonResponseDTO.onSuccess("닉네임 중복", new CheckUserDTO.Response());
+    @Operation(summary = "유저 정보", description = "유저 정보 메서드입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공",
+                    content = @Content(
+                            schema = @Schema(implementation = CommonResponseDTO.class)
+                    )
+            )
+    })
+    @GetMapping("/{userId}")
+    @ResponseBody
+    public CommonResponseDTO<GetUserInfoDTO.Response> getUserInfo(
+            @PathVariable(name = "userId") Long userId
+    ) {
+        return CommonResponseDTO.onSuccess("유저 정보", userService.getUserInfo(userId));
     }
 }
