@@ -2,11 +2,15 @@ package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.dto.CheckUserDTO;
-import prefolio.prefolioserver.dto.UserInfoDTO;
+import prefolio.prefolioserver.dto.GetUserInfoDTO;
+import prefolio.prefolioserver.dto.UserJoinDTO;
 
 @Service
 public interface UserService {
 
-    UserInfoDTO.Response saveUserInfo(UserInfoDTO.Request userInfoRequest);
-    CheckUserDTO.Response checkUser(String nickname);
+    UserJoinDTO.Response joinUser(UserJoinDTO.Request userJoinRequest);
+
+    //CheckUserDTO.Response checkUser(String nickname);
+    CheckUserDTO.Response findUserByNickname(CheckUserDTO.Request checkUserRequest);
+    GetUserInfoDTO.Response getUserInfo(Long userId);
 }
