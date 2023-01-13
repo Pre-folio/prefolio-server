@@ -30,7 +30,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,8 +50,10 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public KakaoLoginDTO.Response kakaoLogin(String code) {
 
+        System.out.println("AuthServiceImpl.kakaoLogin");
         // "인가 코드"로 "accessToken" 요청
         String kakaoAccessToken = getAccessToken(code);
+        System.out.println("kakaoAccessToken = " + kakaoAccessToken);
 
         // 토큰으로 카카오 API 호출 (이메일 정보 가져오기)
         KakaoUserInfoDTO userInfo = getUserInfo(kakaoAccessToken);
@@ -69,19 +70,20 @@ public class AuthServiceImpl implements AuthService{
         return new KakaoLoginDTO.Response(jwtToken);
     }
 
-
     // 인가코드로 accessToken 요청
     private String getAccessToken(String code) {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
+        System.out.println("header>>>");
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", KAKAO_CLIENT_ID);
         body.add("redirect_uri", KAKAO_REDIRECT_URI);
         body.add("code", code);
+        System.out.println("body>>>");
 
         // HTTP 요청 보내기 - Post 방식
         // response 변수의 응답 받음
@@ -93,6 +95,8 @@ public class AuthServiceImpl implements AuthService{
                 kakaoTokenRequest,
                 String.class
         );
+        System.out.println("HTTP 요청 보내기");
+        System.out.println("response = " + response);
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = response.getBody();
@@ -114,12 +118,12 @@ public class AuthServiceImpl implements AuthService{
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HTTP 요청 보내기 - Post 방식
-        HttpEntity<MultiValueMap<String, String>> kakaoUserInfoRequest = new HttpEntity<>(headers);
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST,
-                kakaoUserInfoRequest,
+                kakaoTokenRequest,
                 String.class
         );
 
