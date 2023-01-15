@@ -6,11 +6,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.KakaoLoginDTO;
 import prefolio.prefolioserver.service.AuthService;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -33,7 +35,7 @@ public class AuthController {
     public CommonResponseDTO<KakaoLoginDTO.Response> kakaoLogin(
             @RequestParam(name = "code") String code
     ) {
-        System.out.println("code = " + code);
+        log.trace("authorization code = {}", code);
         return CommonResponseDTO.onSuccess("kakao 로그인 성공", authService.kakaoLogin(code));
     }
 
