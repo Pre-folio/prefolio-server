@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -38,12 +36,12 @@ import java.util.Date;
 public class AuthServiceImpl implements AuthService{
 
     private final AuthRepository authRepository;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${kakao.key}")
     private String KAKAO_CLIENT_ID;
 
-    @Value("${kakao.uri")
+    @Value("${kakao.uri}")
     private String KAKAO_REDIRECT_URI;
 
     @Value("${jwt.secret}")
@@ -54,24 +52,18 @@ public class AuthServiceImpl implements AuthService{
 
         // "인가 코드"로 "accessToken" 요청
         String kakaoAccessToken = getAccessToken(code);
-        log.trace("kakao access token = {}", kakaoAccessToken);
 
         // 토큰으로 카카오 API 호출 (이메일 정보 가져오기)
         KakaoUserInfoDTO userInfo = getUserInfo(kakaoAccessToken);
-        log.trace("userInfo = {}", userInfo);
 
         // DB정보 확인 -> 없으면 DB에 저장
         OAuth user = registerOAuthIfNeed(userInfo);
-        log.trace("user = {}", user);
 
         // 로그인 처리
         Authentication authentication = getAuthentication(user);
-        log.trace("authentication = {}", authentication);
 
         // JWT 토큰 리턴
         String jwtToken = usersAuthorizationInput(authentication);
-        log.trace("jwtToken = {}", jwtToken);
-
         return new KakaoLoginDTO.Response(jwtToken);
     }
 
@@ -81,14 +73,12 @@ public class AuthServiceImpl implements AuthService{
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-        System.out.println("header>>>");
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", KAKAO_CLIENT_ID);
         body.add("redirect_uri", KAKAO_REDIRECT_URI);
         body.add("code", code);
-        System.out.println("body>>>");
 
         // HTTP 요청 보내기 - Post 방식
         // response 변수의 응답 받음
@@ -100,8 +90,6 @@ public class AuthServiceImpl implements AuthService{
                 kakaoTokenRequest,
                 String.class
         );
-        System.out.println("HTTP 요청 보내기");
-        System.out.println("response = " + response);
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = response.getBody();
@@ -110,7 +98,6 @@ public class AuthServiceImpl implements AuthService{
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             return jsonNode.get("access_token").asText();
         } catch (JsonProcessingException e) {
-            log.error("error log = kakao access token 요청에 대한 응답 발생 실패");
             return null;
         }
 
@@ -120,7 +107,7 @@ public class AuthServiceImpl implements AuthService{
     private KakaoUserInfoDTO getUserInfo(String accessToken) {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer" + accessToken);
+        headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
         // HTTP 요청 보내기 - Post 방식
@@ -140,7 +127,6 @@ public class AuthServiceImpl implements AuthService{
             JsonNode jsonNode = objectMapper.readTree(responseBody);
 
             String email = jsonNode.get("kakao_account").get("email").asText();
-            log.trace("email = {}", email);
             return new KakaoUserInfoDTO(email);
         } catch (JsonProcessingException e) {
             return null;
@@ -157,7 +143,6 @@ public class AuthServiceImpl implements AuthService{
         // DB에 없을 시 DB에 추가
         if (user == null) {
             // DB에 정보 등록
-            log.info("DB에 user 정보 없음 -> 추가 진행");
             user = new OAuth(kakaoEmail, false);
             authRepository.save(user);
         }
@@ -166,7 +151,7 @@ public class AuthServiceImpl implements AuthService{
 
     // 로그인 처리
     private Authentication getAuthentication(OAuth user) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 "",
@@ -178,14 +163,14 @@ public class AuthServiceImpl implements AuthService{
 
     // JWT 토큰 리턴
     private String usersAuthorizationInput(Authentication authentication) {
-        UserDetails userDetails = ((UserDetails) authentication.getPrincipal());
+        UserDetailsImpl userDetails = ((UserDetailsImpl) authentication.getPrincipal());
         String token = generateJwtToken(userDetails);
         return token;
     }
 
     @Override
-    public String generateJwtToken(UserDetails userDetails) {
-        OAuth user = authRepository.findByEmail(userDetails.getUsername()).get();
+    public String generateJwtToken(UserDetailsImpl userDetails) {
+        OAuth user = authRepository.findByEmail(userDetails.getEmail()).get();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);  // 만료일 1일
 
