@@ -3,20 +3,18 @@ package prefolio.prefolioserver.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.webjars.NotFoundException;
-import prefolio.prefolioserver.domain.Like;
 import prefolio.prefolioserver.domain.OAuth;
-import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.CheckUserDTO;
 import prefolio.prefolioserver.dto.GetUserInfoDTO;
-import prefolio.prefolioserver.dto.UserJoinDTO;
+import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
+import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
+import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.AuthRepository;
 import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.LikeRepository;
-import prefolio.prefolioserver.error.ErrorCode;
 
 import java.util.Optional;
 
@@ -36,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserJoinDTO.Response joinUser(UserJoinDTO.Request userJoinRequest) {
+    public JoinUserResponseDTO joinUser(JoinUserRequestDTO userJoinRequest) {
         User user = User.builder()
                 .type(userJoinRequest.getType())
                 .nickname(userJoinRequest.getNickname())
@@ -50,16 +48,16 @@ public class UserServiceImpl implements UserService {
         //System.out.println("user Entity = " + user.getNickname());
         User savedUser = userRepository.saveAndFlush(user);
         authRepository.saveAndFlush(oauth);
-        return new UserJoinDTO.Response(savedUser);
+        return new JoinUserResponseDTO(savedUser);
     }
 
     @Override
-    public CheckUserDTO.Response findUserByNickname(CheckUserDTO.Request checkUserRequest) {
+    public CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest) {
         Optional<User> user = userRepository.findByNickname(checkUserRequest.getNickname());
         if (user.isEmpty()) {
-            return new CheckUserDTO.Response(false);
+            return new CheckUserResponseDTO(false);
         }
-        return new CheckUserDTO.Response(true);
+        return new CheckUserResponseDTO(true);
     }
 
     @Override

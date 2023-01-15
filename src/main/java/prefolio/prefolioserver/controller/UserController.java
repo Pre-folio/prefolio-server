@@ -7,10 +7,12 @@ package prefolio.prefolioserver.controller;
         import io.swagger.v3.oas.annotations.responses.ApiResponses;
         import lombok.RequiredArgsConstructor;
         import org.springframework.web.bind.annotation.*;
-        import prefolio.prefolioserver.dto.CheckUserDTO;
         import prefolio.prefolioserver.dto.CommonResponseDTO;
         import prefolio.prefolioserver.dto.GetUserInfoDTO;
-        import prefolio.prefolioserver.dto.UserJoinDTO;
+        import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
+        import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+        import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
+        import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
         import prefolio.prefolioserver.service.UserService;
 
 @RestController
@@ -32,7 +34,7 @@ public class UserController {
     })
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<UserJoinDTO.Response> userJoin(@RequestBody UserJoinDTO.Request userJoinRequest) {
+    public CommonResponseDTO<JoinUserResponseDTO> userJoin(@RequestBody JoinUserRequestDTO userJoinRequest) {
         return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(userJoinRequest));
     }
 
@@ -55,7 +57,7 @@ public class UserController {
     })
     @PostMapping("/nickname")
     @ResponseBody
-    public CommonResponseDTO<CheckUserDTO.Response> checkUser(@RequestBody CheckUserDTO.Request checkUserRequest) {
+    public CommonResponseDTO<CheckUserResponseDTO> checkUser(@RequestBody CheckUserRequestDTO checkUserRequest) {
         return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(checkUserRequest));
     }
 
