@@ -1,12 +1,11 @@
 package prefolio.prefolioserver.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.dto.KakaoLoginDTO;
+import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 
 @Service
 public interface AuthService {
 
-    public KakaoLoginDTO.Response kakaoLogin(String code);
+    public KakaoLoginResponseDTO kakaoLogin(String code);
     public String generateJwtToken(UserDetailsImpl userDetails);
 }

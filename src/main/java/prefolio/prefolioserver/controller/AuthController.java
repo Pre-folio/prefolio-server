@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
-import prefolio.prefolioserver.dto.KakaoLoginDTO;
+import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.service.AuthService;
 
 @Slf4j
@@ -32,7 +32,7 @@ public class AuthController {
     })
     @GetMapping("/kakao")
     @ResponseBody
-    public CommonResponseDTO<KakaoLoginDTO.Response> kakaoLogin(
+    public CommonResponseDTO<KakaoLoginResponseDTO> kakaoLogin(
             @RequestParam(name = "code") String code
     ) {
         return CommonResponseDTO.onSuccess("kakao 로그인 성공", authService.kakaoLogin(code));

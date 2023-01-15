@@ -9,8 +9,6 @@ package prefolio.prefolioserver.controller;
         import org.springframework.web.bind.annotation.*;
         import prefolio.prefolioserver.dto.CheckUserDTO;
         import prefolio.prefolioserver.dto.CommonResponseDTO;
-        import prefolio.prefolioserver.dto.GetUserInfoDTO;
-        import prefolio.prefolioserver.dto.UserJoinDTO;
         import prefolio.prefolioserver.service.UserService;
 
 @RestController

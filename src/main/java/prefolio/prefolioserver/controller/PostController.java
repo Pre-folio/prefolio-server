@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
+import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 
 @RestController
@@ -80,7 +83,7 @@ public class PostController {
     })
     @GetMapping("/{postId}")
     @ResponseBody
-    public CommonResponseDTO<GetPostDTO.Response> getPost(
+    public CommonResponseDTO<GetPostResponseDTO> getPost(
             @PathVariable(name = "postId") Long postId
     ) {
         return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(postId));
@@ -124,13 +127,13 @@ public class PostController {
 //                    responseCode = "200",
 //                    description = "SUCCESS",
 //                    content = @Content(
-//                            schema = @Schema(implementation = ClickLikeDTO.Response.class)
+//                            schema = @Schema(implementation = ClickLikeResponseDTO.class)
 //                    )
 //            )
 //    })
 //    @GetMapping("/likes/{postId}")
 //    @ResponseBody
-//    public CommonResponseDTO<ClickLikeDTO.Response> clickLike(
+//    public CommonResponseDTO<ClickLikeResponseDTO> clickLike(
 //            @PathVariable(name = "postId") Long postId,
 //            @RequestParam(name = "isLiked") Boolean isLiked
 //    ) {
@@ -143,13 +146,13 @@ public class PostController {
 //                    responseCode = "200",
 //                    description = "조회 성공",
 //                    content = @Content(
-//                            schema = @Schema(implementation = ClickScrapDTO.Response.class)
+//                            schema = @Schema(implementation = ClickScrapResponseDTO.class)
 //                    )
 //            )
 //    })
 //    @GetMapping("/scraps/{postId}")
 //    @ResponseBody
-//    public CommonResponseDTO<ClickScrapDTO.Response> clickScrap(
+//    public CommonResponseDTO<ClickScrapResponseDTO> clickScrap(
 //            @PathVariable(name = "postId") Long postId,
 //            @RequestParam(name = "isScrapped") Boolean isScrapped
 //    ) {
