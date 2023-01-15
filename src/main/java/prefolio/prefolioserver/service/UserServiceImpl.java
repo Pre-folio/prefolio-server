@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.GetUserInfoDTO;
+import prefolio.prefolioserver.dto.request.GetUserInfoRequestDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
@@ -35,13 +36,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public JoinUserResponseDTO joinUser(JoinUserRequestDTO userJoinRequest) {
+    public JoinUserResponseDTO joinUser(JoinUserRequestDTO joinUserRequest) {
         User user = User.builder()
-                .type(userJoinRequest.getType())
-                .nickname(userJoinRequest.getNickname())
-                .profileImage(userJoinRequest.getProfileImage())
-                .grade(userJoinRequest.getGrade())
-                .refreshToken(userJoinRequest.getRefreshToken())
+                .type(joinUserRequest.getType())
+                .nickname(joinUserRequest.getNickname())
+                .profileImage(joinUserRequest.getProfileImage())
+                .grade(joinUserRequest.getGrade())
+                .refreshToken(joinUserRequest.getRefreshToken())
                 .build();
         OAuth oauth = OAuth.builder()
                 .isMember(TRUE)
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserInfoDTO.Response getUserInfo(Long userId){
+    public GetUserInfoResponseDTO getUserInfo(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -70,8 +71,8 @@ public class UserServiceImpl implements UserService {
         Optional<Long> countLike = likeRepository.countByUserId(userId);
 
         if(countScrap.isEmpty() && countLike.isEmpty())
-            return new GetUserInfoDTO.Response(user,0L,0L);
+            return new GetUserInfoResponseDTO(user,0L,0L);
 
-    return new GetUserInfoDTO.Response(user, countScrap.get(), countLike.get());
+    return new GetUserInfoResponseDTO(user, countScrap.get(), countLike.get());
     }
 }

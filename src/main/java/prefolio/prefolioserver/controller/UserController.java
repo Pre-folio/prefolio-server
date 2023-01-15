@@ -8,11 +8,13 @@ package prefolio.prefolioserver.controller;
         import lombok.RequiredArgsConstructor;
         import org.springframework.web.bind.annotation.*;
         import prefolio.prefolioserver.dto.CommonResponseDTO;
-        import prefolio.prefolioserver.dto.GetUserInfoDTO;
+        import prefolio.prefolioserver.dto.request.GetUserInfoRequestDTO;
         import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
         import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+        import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
         import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
         import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
+        import prefolio.prefolioserver.service.UserService;
 
 
 @RestController
@@ -34,8 +36,8 @@ public class UserController {
     })
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<JoinUserResponseDTO> userJoin(@RequestBody JoinUserRequestDTO userJoinRequest) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(userJoinRequest));
+    public CommonResponseDTO<JoinUserResponseDTO> joinUser(@RequestBody JoinUserRequestDTO joinUserRequest) {
+        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(joinUserRequest));
     }
 
     @Operation(summary = "유저 닉네임 중복", description = "유저 닉네임 중복 확인 메서드입니다.")
@@ -73,7 +75,7 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     @ResponseBody
-    public CommonResponseDTO<GetUserInfoDTO.Response> getUserInfo(
+    public CommonResponseDTO<GetUserInfoResponseDTO> getUserInfo(
             @PathVariable(name = "userId") Long userId
     ) {
         return CommonResponseDTO.onSuccess("유저 정보", userService.getUserInfo(userId));
