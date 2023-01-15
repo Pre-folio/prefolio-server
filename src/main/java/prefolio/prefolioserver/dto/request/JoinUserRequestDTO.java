@@ -1,4 +1,4 @@
-package prefolio.prefolioserver.dto;
+package prefolio.prefolioserver.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.User;
 
-public class UserJoinDTO {
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Request {
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class JoinUserRequestDTO {
 
         private String type;
 
@@ -25,24 +23,11 @@ public class UserJoinDTO {
         private String refreshToken;
 
         /* Dto -> Entity */
-        public Request (User user) {
+        public JoinUserRequestDTO (User user) {
             this.type = user.getType();
             this.nickname = user.getNickname();
             this.profileImage = user.getProfileImage();
             this.grade = user.getGrade();
             this.refreshToken = user.getRefreshToken();
         }
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Response {
-
-        private Long userId;
-
-        /* Entity -> Dto */
-        public Response(User user) {this.userId = user.getId();}
-    }
 }
