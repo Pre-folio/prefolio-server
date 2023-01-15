@@ -59,7 +59,7 @@ public class PostController {
                     )
             )
     })
-    @PostMapping("/")
+    @PostMapping("/post")
     @ResponseBody
     public CommonResponseDTO<AddPostDTO.Response> addPost(@RequestBody AddPostDTO.Request addPostRequest) {
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
