@@ -30,7 +30,7 @@ public class WebSecurityConfig {
     private static final String[] SwaggerPatterns = {
             "/swagger-resources/**",
             "/swagger-ui/**",
-            "/v2/api-docs",
+            "/v3/api-docs/**",
             "/webjars/**"
     };
     // 인증 실패 또는 인증헤더가 전달받지 못했을 때 핸들러
