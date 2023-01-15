@@ -68,28 +68,23 @@ public class WebSecurityConfig {
 
     /** cors 설정 configuration bean */
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+    protected CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", getDefaultCorsConfiguration());
 
-        //로컬 react 개발 환경
-        configuration.addAllowedOriginPattern("*");
-        //서버 react 프론트 환경
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.addExposedHeader("x-auth-token");
-        //내 서버의 응답 json 을 javascript에서 처리할수 있게 하는것(axios 등)
-        configuration.setAllowCredentials(true);
-        configuration.setMaxAge(3600L);
-
-        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     private CorsConfiguration getDefaultCorsConfiguration() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(
-                Arrays.asList("http://localhost:3000", "https://api.prefolio.net", "https://prefolio.net"));
+                Arrays.asList(
+                        "http://localhost:3000",
+                        "https://api.prefolio.net",
+                        "https://prefolio.net",
+                        "http://localhost:8080"
+                )
+        );
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
