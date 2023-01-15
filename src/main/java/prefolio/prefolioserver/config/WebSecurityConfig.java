@@ -30,7 +30,6 @@ public class WebSecurityConfig {
     private static final String[] SwaggerPatterns = {
             "/swagger-resources/**",
             "/swagger-ui/**",
-            "/v3/api-docs/**",
             "/api-docs/**",
             "/webjars/**"
     };
@@ -57,7 +56,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(SwaggerPatterns).permitAll()
-                .requestMatchers("/auth/kakao").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
