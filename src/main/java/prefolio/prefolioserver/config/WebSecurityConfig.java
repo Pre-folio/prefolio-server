@@ -8,15 +8,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import prefolio.prefolioserver.config.jwt.JwtAccessDeniedHandler;
+import prefolio.prefolioserver.config.jwt.JwtAuthenticationEntryPoint;
+import prefolio.prefolioserver.config.jwt.JwtAuthenticationFilter;
+
 import java.util.Arrays;
 
 @EnableWebSecurity
@@ -33,9 +34,9 @@ public class WebSecurityConfig {
             "/webjars/**"
     };
     // 인증 실패 또는 인증헤더가 전달받지 못했을 때 핸들러
-    private final AuthenticationEntryPoint authenticationEntryPoint;
-    private final AuthenticationFilter authenticationFilter;
-    private final AccessDeniedHandler accessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -44,8 +45,8 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 //예외처리 핸들러
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint) // 인증 실패
-                .accessDeniedHandler(accessDeniedHandler) // 인가 실패
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) // 인증 실패
+                .accessDeniedHandler(jwtAccessDeniedHandler) // 인가 실패
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 사용 안 함
@@ -60,7 +61,7 @@ public class WebSecurityConfig {
                 .and()
                 .headers().frameOptions().disable();
 
-        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
         // 검토 필요
