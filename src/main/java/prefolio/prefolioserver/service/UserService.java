@@ -2,8 +2,6 @@ package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.dto.CheckUserDTO;
-import prefolio.prefolioserver.dto.GetUserInfoDTO;
-import prefolio.prefolioserver.dto.UserJoinDTO;
 
 @Service
 public interface UserService {

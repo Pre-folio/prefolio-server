@@ -2,13 +2,14 @@ package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.Like;
 import prefolio.prefolioserver.domain.OAuth;
-import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.CheckUserDTO;
+
 import prefolio.prefolioserver.dto.GetUserInfoDTO;
 import prefolio.prefolioserver.dto.UserJoinDTO;
 import prefolio.prefolioserver.error.CustomException;

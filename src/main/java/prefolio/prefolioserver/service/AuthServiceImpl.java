@@ -21,7 +21,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import prefolio.prefolioserver.domain.OAuth;
-import prefolio.prefolioserver.dto.KakaoLoginDTO;
+import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.dto.KakaoUserInfoDTO;
 import prefolio.prefolioserver.repository.AuthRepository;
 
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService{
     private String JWT_SECRET;
 
     @Override
-    public KakaoLoginDTO.Response kakaoLogin(String code) {
+    public KakaoLoginResponseDTO kakaoLogin(String code) {
 
         // "인가 코드"로 "accessToken" 요청
         String kakaoAccessToken = getAccessToken(code);
@@ -64,7 +64,7 @@ public class AuthServiceImpl implements AuthService{
 
         // JWT 토큰 리턴
         String jwtToken = usersAuthorizationInput(authentication);
-        return new KakaoLoginDTO.Response(jwtToken);
+        return new KakaoLoginResponseDTO(jwtToken);
     }
 
     // 인가코드로 accessToken 요청
