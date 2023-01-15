@@ -35,7 +35,6 @@ public class AuthController {
     public CommonResponseDTO<KakaoLoginDTO.Response> kakaoLogin(
             @RequestParam(name = "code") String code
     ) {
-        log.trace("authorization code = {}", code);
         return CommonResponseDTO.onSuccess("kakao 로그인 성공", authService.kakaoLogin(code));
     }
 

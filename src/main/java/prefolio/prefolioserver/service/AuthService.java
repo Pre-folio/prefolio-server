@@ -8,5 +8,5 @@ import prefolio.prefolioserver.dto.KakaoLoginDTO;
 public interface AuthService {
 
     public KakaoLoginDTO.Response kakaoLogin(String code);
-    public String generateJwtToken(UserDetails userDetails);
+    public String generateJwtToken(UserDetailsImpl userDetails);
 }
