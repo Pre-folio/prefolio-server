@@ -7,6 +7,8 @@ import prefolio.prefolioserver.domain.Post;
 import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.*;
+import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
+import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
 import prefolio.prefolioserver.repository.LikeRepository;
 import prefolio.prefolioserver.repository.PostRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
@@ -22,7 +24,7 @@ public class PostServiceImpl implements PostService{
     private final ScrapRepository scrapRepository;
 
     @Override
-    public AddPostDTO.Response savePost(AddPostDTO.Request addPostRequest) {
+    public AddPostResponseDTO savePost(AddPostRequestDTO addPostRequest) {
         Post post = Post.builder().thumbnail(addPostRequest.getThumbnail())
                 .title(addPostRequest.getTitle())
                 .startDate(addPostRequest.getStartDate())
@@ -34,7 +36,7 @@ public class PostServiceImpl implements PostService{
                 .contents(addPostRequest.getContents())
                 .build();
         Post savedPost = postRepository.saveAndFlush(post);
-        return new AddPostDTO.Response(savedPost);
+        return new AddPostResponseDTO(savedPost);
     }
 
     @Override

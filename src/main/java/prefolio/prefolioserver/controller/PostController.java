@@ -6,9 +6,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
+import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
+import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 
 @RestController
@@ -61,7 +64,7 @@ public class PostController {
     })
     @PostMapping("/post")
     @ResponseBody
-    public CommonResponseDTO<AddPostDTO.Response> addPost(@RequestBody AddPostDTO.Request addPostRequest) {
+    public CommonResponseDTO<AddPostResponseDTO> addPost(@RequestBody AddPostRequestDTO addPostRequest) {
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
     }
 
