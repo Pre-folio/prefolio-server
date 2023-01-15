@@ -13,7 +13,7 @@ package prefolio.prefolioserver.controller;
         import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
         import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
         import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
-        import prefolio.prefolioserver.service.UserService;
+
 
 @RestController
 @RequestMapping("/user")

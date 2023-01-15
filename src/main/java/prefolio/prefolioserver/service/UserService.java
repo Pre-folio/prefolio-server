@@ -8,6 +8,7 @@ import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 
+
 @Service
 public interface UserService {
 

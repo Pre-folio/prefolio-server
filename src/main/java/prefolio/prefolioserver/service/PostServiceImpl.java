@@ -9,6 +9,9 @@ import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
+import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.repository.LikeRepository;
 import prefolio.prefolioserver.repository.PostRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
@@ -40,14 +43,14 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public GetPostDTO.Response findPostById(Long postId) {
+    public GetPostResponseDTO findPostById(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
 
         return null;
     }
 
 //    @Override
-//    public ClickLikeDTO.Response clickLike(Long postId, Boolean isLiked) {
+//    public ClickLikeResponseDTO clickLike(Long postId, Boolean isLiked) {
 //        Post post = postRepository.findById(postId).get();
 //        User user = clickLikeRequest.getUser();
 //        // 좋아요 누름
@@ -61,11 +64,11 @@ public class PostServiceImpl implements PostService{
 //            likeRepository.delete(like);
 //        }
 //        Long likes = likeRepository.countByPostId(postId);
-//        return new ClickLikeDTO.Response(likes, isLiked);
+//        return new ClickLikeResponseDTO(likes, isLiked);
 //    }
 //
 //    @Override
-//    public ClickScrapDTO.Response clickScrap(Long postId, Boolean isScrapped) {
+//    public ClickScrapResponseDTO clickScrap(Long postId, Boolean isScrapped) {
 //        Post post = postRepository.findById(postId).get();
 //        User user = clickScrapRequest.getUser();
 //        // 스크랩 누름
@@ -79,7 +82,7 @@ public class PostServiceImpl implements PostService{
 //            scrapRepository.delete(scrap);
 //        }
 //        Long scraps = scrapRepository.countByPostId(postId);
-//        return new ClickScrapDTO.Response(scraps, isScrapped);
+//        return new ClickScrapResponseDTO(scraps, isScrapped);
 //    }
-
+//
 }
