@@ -7,6 +7,7 @@ import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
@@ -50,22 +52,25 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public KakaoLoginDTO.Response kakaoLogin(String code) {
 
-        System.out.println("AuthServiceImpl.kakaoLogin");
         // "인가 코드"로 "accessToken" 요청
         String kakaoAccessToken = getAccessToken(code);
-        System.out.println("kakaoAccessToken = " + kakaoAccessToken);
+        log.trace("kakao access token = {}", kakaoAccessToken);
 
         // 토큰으로 카카오 API 호출 (이메일 정보 가져오기)
         KakaoUserInfoDTO userInfo = getUserInfo(kakaoAccessToken);
+        log.trace("userInfo = {}", userInfo);
 
         // DB정보 확인 -> 없으면 DB에 저장
         OAuth user = registerOAuthIfNeed(userInfo);
+        log.trace("user = {}", user);
 
         // 로그인 처리
         Authentication authentication = getAuthentication(user);
+        log.trace("authentication = {}", authentication);
 
         // JWT 토큰 리턴
         String jwtToken = usersAuthorizationInput(authentication);
+        log.trace("jwtToken = {}", jwtToken);
 
         return new KakaoLoginDTO.Response(jwtToken);
     }
@@ -105,6 +110,7 @@ public class AuthServiceImpl implements AuthService{
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             return jsonNode.get("access_token").asText();
         } catch (JsonProcessingException e) {
+            log.error("error log = kakao access token 요청에 대한 응답 발생 실패");
             return null;
         }
 
@@ -134,6 +140,7 @@ public class AuthServiceImpl implements AuthService{
             JsonNode jsonNode = objectMapper.readTree(responseBody);
 
             String email = jsonNode.get("kakao_account").get("email").asText();
+            log.trace("email = {}", email);
             return new KakaoUserInfoDTO(email);
         } catch (JsonProcessingException e) {
             return null;
@@ -150,6 +157,7 @@ public class AuthServiceImpl implements AuthService{
         // DB에 없을 시 DB에 추가
         if (user == null) {
             // DB에 정보 등록
+            log.info("DB에 user 정보 없음 -> 추가 진행");
             user = new OAuth(kakaoEmail, false);
             authRepository.save(user);
         }
