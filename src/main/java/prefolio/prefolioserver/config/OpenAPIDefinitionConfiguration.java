@@ -13,6 +13,12 @@ public class OpenAPIDefinitionConfiguration {
     @Component
     @Profile("dev")
     @OpenAPIDefinition(servers = @Server(url = "https://api.prefolio.net"))
+    @SecurityScheme(
+            name = "Bearer Authentication",
+            type = SecuritySchemeType.HTTP,
+            bearerFormat = "JWT",
+            scheme = "bearer"
+    )
     public static class PrdOpenAPIDefinitionConfiguration {
     }
 
