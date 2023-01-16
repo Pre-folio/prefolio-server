@@ -57,7 +57,6 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(SwaggerPatterns).permitAll()
                 .requestMatchers("/auth/**").permitAll()
-                .requestMatchers("/**").permitAll() // 임시 권한 전체 허용
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();

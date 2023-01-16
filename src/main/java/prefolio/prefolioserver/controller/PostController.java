@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 
 @RestController
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
@@ -71,9 +73,7 @@ public class PostController {
     @PostMapping("/post")
     @ResponseBody
     public CommonResponseDTO<AddPostResponseDTO> addPost(
-            @AuthUser OAuth authUser,
             @RequestBody AddPostRequestDTO addPostRequest) {
-        System.out.println("authUser = " + authUser);
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
     }
 
