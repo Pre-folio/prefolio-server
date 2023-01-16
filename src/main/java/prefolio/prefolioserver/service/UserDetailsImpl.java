@@ -16,7 +16,6 @@ public class UserDetailsImpl implements UserDetails {
     private Boolean isMember;
 
     @Builder
-
     public UserDetailsImpl(String email, Boolean isMember) {
         this.email = email;
         this.isMember = isMember;

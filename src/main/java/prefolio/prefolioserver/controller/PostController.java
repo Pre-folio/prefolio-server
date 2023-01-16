@@ -8,7 +8,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import prefolio.prefolioserver.annotation.AuthUser;
+import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
@@ -67,7 +70,10 @@ public class PostController {
     })
     @PostMapping("/post")
     @ResponseBody
-    public CommonResponseDTO<AddPostResponseDTO> addPost(@RequestBody AddPostRequestDTO addPostRequest) {
+    public CommonResponseDTO<AddPostResponseDTO> addPost(
+            @AuthUser OAuth authUser,
+            @RequestBody AddPostRequestDTO addPostRequest) {
+        System.out.println("authUser = " + authUser);
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
     }
 
