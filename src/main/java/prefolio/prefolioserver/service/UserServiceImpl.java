@@ -15,6 +15,7 @@ import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.LikeRepository;
 
+import java.util.Date;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
@@ -27,7 +28,6 @@ import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final AuthRepository authRepository;
     private final ScrapRepository scrapRepository;
     private final LikeRepository likeRepository;
 
@@ -40,13 +40,9 @@ public class UserServiceImpl implements UserService {
                 .profileImage(joinUserRequest.getProfileImage())
                 .grade(joinUserRequest.getGrade())
                 .refreshToken(joinUserRequest.getRefreshToken())
+                .createdAt(new Date())
                 .build();
-        OAuth oauth = OAuth.builder()
-                .isMember(TRUE)
-                .build();
-        //System.out.println("user Entity = " + user.getNickname());
         User savedUser = userRepository.saveAndFlush(user);
-        authRepository.saveAndFlush(oauth);
         return new JoinUserResponseDTO(savedUser);
     }
 
