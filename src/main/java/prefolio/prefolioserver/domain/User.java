@@ -18,9 +18,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name="oauth_id", nullable = false)
-    private OAuth oauth;
+    @Column
+    private String email;
 
     @Column
     private String type;
@@ -52,7 +51,7 @@ public class User {
     @Builder
     public User(
             Long id,
-            OAuth oauth,
+            String email,
             String type,
             String nickname,
             String profileImage,
@@ -63,7 +62,7 @@ public class User {
             Date deletedAt
     ) {
         this.id = id;
-        this.oauth = oauth;
+        this.email = email;
         this.type = type;
         this.nickname = nickname;
         this.profileImage = profileImage;
