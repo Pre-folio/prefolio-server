@@ -7,17 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.annotation.AuthUser;
-import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 

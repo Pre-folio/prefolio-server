@@ -1,10 +1,8 @@
 package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 
 @Service
