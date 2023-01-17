@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 
 @Service
-public interface AuthService {
+public interface KakaoService {
 
     public KakaoLoginResponseDTO kakaoLogin(String code);
     public String generateJwtToken(UserDetailsImpl userDetails);

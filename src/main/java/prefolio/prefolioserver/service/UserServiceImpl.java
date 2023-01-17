@@ -4,16 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.request.GetUserInfoRequestDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
-import prefolio.prefolioserver.repository.AuthRepository;
 import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.LikeRepository;
