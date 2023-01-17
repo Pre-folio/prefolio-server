@@ -37,6 +37,7 @@ public class KakaoServiceImpl implements KakaoService {
 
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenServiceImpl jwtTokenService;
 
     @Value("${kakao.key}")
     private String KAKAO_CLIENT_ID;
@@ -64,6 +65,7 @@ public class KakaoServiceImpl implements KakaoService {
 
         // JWT 토큰 리턴
         String jwtToken = usersAuthorizationInput(authentication);
+
         return new KakaoLoginResponseDTO(jwtToken);
     }
 
@@ -152,7 +154,7 @@ public class KakaoServiceImpl implements KakaoService {
 
     // 로그인 처리
     private Authentication getAuthentication(User user) {
-        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 "",

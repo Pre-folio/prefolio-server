@@ -3,6 +3,7 @@ package prefolio.prefolioserver.service;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import prefolio.prefolioserver.domain.constant.UserRole;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,12 +14,10 @@ import java.util.Collection;
 public class UserDetailsImpl implements UserDetails {
 
     private String email;
-    private Boolean isMember;
 
     @Builder
-    public UserDetailsImpl(String email, Boolean isMember) {
+    public UserDetailsImpl(String email) {
         this.email = email;
-        this.isMember = isMember;
     }
 
     @Override
