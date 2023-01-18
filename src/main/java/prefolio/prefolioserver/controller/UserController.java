@@ -28,7 +28,11 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "유저 정보 저장", description = "유저 정보 저장 메서드입니다.")
+    @Operation(
+            summary = "유저 정보 저장",
+            description = "유저 정보 저장 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -47,7 +51,11 @@ public class UserController {
         return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(authUser, joinUserRequest));
     }
 
-    @Operation(summary = "유저 닉네임 중복", description = "유저 닉네임 중복 확인 메서드입니다.")
+    @Operation(
+            summary = "유저 닉네임 중복",
+            description = "유저 닉네임 중복 확인 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -70,7 +78,11 @@ public class UserController {
         return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(checkUserRequest));
     }
 
-    @Operation(summary = "유저 정보", description = "유저 정보 메서드입니다.")
+    @Operation(
+            summary = "유저 정보",
+            description = "유저 정보 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
