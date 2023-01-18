@@ -15,7 +15,7 @@ public interface UserService {
 
 
     @Transactional
-    JoinUserResponseDTO joinUser(JoinUserRequestDTO joinUserRequest);
+    JoinUserResponseDTO joinUser(UserDetailsImpl authUser, JoinUserRequestDTO joinUserRequest);
 
     CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest);
     GetUserInfoResponseDTO getUserInfo(Long userId);
