@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.Post;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Builder

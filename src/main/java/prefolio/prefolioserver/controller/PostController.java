@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
+import prefolio.prefolioserver.service.UserDetailsImpl;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
@@ -67,8 +69,10 @@ public class PostController {
     @PostMapping("/post")
     @ResponseBody
     public CommonResponseDTO<AddPostResponseDTO> addPost(
-            @RequestBody AddPostRequestDTO addPostRequest) {
-        return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestBody AddPostRequestDTO addPostRequest
+    ) {
+        return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(authUser, addPostRequest));
     }
 
     @Operation(summary = "게시글 조회", description = "게시글 한 개 조회 메서드입니다.")

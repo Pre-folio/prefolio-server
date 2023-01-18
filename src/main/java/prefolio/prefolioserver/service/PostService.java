@@ -8,7 +8,7 @@ import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 @Service
 public interface PostService {
 
-    public AddPostResponseDTO savePost(AddPostRequestDTO addPostDTO);
+    public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostDTO);
 
     public GetPostResponseDTO findPostById(Long postId);
 

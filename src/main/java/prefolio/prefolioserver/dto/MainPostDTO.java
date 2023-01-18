@@ -3,7 +3,7 @@ package prefolio.prefolioserver.dto;
 import lombok.Getter;
 import prefolio.prefolioserver.domain.Post;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 public class MainPostDTO {
