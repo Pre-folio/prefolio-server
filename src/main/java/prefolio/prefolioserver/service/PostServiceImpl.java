@@ -3,9 +3,12 @@ package prefolio.prefolioserver.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.repository.LikeRepository;
 import prefolio.prefolioserver.service.repository.PostRepository;
@@ -55,40 +58,44 @@ public class PostServiceImpl implements PostService{
         return null;
     }
 
-//    @Override
-//    public ClickLikeResponseDTO clickLike(Long postId, Boolean isLiked) {
-//        Post post = postRepository.findById(postId).get();
-//        User user = clickLikeRequest.getUser();
-//        // 좋아요 누름
-//        if (isLiked == Boolean.TRUE) {
-//            Like like = Like.builder().user(user)
-//                    .post(post)
-//                    .build();
-//            likeRepository.save(like);
-//        } else { // 좋아요 취소
-//            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
-//            likeRepository.delete(like);
-//        }
-//        Long likes = likeRepository.countByPostId(postId);
-//        return new ClickLikeResponseDTO(likes, isLiked);
-//    }
-//
-//    @Override
-//    public ClickScrapResponseDTO clickScrap(Long postId, Boolean isScrapped) {
-//        Post post = postRepository.findById(postId).get();
-//        User user = clickScrapRequest.getUser();
-//        // 스크랩 누름
-//        if (isScrapped == Boolean.TRUE) {
-//            Scrap scrap = Scrap.builder().user(user)
-//                    .post(post)
-//                    .build();
-//            scrapRepository.save(scrap);
-//        } else { // 스크랩 취소
-//            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
-//            scrapRepository.delete(scrap);
-//        }
-//        Long scraps = scrapRepository.countByPostId(postId);
-//        return new ClickScrapResponseDTO(scraps, isScrapped);
-//    }
-//
+    @Override
+    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("해당 게시글은 존재하지 않습니다."));
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저는 존재하지 않습니다."));
+        // 좋아요 누름
+        if (isLiked == Boolean.TRUE) {
+            Like like = Like.builder().user(user)
+                    .post(post)
+                    .build();
+            likeRepository.save(like);
+        } else { // 좋아요 취소
+            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
+            likeRepository.delete(like);
+        }
+        Long likes = likeRepository.countByPostId(postId);
+        return new ClickLikeResponseDTO(likes, isLiked);
+    }
+
+    @Override
+    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("해당 게시글은 존재하지 않습니다."));
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저는 존재하지 않습니다."));
+        // 스크랩 누름
+        if (isScrapped == Boolean.TRUE) {
+            Scrap scrap = Scrap.builder().user(user)
+                    .post(post)
+                    .build();
+            scrapRepository.save(scrap);
+        } else { // 스크랩 취소
+            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
+            scrapRepository.delete(scrap);
+        }
+        Long scraps = scrapRepository.countByPostId(postId);
+        return new ClickScrapResponseDTO(scraps, isScrapped);
+    }
+
 }
