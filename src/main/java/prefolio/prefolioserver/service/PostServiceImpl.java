@@ -1,6 +1,7 @@
 package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
@@ -9,20 +10,29 @@ import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.repository.LikeRepository;
 import prefolio.prefolioserver.service.repository.PostRepository;
 import prefolio.prefolioserver.service.repository.ScrapRepository;
+import prefolio.prefolioserver.service.repository.UserRepository;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
     private final ScrapRepository scrapRepository;
 
     @Override
-    public AddPostResponseDTO savePost(AddPostRequestDTO addPostRequest) {
-        Post post = Post.builder().thumbnail(addPostRequest.getThumbnail())
+    public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostRequest) {
+        User findUser = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
+
+        Post post = Post.builder()
+                .user(findUser)
+                .thumbnail(addPostRequest.getThumbnail())
                 .title(addPostRequest.getTitle())
                 .startDate(addPostRequest.getStartDate())
                 .endDate(addPostRequest.getEndDate())
@@ -31,6 +41,8 @@ public class PostServiceImpl implements PostService{
                 .partTag(addPostRequest.getPartTag())
                 .actTag(addPostRequest.getActTag())
                 .contents(addPostRequest.getContents())
+                .hits(0)
+                .createdAt(new Date())
                 .build();
         Post savedPost = postRepository.saveAndFlush(post);
         return new AddPostResponseDTO(savedPost);
