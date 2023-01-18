@@ -3,15 +3,12 @@ package prefolio.prefolioserver.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.domain.*;
-import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
-import prefolio.prefolioserver.repository.LikeRepository;
-import prefolio.prefolioserver.repository.PostRepository;
-import prefolio.prefolioserver.repository.ScrapRepository;
+import prefolio.prefolioserver.service.repository.LikeRepository;
+import prefolio.prefolioserver.service.repository.PostRepository;
+import prefolio.prefolioserver.service.repository.ScrapRepository;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package prefolio.prefolioserver.repository;
+package prefolio.prefolioserver.service.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import prefolio.prefolioserver.domain.Post;
