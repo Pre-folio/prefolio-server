@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -12,6 +13,7 @@ import java.util.Date;
 @Entity
 @Table(name = "User")
 @NoArgsConstructor
+@Setter
 public class User {
 
     @Id
