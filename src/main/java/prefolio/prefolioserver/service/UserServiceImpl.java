@@ -19,7 +19,6 @@ import prefolio.prefolioserver.service.repository.LikeRepository;
 import java.util.Date;
 import java.util.Optional;
 
-import static java.lang.Boolean.valueOf;
 import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 
 

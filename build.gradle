@@ -37,6 +37,10 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {
