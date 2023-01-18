@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.service.repository.UserRepository;
+import prefolio.prefolioserver.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

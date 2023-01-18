@@ -12,9 +12,9 @@ import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
-import prefolio.prefolioserver.service.repository.UserRepository;
-import prefolio.prefolioserver.service.repository.ScrapRepository;
-import prefolio.prefolioserver.service.repository.LikeRepository;
+import prefolio.prefolioserver.repository.UserRepository;
+import prefolio.prefolioserver.repository.ScrapRepository;
+import prefolio.prefolioserver.repository.LikeRepository;
 
 import java.util.Date;
 import java.util.Optional;
