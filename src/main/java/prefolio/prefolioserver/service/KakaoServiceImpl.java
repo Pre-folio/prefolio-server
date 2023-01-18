@@ -60,11 +60,11 @@ public class KakaoServiceImpl implements KakaoService {
         // DB정보 확인 -> 없으면 DB에 저장
         User user = registerUserIfNeed(userInfo);
 
-        // 로그인 처리
-        Authentication authentication = getAuthentication(user);
-
         // JWT 토큰 리턴
-        String jwtToken = usersAuthorizationInput(authentication);
+        String jwtToken = usersAuthorizationInput(user);
+
+        // 로그인 처리
+        Authentication authentication = getAuthentication(jwtToken);
 
         return new KakaoLoginResponseDTO(jwtToken);
     }
@@ -152,9 +152,17 @@ public class KakaoServiceImpl implements KakaoService {
         return user;
     }
 
-    // 로그인 처리
-    private Authentication getAuthentication(User user) {
+    // JWT 토큰 리턴
+    private String usersAuthorizationInput(User user) {
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
+        String token = generateJwtToken(userDetails);
+        return token;
+    }
+
+    // 로그인 처리
+    private Authentication getAuthentication(String token) {
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(
+                jwtTokenService.getUserIdFromJwtToken(token)));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 "",
@@ -162,13 +170,6 @@ public class KakaoServiceImpl implements KakaoService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return authentication;
-    }
-
-    // JWT 토큰 리턴
-    private String usersAuthorizationInput(Authentication authentication) {
-        UserDetailsImpl userDetails = ((UserDetailsImpl) authentication.getPrincipal());
-        String token = generateJwtToken(userDetails);
-        return token;
     }
 
     @Override
