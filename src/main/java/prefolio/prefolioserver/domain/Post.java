@@ -2,14 +2,11 @@ package prefolio.prefolioserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.servlet.http.Part;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -21,9 +18,9 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name="user_id", nullable = false)
-//    private User user;
+    @ManyToOne(fetch = FetchType.LAZY)  // Cascade
+    @JoinColumn(name="user_id", nullable = false)
+    private User user;
 
     @Column
     private String thumbnail;
@@ -70,7 +67,7 @@ public class Post {
     @Builder
     public Post(
             Long id,
-//            User user,
+            User user,
             String thumbnail,
             String title,
             String startDate,
@@ -86,7 +83,7 @@ public class Post {
             Date deletedAt
     ) {
         this.id = id;
-//        this.user = user;
+        this.user = user;
         this.thumbnail = thumbnail;
         this.title = title;
         this.startDate = startDate;
