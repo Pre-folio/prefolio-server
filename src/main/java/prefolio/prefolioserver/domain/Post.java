@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,6 +52,12 @@ public class Post {
 
     @Column
     private Integer hits;
+
+    @OneToMany(mappedBy = "post")
+    private List<Like> likeList;
+
+    @OneToMany(mappedBy = "post")
+    private List<Scrap> scrapList;
 
     @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")

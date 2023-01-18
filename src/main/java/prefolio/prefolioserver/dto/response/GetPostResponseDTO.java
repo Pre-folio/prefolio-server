@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.CountDTO;
 import prefolio.prefolioserver.dto.PostDTO;
+import prefolio.prefolioserver.dto.UserDTO;
 
 @Getter
 @Builder
@@ -14,11 +15,11 @@ public class GetPostResponseDTO {
 
     private PostDTO post;
     private CountDTO count;
-    private User user;
+    private UserDTO user;
     private Boolean isLiked;
     private Boolean isScrapped;
 
-    public GetPostResponseDTO(PostDTO post, CountDTO count, User user, Boolean isLiked, Boolean isScrapped) {
+    public GetPostResponseDTO(PostDTO post, CountDTO count, UserDTO user, Boolean isLiked, Boolean isScrapped) {
         this.post = post;
         this.count = count;
         this.user = user;
