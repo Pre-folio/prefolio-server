@@ -12,7 +12,7 @@ public interface PostService {
 
     public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostDTO);
 
-    public GetPostResponseDTO findPostById(Long postId);
+    public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId);
 
     public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked);
 

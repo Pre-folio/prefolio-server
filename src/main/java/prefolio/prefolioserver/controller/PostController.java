@@ -99,16 +99,17 @@ public class PostController {
                     responseCode = "200",
                     description = "게시글 조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = GetPostResponseDTO.class)
                     )
             )
     })
-    @GetMapping("/{postId}")
+    @GetMapping("/post/{postId}")
     @ResponseBody
     public CommonResponseDTO<GetPostResponseDTO> getPost(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable(name = "postId") Long postId
     ) {
-        return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(postId));
+        return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(authUser, postId));
     }
 
     @Operation(
