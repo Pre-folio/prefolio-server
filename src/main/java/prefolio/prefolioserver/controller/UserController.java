@@ -1,21 +1,21 @@
 package prefolio.prefolioserver.controller;
 
-        import io.swagger.v3.oas.annotations.Operation;
-        import io.swagger.v3.oas.annotations.media.Content;
-        import io.swagger.v3.oas.annotations.media.Schema;
-        import io.swagger.v3.oas.annotations.responses.ApiResponse;
-        import io.swagger.v3.oas.annotations.responses.ApiResponses;
-        import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-        import lombok.RequiredArgsConstructor;
-        import org.springframework.web.bind.annotation.*;
-        import prefolio.prefolioserver.dto.CommonResponseDTO;
-        import prefolio.prefolioserver.dto.request.GetUserInfoRequestDTO;
-        import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
-        import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
-        import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
-        import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
-        import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
-        import prefolio.prefolioserver.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import prefolio.prefolioserver.domain.User;
+import prefolio.prefolioserver.dto.CommonResponseDTO;
+import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
+import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
+import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
+import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
+import prefolio.prefolioserver.service.UserService;
 
 
 @RestController

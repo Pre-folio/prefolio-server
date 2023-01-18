@@ -2,6 +2,7 @@ package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;

@@ -2,10 +2,7 @@ package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.domain.Like;
-import prefolio.prefolioserver.domain.Post;
-import prefolio.prefolioserver.domain.Scrap;
-import prefolio.prefolioserver.domain.User;
+import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;

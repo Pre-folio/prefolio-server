@@ -7,14 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 
@@ -69,7 +66,8 @@ public class PostController {
     })
     @PostMapping("/post")
     @ResponseBody
-    public CommonResponseDTO<AddPostResponseDTO> addPost(@RequestBody AddPostRequestDTO addPostRequest) {
+    public CommonResponseDTO<AddPostResponseDTO> addPost(
+            @RequestBody AddPostRequestDTO addPostRequest) {
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(addPostRequest));
     }
 
