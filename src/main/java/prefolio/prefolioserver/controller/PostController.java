@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
+import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
@@ -25,7 +27,11 @@ public class PostController {
 
     private final PostService postService;
 
-    @Operation(summary = "메인피드 게시물 조회", description = "메인피드 게시물 조회 메서드입니다.")
+    @Operation(
+            summary = "메인피드 게시물 조회",
+            description = "메인피드 게시물 조회 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -40,7 +46,11 @@ public class PostController {
         return "getAllPosts";
     }
 
-    @Operation(summary = "검색 결과 조회", description = "검색 결과 게시물 조회 메서드입니다.")
+    @Operation(
+            summary = "검색 결과 조회",
+            description = "검색 결과 게시물 조회 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -56,7 +66,11 @@ public class PostController {
         return "getSearchPosts";
     }
 
-    @Operation(summary = "글 작성", description = "글 작성 메서드입니다.")
+    @Operation(
+            summary = "글 작성",
+            description = "글 작성 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -75,7 +89,11 @@ public class PostController {
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(authUser, addPostRequest));
     }
 
-    @Operation(summary = "게시글 조회", description = "게시글 한 개 조회 메서드입니다.")
+    @Operation(
+            summary = "게시글 조회",
+            description = "게시글 한 개 조회 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -93,7 +111,11 @@ public class PostController {
         return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(postId));
     }
 
-    @Operation(summary = "유저 게시글 모두 조회", description = "유저 게시글을 모두 조회하는 메서드입니다.")
+    @Operation(
+            summary = "유저 게시글 모두 조회",
+            description = "유저 게시글을 모두 조회하는 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -109,7 +131,11 @@ public class PostController {
         return "getUserPosts";
     }
 
-    @Operation(summary = "스크랩한 게시글 모두 조회", description = "스크랩한 게시글을 모두 조회하는 메서드입니다.")
+    @Operation(
+            summary = "스크랩한 게시글 모두 조회",
+            description = "스크랩한 게시글을 모두 조회하는 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -125,42 +151,51 @@ public class PostController {
         return "getScrapPosts";
     }
 
-//    @Operation(summary = "좋아요 버튼 누르기", description = "좋아요 누름/취소 메서드입니다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200",
-//                    description = "SUCCESS",
-//                    content = @Content(
-//                            schema = @Schema(implementation = ClickLikeResponseDTO.class)
-//                    )
-//            )
-//    })
-//    @GetMapping("/likes/{postId}")
-//    @ResponseBody
-//    public CommonResponseDTO<ClickLikeResponseDTO> clickLike(
-//            @PathVariable(name = "postId") Long postId,
-//            @RequestParam(name = "isLiked") Boolean isLiked
-//    ) {
-//        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(postId, isLiked));
-//    }
-//
-//    @Operation(summary = "스크랩 버튼 누르기", description = "스크랩 누름/취소 메서드입니다.")
-//    @ApiResponses(value = {
-//            @ApiResponse(
-//                    responseCode = "200",
-//                    description = "조회 성공",
-//                    content = @Content(
-//                            schema = @Schema(implementation = ClickScrapResponseDTO.class)
-//                    )
-//            )
-//    })
-//    @GetMapping("/scraps/{postId}")
-//    @ResponseBody
-//    public CommonResponseDTO<ClickScrapResponseDTO> clickScrap(
-//            @PathVariable(name = "postId") Long postId,
-//            @RequestParam(name = "isScrapped") Boolean isScrapped
-//    ) {
-//        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(postId, isScrapped));
-//    }
+    @Operation(
+            summary = "좋아요 버튼 누르기",
+            description = "좋아요 누름/취소 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")})
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "SUCCESS",
+                    content = @Content(
+                            schema = @Schema(implementation = ClickLikeResponseDTO.class)
+                    )
+            )
+    })
+    @GetMapping("/likes/{postId}")
+    @ResponseBody
+    public CommonResponseDTO<ClickLikeResponseDTO> clickLike(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable(name = "postId") Long postId,
+            @RequestParam(name = "isLiked") Boolean isLiked
+    ) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(authUser, postId, isLiked));
+    }
+
+    @Operation(
+            summary = "스크랩 버튼 누르기",
+            description = "스크랩 누름/취소 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "조회 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = ClickScrapResponseDTO.class)
+                    )
+            )
+    })
+    @GetMapping("/scraps/{postId}")
+    @ResponseBody
+    public CommonResponseDTO<ClickScrapResponseDTO> clickScrap(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable(name = "postId") Long postId,
+            @RequestParam(name = "isScrapped") Boolean isScrapped
+    ) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId, isScrapped));
+    }
 
 }
