@@ -23,7 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.dto.KakaoUserInfoDTO;
-import prefolio.prefolioserver.service.repository.UserRepository;
+import prefolio.prefolioserver.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
