@@ -5,18 +5,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.*;
+import prefolio.prefolioserver.dto.CountDTO;
+import prefolio.prefolioserver.dto.PostDTO;
+import prefolio.prefolioserver.dto.UserDTO;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
 import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
 import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
-import prefolio.prefolioserver.service.repository.LikeRepository;
-import prefolio.prefolioserver.service.repository.PostRepository;
-import prefolio.prefolioserver.service.repository.ScrapRepository;
-import prefolio.prefolioserver.service.repository.UserRepository;
+import prefolio.prefolioserver.repository.LikeRepository;
+import prefolio.prefolioserver.repository.PostRepository;
+import prefolio.prefolioserver.repository.ScrapRepository;
+import prefolio.prefolioserver.repository.UserRepository;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,10 +54,30 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public GetPostResponseDTO findPostById(Long postId) {
-        Optional<Post> post = postRepository.findById(postId);
+    public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException("해당 계시글을 찾을 수 없습니다."));
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저는 존재하지 않습니다."));
 
-        return null;
+        PostDTO postDTO = new PostDTO(post);
+        CountDTO countDTO = new CountDTO(post.getHits(), post.getLikeList().size(), post.getScrapList().size());
+        UserDTO userDTO = new UserDTO(user);
+
+        Boolean isLiked = false;
+        Boolean isScrapped = false;
+
+        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
+
+        if(like.isPresent()) {
+            isLiked = true;
+        }
+        if(scrap.isPresent()) {
+            isScrapped = true;
+        }
+
+        return new GetPostResponseDTO(postDTO, countDTO, userDTO, isLiked, isScrapped);
     }
 
     @Override
