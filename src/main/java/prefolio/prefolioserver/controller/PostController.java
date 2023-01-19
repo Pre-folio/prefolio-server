@@ -6,12 +6,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.Post;
 import prefolio.prefolioserver.domain.constant.ActTag;
 import prefolio.prefolioserver.domain.constant.PartTag;
 import prefolio.prefolioserver.domain.constant.SortBy;
@@ -152,8 +149,9 @@ public class PostController {
     })
     @GetMapping("/{userId}")
     @ResponseBody
-    public String getUserPosts(HttpServletRequest request) {
-        return "getUserPosts";
+    public CommonResponseDTO<List<CardPostResponseDTO>> findPostByUserId(
+            @PathVariable(name = "userId") Long userId) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(userId));
     }
 
     @Operation(

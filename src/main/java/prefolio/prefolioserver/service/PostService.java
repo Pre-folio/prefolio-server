@@ -19,7 +19,7 @@ public interface PostService {
             ActTag actTag, Integer pageNum, Integer limit
     );
 
-    public MainPostResponseDTO getSearchPosts(
+    MainPostResponseDTO getSearchPosts(
             UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
             ActTag actTag, Integer pageNum, Integer limit, String searchWord
     );
@@ -32,5 +32,7 @@ public interface PostService {
 
     public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped);
 
-    List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
+    public List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
+
+    public List<CardPostResponseDTO> findPostByUserId(Long userId);
 }
