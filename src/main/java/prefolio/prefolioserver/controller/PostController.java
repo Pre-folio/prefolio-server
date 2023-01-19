@@ -76,8 +76,18 @@ public class PostController {
     })
     @GetMapping("/search")
     @ResponseBody
-    public String getSearchPosts(HttpServletRequest request) {
-        return "getSearchPosts";
+    public CommonResponseDTO<MainPostResponseDTO> getSearchPosts(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "sortBy") SortBy sortBy,
+            @RequestParam(name = "partTag", required = false) PartTag partTag,
+            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "pageNum") Integer pageNum,
+            @RequestParam(name = "limit") Integer limit,
+            @RequestParam(name = "searchWord") String searchWord
+    ) {
+        return CommonResponseDTO.onSuccess(
+                "검색 결과 게시물 조회 성공",
+                postService.getSearchPosts(authUser, sortBy, partTag, actTag, pageNum, limit, searchWord));
     }
 
     @Operation(

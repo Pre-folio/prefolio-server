@@ -16,4 +16,12 @@ public class PostSpecification {
     public static Specification<Post> likeActTag(String actTag) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("actTag"), '%' + actTag + '%');
     }
+
+    public static Specification<Post> likeTitle(String searchWord) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), '%' + searchWord + '%');
+    }
+
+    public static Specification<Post> likeContents(String searchWord) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("contents"), '%' + searchWord + '%');
+    }
 }

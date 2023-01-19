@@ -70,6 +70,39 @@ public class PostServiceImpl implements PostService{
         return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
     }
 
+    @Override
+    public MainPostResponseDTO getSearchPosts(
+            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
+            ActTag actTag, Integer pageNum, Integer limit, String searchWord
+    ) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저는 존재하지 않습니다."));
+
+        // 페이지 요청 정보
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(sortBy.getSortBy()).descending());
+
+        // 쿼리
+        Specification<Post> spec = PostSpecification.likeTitle(searchWord)  // 검색
+                .or(PostSpecification.likeContents(searchWord));
+        if (partTag != null)  // 쿼리에 partTag 들어왔을 때
+            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
+            spec = spec.and(PostSpecification.likePartTag(user.getType()));
+        if (actTag != null)
+            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+
+        Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
+        List<MainPostDTO> mainPostsList = new ArrayList<>();
+        for (Post p : findPosts.getContent()) {
+            String pTag = p.getPartTag();
+            String aTag = p.getActTag();
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            mainPostsList.add(mainPostDTO);
+        }
+
+        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+    }
+
     public List<String> parseTag(String strTag) {
         List<String> tagList = new ArrayList<>();
         // 태그 없을 때
