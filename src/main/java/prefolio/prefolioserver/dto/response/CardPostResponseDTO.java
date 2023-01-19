@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.Scrap;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -18,16 +20,16 @@ public class CardPostResponseDTO {
 
     private String title;
 
-    private String partTag;
+    private List<String> partTag;
 
-    private String actTag;
+    private List<String> actTag;
 
 
-    public CardPostResponseDTO(Scrap scrap) {
+    public CardPostResponseDTO(Scrap scrap, List<String> partTag, List<String> actTag) {
         this.postId = scrap.getPost().getId();
         this.thumbnail = scrap.getPost().getThumbnail();
         this.title = scrap.getPost().getTitle();
-        this.partTag = scrap.getPost().getPartTag();
-        this.actTag = scrap.getPost().getActTag();
+        this.partTag = partTag;
+        this.actTag = actTag;
     }
 }

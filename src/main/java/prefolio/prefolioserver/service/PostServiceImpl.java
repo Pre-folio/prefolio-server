@@ -193,7 +193,9 @@ public class PostServiceImpl implements PostService{
         List<CardPostResponseDTO> cardPostResponseDTOList = new ArrayList<>();
 
         for(Scrap scrap : scraps){
-            CardPostResponseDTO dto = new CardPostResponseDTO(scrap);
+            String pTag = scrap.getPost().getPartTag();
+            String aTag = scrap.getPost().getActTag();
+            CardPostResponseDTO dto = new CardPostResponseDTO(scrap, parseTag(pTag), parseTag(aTag));
             cardPostResponseDTOList.add(dto);
         }
 
