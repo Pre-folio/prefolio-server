@@ -234,4 +234,24 @@ public class PostServiceImpl implements PostService{
 
         return cardPostResponseDTOList;
     }
+
+    @Override
+    public List<CardPostResponseDTO> findPostByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        List<Post> posts = Optional.ofNullable(postRepository.findAllByUserId(userId))
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+
+        List<CardPostResponseDTO> cardPostResponseDTOList = new ArrayList<>();
+
+        for(Post post : posts){
+            String pTag = post.getPartTag();
+            String aTag = post.getActTag();
+            CardPostResponseDTO dto = new CardPostResponseDTO(post, parseTag(pTag), parseTag(aTag));
+            cardPostResponseDTOList.add(dto);
+        }
+
+        return cardPostResponseDTOList;
+    }
 }
