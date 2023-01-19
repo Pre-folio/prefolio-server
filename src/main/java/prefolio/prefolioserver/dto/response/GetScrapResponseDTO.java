@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.Post;
 import prefolio.prefolioserver.domain.Scrap;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -18,6 +20,7 @@ public class GetScrapResponseDTO {
 
     /* Entity -> Dto */
     public GetScrapResponseDTO(Scrap scrap) {
+    //public GetScrapResponseDTO(List<Scrap> scrap) {
         this.scrapId = scrap.getId();
         this.post = scrap.getPost();
     }

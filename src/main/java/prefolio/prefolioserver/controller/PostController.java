@@ -10,14 +10,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
-import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
-import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
+import prefolio.prefolioserver.dto.request.GetScrapRequestDTO;
+import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
+
+import java.util.List;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
@@ -142,14 +143,15 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = GetScrapResponseDTO.class)
                     )
             )
     })
     @GetMapping("/scraps")
     @ResponseBody
-    public String getScrapPosts(HttpServletRequest request) {
-        return "getScrapPosts";
+    public CommonResponseDTO<List<GetScrapResponseDTO>> findScrapByUserId(
+            @AuthenticationPrincipal UserDetailsImpl authUser) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findScrapByUserId(authUser));
     }
 
     @Operation(
@@ -198,5 +200,4 @@ public class PostController {
     ) {
         return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId, isScrapped));
     }
-
 }
