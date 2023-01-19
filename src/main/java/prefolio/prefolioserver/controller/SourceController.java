@@ -39,9 +39,10 @@ public class SourceController {
     @GetMapping("/url")
     @ResponseBody
     public CommonResponseDTO<String> createURL(
-            @AuthenticationPrincipal UserDetailsImpl authUser
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            String filePath
     ) {
         //user nickname 파일 이름으로?
-        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL());
+        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL(authUser, filePath));
     }
 }

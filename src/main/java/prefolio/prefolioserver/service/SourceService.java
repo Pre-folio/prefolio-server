@@ -4,5 +4,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface SourceService {
-    String createURL();
+    String createURL(UserDetailsImpl authUser, String filePath);
 }
