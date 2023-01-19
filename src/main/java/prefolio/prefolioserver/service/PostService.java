@@ -19,6 +19,11 @@ public interface PostService {
             ActTag actTag, Integer pageNum, Integer limit
     );
 
+    public MainPostResponseDTO getSearchPosts(
+            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
+            ActTag actTag, Integer pageNum, Integer limit, String searchWord
+    );
+
     public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostDTO);
 
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId);
