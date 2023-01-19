@@ -8,12 +8,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.Scrap;
+import prefolio.prefolioserver.domain.Post;
+import prefolio.prefolioserver.domain.constant.ActTag;
+import prefolio.prefolioserver.domain.constant.PartTag;
+import prefolio.prefolioserver.domain.constant.SortBy;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
-import prefolio.prefolioserver.dto.request.GetScrapRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
@@ -43,8 +46,18 @@ public class PostController {
     })
     @GetMapping("/all")
     @ResponseBody
-    public String getAllPosts(HttpServletRequest request) {
-        return "getAllPosts";
+    public CommonResponseDTO<MainPostResponseDTO> getAllPosts(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "sortBy") SortBy sortBy,
+            @RequestParam(name = "partTag", required = false) PartTag partTag,
+            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "pageNum") Integer pageNum,
+            @RequestParam(name = "limit") Integer limit
+            ) {
+        return CommonResponseDTO.onSuccess(
+                "메인피드 게시물 조회 성공",
+                postService.getAllPosts(authUser, sortBy, partTag, actTag, pageNum, limit)
+        );
     }
 
     @Operation(
