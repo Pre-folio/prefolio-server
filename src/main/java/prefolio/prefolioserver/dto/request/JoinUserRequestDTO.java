@@ -20,7 +20,6 @@ public class JoinUserRequestDTO {
 
         private Integer grade;
 
-        private String refreshToken;
 
         /* Dto -> Entity */
         public JoinUserRequestDTO (User user) {
@@ -28,6 +27,5 @@ public class JoinUserRequestDTO {
             this.nickname = user.getNickname();
             this.profileImage = user.getProfileImage();
             this.grade = user.getGrade();
-            this.refreshToken = user.getRefreshToken();
         }
 }

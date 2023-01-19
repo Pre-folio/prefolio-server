@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import prefolio.prefolioserver.domain.OAuth;
+import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.dto.KakaoUserInfoDTO;
-import prefolio.prefolioserver.repository.AuthRepository;
+import prefolio.prefolioserver.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -33,10 +33,11 @@ import java.util.Date;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService{
+public class KakaoServiceImpl implements KakaoService {
 
-    private final AuthRepository authRepository;
+    private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsService;
+    private final JwtTokenServiceImpl jwtTokenService;
 
     @Value("${kakao.key}")
     private String KAKAO_CLIENT_ID;
@@ -57,13 +58,14 @@ public class AuthServiceImpl implements AuthService{
         KakaoUserInfoDTO userInfo = getUserInfo(kakaoAccessToken);
 
         // DB정보 확인 -> 없으면 DB에 저장
-        OAuth user = registerOAuthIfNeed(userInfo);
-
-        // 로그인 처리
-        Authentication authentication = getAuthentication(user);
+        User user = registerUserIfNeed(userInfo);
 
         // JWT 토큰 리턴
-        String jwtToken = usersAuthorizationInput(authentication);
+        String jwtToken = usersAuthorizationInput(user);
+
+        // 로그인 처리
+        Authentication authentication = getAuthentication(jwtToken);
+
         return new KakaoLoginResponseDTO(jwtToken);
     }
 
@@ -134,24 +136,33 @@ public class AuthServiceImpl implements AuthService{
     }
 
     // DB정보 확인 -> 없으면 DB에 저장
-    private OAuth registerOAuthIfNeed(KakaoUserInfoDTO userInfo) {
+    private User registerUserIfNeed(KakaoUserInfoDTO userInfo) {
         // DB에 중복된 이메일 있는지 확인
         String kakaoEmail = userInfo.getEmail();
-        OAuth user = authRepository.findByEmail(kakaoEmail)
+        User user = userRepository.findByEmail(kakaoEmail)
                 .orElse(null);
 
         // DB에 없을 시 DB에 추가
         if (user == null) {
             // DB에 정보 등록
-            user = new OAuth(kakaoEmail, false);
-            authRepository.save(user);
+            user = User.builder().email(kakaoEmail)
+                            .build();
+            userRepository.save(user);
         }
         return user;
     }
 
+    // JWT 토큰 리턴
+    private String usersAuthorizationInput(User user) {
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
+        String token = generateJwtToken(userDetails);
+        return token;
+    }
+
     // 로그인 처리
-    private Authentication getAuthentication(OAuth user) {
-        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(user.getEmail());
+    private Authentication getAuthentication(String token) {
+        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(
+                jwtTokenService.getUserIdFromJwtToken(token)));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 userDetails,
                 "",
@@ -161,16 +172,9 @@ public class AuthServiceImpl implements AuthService{
         return authentication;
     }
 
-    // JWT 토큰 리턴
-    private String usersAuthorizationInput(Authentication authentication) {
-        UserDetailsImpl userDetails = ((UserDetailsImpl) authentication.getPrincipal());
-        String token = generateJwtToken(userDetails);
-        return token;
-    }
-
     @Override
     public String generateJwtToken(UserDetailsImpl userDetails) {
-        OAuth user = authRepository.findByEmail(userDetails.getEmail()).get();
+        User user = userRepository.findByEmail(userDetails.getEmail()).get();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 1);  // 만료일 1일
 

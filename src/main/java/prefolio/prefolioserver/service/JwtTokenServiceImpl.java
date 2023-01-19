@@ -25,7 +25,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public String getToken(HttpServletRequest request) {
-        return request.getHeader("X-AUTH-TOKEN");
+        String bearerToken = request.getHeader("Authorization");
+        if(bearerToken != null) {
+            String accessToken = bearerToken.substring(bearerToken.lastIndexOf(" ")+1);
+            return accessToken;
+        }
+        return bearerToken;
     }
 
     @Override
@@ -42,8 +47,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(
-                this.getUserIdFromJwtToken(token).toString());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(
+                this.getUserIdFromJwtToken(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 

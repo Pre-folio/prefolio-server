@@ -1,12 +1,14 @@
 package prefolio.prefolioserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import prefolio.prefolioserver.domain.Post;
 
-import java.sql.Date;
+import java.util.Date;
 
 @Getter
 @Builder
@@ -14,7 +16,6 @@ import java.sql.Date;
 @AllArgsConstructor
 public class PostDTO {
 
-    private Long id;
     private String thumbnail;
     private String title;
     private String startDate;
@@ -24,10 +25,10 @@ public class PostDTO {
     private String partTag;
     private String actTag;
     private Integer hits;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
     public PostDTO(Post post) {
-        this.id = post.getId();
         this.thumbnail = post.getThumbnail();
         this.title = post.getTitle();
         this.startDate = post.getStartDate();

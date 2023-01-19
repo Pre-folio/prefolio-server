@@ -1,27 +1,24 @@
 package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import prefolio.prefolioserver.domain.OAuth;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.request.GetUserInfoRequestDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
-import prefolio.prefolioserver.repository.AuthRepository;
 import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.LikeRepository;
 
+import java.util.Date;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
-import static java.lang.Boolean.valueOf;
 import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 
 
@@ -30,26 +27,20 @@ import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final AuthRepository authRepository;
     private final ScrapRepository scrapRepository;
     private final LikeRepository likeRepository;
 
     @Override
     @Transactional
-    public JoinUserResponseDTO joinUser(JoinUserRequestDTO joinUserRequest) {
-        User user = User.builder()
-                .type(joinUserRequest.getType())
-                .nickname(joinUserRequest.getNickname())
-                .profileImage(joinUserRequest.getProfileImage())
-                .grade(joinUserRequest.getGrade())
-                .refreshToken(joinUserRequest.getRefreshToken())
-                .build();
-        OAuth oauth = OAuth.builder()
-                .isMember(TRUE)
-                .build();
-        //System.out.println("user Entity = " + user.getNickname());
-        User savedUser = userRepository.saveAndFlush(user);
-        authRepository.saveAndFlush(oauth);
+    public JoinUserResponseDTO joinUser(UserDetailsImpl authUser, JoinUserRequestDTO joinUserRequest) {
+        User findUser = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
+        findUser.setType(joinUserRequest.getType());
+        findUser.setNickname(joinUserRequest.getNickname());
+        findUser.setProfileImage(joinUserRequest.getProfileImage());
+        findUser.setGrade(joinUserRequest.getGrade());
+        findUser.setCreatedAt(new Date());
+        User savedUser = userRepository.saveAndFlush(findUser);
         return new JoinUserResponseDTO(savedUser);
     }
 

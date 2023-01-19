@@ -1,18 +1,36 @@
 package prefolio.prefolioserver.service;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import prefolio.prefolioserver.domain.Post;
+import prefolio.prefolioserver.domain.constant.ActTag;
+import prefolio.prefolioserver.domain.constant.PartTag;
+import prefolio.prefolioserver.domain.constant.SortBy;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
-import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
+import prefolio.prefolioserver.dto.response.*;
+
+import java.util.List;
 
 @Service
 public interface PostService {
 
-    public AddPostResponseDTO savePost(AddPostRequestDTO addPostDTO);
+    public MainPostResponseDTO getAllPosts(
+            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
+            ActTag actTag, Integer pageNum, Integer limit
+    );
 
-    public GetPostResponseDTO findPostById(Long postId);
+    public MainPostResponseDTO getSearchPosts(
+            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
+            ActTag actTag, Integer pageNum, Integer limit, String searchWord
+    );
 
-//    public ClickLikeResponseDTO clickLike(Long postId, Boolean isLiked);
-//
-//    public ClickScrapResponseDTO clickScrap(Long postId, Boolean isScrapped);
+    public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostDTO);
+
+    public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId);
+
+    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked);
+
+    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped);
+
+    List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
 }

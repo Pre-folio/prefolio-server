@@ -59,8 +59,8 @@ public enum ErrorCode {
     PARAMETER_NOT_VALID(BAD_REQUEST, "P000", "인자가 유효하지 않습니다"),
 
     /* Database 에러 */
-    DUPLICATE_RESOURCE(CONFLICT, "D001", "데이터가 이미 존재합니다");
-
+    DUPLICATE_RESOURCE(CONFLICT, "D001", "데이터가 이미 존재합니다"),
+    DATA_NOT_FOUND(NOT_FOUND, "D002", "데이터가 존재하지 않습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

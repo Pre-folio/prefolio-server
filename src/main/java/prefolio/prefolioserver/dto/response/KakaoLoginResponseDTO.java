@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class KakaoLoginResponseDTO {
 
-    private String token;
+    private String accessToken;
 
-    public KakaoLoginResponseDTO(String token) {
-        this.token = token;
+    public KakaoLoginResponseDTO(String accessToken) {
+        this.accessToken = accessToken;
     }
 }
