@@ -1,17 +1,21 @@
 package prefolio.prefolioserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.sql.Date;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Entity
 @Table(name = "User")
 @NoArgsConstructor
+@Setter
 public class User {
 
     @Id
@@ -35,6 +39,18 @@ public class User {
 
     @Column(name = "refresh_token")
     private String refreshToken;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Post> postList;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Like> likeList;
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Scrap> scrapList;
 
     @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
