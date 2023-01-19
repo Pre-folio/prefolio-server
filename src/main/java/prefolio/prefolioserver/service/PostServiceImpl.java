@@ -9,17 +9,16 @@ import prefolio.prefolioserver.dto.CountDTO;
 import prefolio.prefolioserver.dto.PostDTO;
 import prefolio.prefolioserver.dto.UserDTO;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
-import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
-import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
+import prefolio.prefolioserver.dto.response.*;
+import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.LikeRepository;
 import prefolio.prefolioserver.repository.PostRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.UserRepository;
+import java.util.*;
 
-import java.util.Date;
-import java.util.Optional;
+import static prefolio.prefolioserver.error.ErrorCode.*;
+
 
 @Service
 @RequiredArgsConstructor
@@ -120,4 +119,24 @@ public class PostServiceImpl implements PostService{
         return new ClickScrapResponseDTO(scraps, isScrapped);
     }
 
+    @Override
+    public List<GetScrapResponseDTO> findScrapByUserId(UserDetailsImpl authUser) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+//        List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId())
+//                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+        List<Scrap> scraps = Optional.ofNullable(scrapRepository.findAllByUserId(user.getId()))
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+
+        List<GetScrapResponseDTO> getScrapResponseDTOList = new ArrayList<>();
+
+        for(Scrap scrap : scraps){
+            GetScrapResponseDTO dto = new GetScrapResponseDTO(scrap);
+
+            getScrapResponseDTOList.add(dto);
+        }
+
+        return getScrapResponseDTOList;
+    }
 }

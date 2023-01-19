@@ -1,5 +1,6 @@
 package prefolio.prefolioserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,10 +17,12 @@ public class Scrap {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)  // Cascade
+    @JsonBackReference
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 

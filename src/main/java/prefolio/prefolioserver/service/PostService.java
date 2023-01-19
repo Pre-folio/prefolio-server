@@ -2,10 +2,9 @@ package prefolio.prefolioserver.service;
 
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
-import prefolio.prefolioserver.dto.response.AddPostResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickLikeResponseDTO;
-import prefolio.prefolioserver.dto.response.ClickScrapResponseDTO;
-import prefolio.prefolioserver.dto.response.GetPostResponseDTO;
+import prefolio.prefolioserver.dto.response.*;
+
+import java.util.List;
 
 @Service
 public interface PostService {
@@ -17,4 +16,6 @@ public interface PostService {
     public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked);
 
     public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped);
+
+    List<GetScrapResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
 }

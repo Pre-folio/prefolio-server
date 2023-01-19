@@ -21,30 +21,6 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 public class OpenAPIDefinitionConfiguration {
-//    @Component
-//    @Profile("dev")
-//    @OpenAPIDefinition(servers = @Server(url = "https://api.prefolio.net"))
-//    @SecurityScheme(
-//            name = "Bearer Authentication",
-//            type = SecuritySchemeType.HTTP,
-//            bearerFormat = "JWT",
-//            scheme = "bearer"
-//    )
-//    public static class PrdOpenAPIDefinitionConfiguration {
-//    }
-//
-//    @Component
-//    @Profile("local")
-//    @OpenAPIDefinition(servers = @Server(url = "http://localhost:8080"))
-//    @SecurityScheme(
-//            name = "Authorization",
-//            type = SecuritySchemeType.HTTP,
-//            bearerFormat = "JWT",
-//            scheme = "bearer"
-//    )
-//    public static class LocalOpenAPIDefinitionConfiguration {
-//
-//    }
     private static final String API_NAME = "Pre:folio";
     private static final String API_VERSION = "v0.0.1";
     private static final String API_DESCRIPTION = "prefolio API 명세서";

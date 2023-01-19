@@ -1,6 +1,7 @@
 package prefolio.prefolioserver.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,12 +41,15 @@ public class User {
     private String refreshToken;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Post> postList;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Like> likeList;
 
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Scrap> scrapList;
 
     @Column(name = "created_at")

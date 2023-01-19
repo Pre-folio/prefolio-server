@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
@@ -29,11 +30,11 @@ public class SourceServiceImpl implements SourceService{
     AmazonS3 amazonS3;
 
     @Override
-    public String createURL() {
-        String fileName = UUID.randomUUID().toString();
+    public String createURL(UserDetailsImpl authUser, String filePath) {
+        String fileName = filePath + "/" + authUser.getUsername() + UUID.randomUUID();
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60; // 1시간
+        expTimeMillis += 1000 * 60 * 10; // 10분
         expiration.setTime(expTimeMillis);
 
         GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, fileName)
