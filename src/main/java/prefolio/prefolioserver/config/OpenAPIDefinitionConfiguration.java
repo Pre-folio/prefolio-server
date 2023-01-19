@@ -46,9 +46,19 @@ public class OpenAPIDefinitionConfiguration {
                         .scheme("bearer")
                         .bearerFormat("JWT"));  // 토큰 형식을 지정하는 임의의 문자(Optional)
 
+        Server localServer = new Server();
+        localServer.setDescription("local");
+        localServer.setUrl("http://localhost:8080");
+
+        Server testServer = new Server();
+        testServer.setDescription("test");
+        testServer.setUrl("https://api.prefolio.net");
+
         return new OpenAPI()
                 .info(info)
                 .addSecurityItem(securityRequirement)
-                .components(components);
+                .components(components)
+                .servers(Arrays.asList(testServer, localServer));
     }
+
 }
