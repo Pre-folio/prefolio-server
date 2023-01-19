@@ -1,6 +1,8 @@
 package prefolio.prefolioserver.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,7 @@ public class Post {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)  // Cascade
+    @JsonBackReference
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
@@ -54,9 +57,11 @@ public class Post {
     private Integer hits;
 
     @OneToMany(mappedBy = "post")
+    @JsonManagedReference
     private List<Like> likeList;
 
     @OneToMany(mappedBy = "post")
+    @JsonManagedReference
     private List<Scrap> scrapList;
 
     @Column(name = "created_at")
