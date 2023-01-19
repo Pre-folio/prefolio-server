@@ -1,16 +1,25 @@
 package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.*;
+import prefolio.prefolioserver.domain.constant.ActTag;
+import prefolio.prefolioserver.domain.constant.PartTag;
+import prefolio.prefolioserver.domain.constant.SortBy;
 import prefolio.prefolioserver.dto.CountDTO;
+import prefolio.prefolioserver.dto.MainPostDTO;
 import prefolio.prefolioserver.dto.PostDTO;
 import prefolio.prefolioserver.dto.UserDTO;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.error.CustomException;
+import prefolio.prefolioserver.query.PostSpecification;
 import prefolio.prefolioserver.repository.LikeRepository;
 import prefolio.prefolioserver.repository.PostRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
@@ -30,6 +39,52 @@ public class PostServiceImpl implements PostService{
     private final ScrapRepository scrapRepository;
 
     @Override
+    public MainPostResponseDTO getAllPosts(
+            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
+            ActTag actTag, Integer pageNum, Integer limit
+    ) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("해당 유저는 존재하지 않습니다."));
+
+        // 페이지 요청 정보
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(sortBy.getSortBy()).descending());
+
+        // 쿼리
+        Specification<Post> spec = (root, query, criteriaBuilder) -> null;
+        if (partTag != null)  // 쿼리에 partTag 들어왔을 때
+            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
+            spec = spec.and(PostSpecification.likePartTag(user.getType()));
+        if (actTag != null)
+            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+
+        Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
+        List<MainPostDTO> mainPostsList = new ArrayList<>();
+        for (Post p : findPosts.getContent()) {
+            String pTag = p.getPartTag();
+            String aTag = p.getActTag();
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            mainPostsList.add(mainPostDTO);
+        }
+
+        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+    }
+
+    public List<String> parseTag(String strTag) {
+        List<String> tagList = new ArrayList<>();
+        // 태그 없을 때
+        if (strTag == null || strTag == "") {
+            return tagList;
+        }
+        // 태크 있을 때 파싱
+        String[] splitTag = strTag.split(",");
+        for (String t : splitTag) {
+            tagList.add(t);
+        }
+        return tagList;
+    }
+
+    @Override
     public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("해당 유저를 찾을 수 없습니다."));
@@ -46,6 +101,8 @@ public class PostServiceImpl implements PostService{
                 .actTag(addPostRequest.getActTag())
                 .contents(addPostRequest.getContents())
                 .hits(0)
+                .likes(0)
+                .scraps(0)
                 .createdAt(new Date())
                 .build();
         Post savedPost = postRepository.saveAndFlush(post);
@@ -96,6 +153,8 @@ public class PostServiceImpl implements PostService{
             likeRepository.delete(like);
         }
         Long likes = likeRepository.countByPostId(postId);
+        post.setLikes(post.getLikeList().size());
+        postRepository.save(post);
         return new ClickLikeResponseDTO(likes, isLiked);
     }
 
@@ -116,6 +175,8 @@ public class PostServiceImpl implements PostService{
             scrapRepository.delete(scrap);
         }
         Long scraps = scrapRepository.countByPostId(postId);
+        post.setScraps(post.getScrapList().size());
+        postRepository.save(post);
         return new ClickScrapResponseDTO(scraps, isScrapped);
     }
 

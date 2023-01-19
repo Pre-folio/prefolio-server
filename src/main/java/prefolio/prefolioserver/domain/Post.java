@@ -7,12 +7,14 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Post")
 @NoArgsConstructor
 public class Post {
@@ -56,6 +58,12 @@ public class Post {
     @Column
     private Integer hits;
 
+    @Column
+    private Integer likes;
+
+    @Column
+    private Integer scraps;
+
     @OneToMany(mappedBy = "post")
     @JsonManagedReference
     private List<Like> likeList;
@@ -90,6 +98,8 @@ public class Post {
             String actTag,
             String contents,
             Integer hits,
+            Integer likes,
+            Integer scraps,
             Date createdAt,
             Date updatedAt,
             Date deletedAt
@@ -106,6 +116,8 @@ public class Post {
         this.actTag = actTag;
         this.contents = contents;
         this.hits = hits;
+        this.likes = likes;
+        this.scraps = scraps;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
