@@ -17,5 +17,5 @@ public interface PostService {
 
     public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped);
 
-    List<GetScrapResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
+    List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser);
 }

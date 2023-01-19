@@ -149,7 +149,7 @@ public class PostController {
     })
     @GetMapping("/scraps")
     @ResponseBody
-    public CommonResponseDTO<List<GetScrapResponseDTO>> findScrapByUserId(
+    public CommonResponseDTO<List<CardPostResponseDTO>> findScrapByUserId(
             @AuthenticationPrincipal UserDetailsImpl authUser) {
         return CommonResponseDTO.onSuccess("SUCCESS", postService.findScrapByUserId(authUser));
     }
