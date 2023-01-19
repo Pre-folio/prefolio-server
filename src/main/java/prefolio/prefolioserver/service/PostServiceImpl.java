@@ -214,7 +214,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<GetScrapResponseDTO> findScrapByUserId(UserDetailsImpl authUser) {
+    public List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -223,14 +223,15 @@ public class PostServiceImpl implements PostService{
         List<Scrap> scraps = Optional.ofNullable(scrapRepository.findAllByUserId(user.getId()))
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
-        List<GetScrapResponseDTO> getScrapResponseDTOList = new ArrayList<>();
+        List<CardPostResponseDTO> cardPostResponseDTOList = new ArrayList<>();
 
         for(Scrap scrap : scraps){
-            GetScrapResponseDTO dto = new GetScrapResponseDTO(scrap);
-
-            getScrapResponseDTOList.add(dto);
+            String pTag = scrap.getPost().getPartTag();
+            String aTag = scrap.getPost().getActTag();
+            CardPostResponseDTO dto = new CardPostResponseDTO(scrap, parseTag(pTag), parseTag(aTag));
+            cardPostResponseDTOList.add(dto);
         }
 
-        return getScrapResponseDTOList;
+        return cardPostResponseDTOList;
     }
 }
