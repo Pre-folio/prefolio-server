@@ -21,7 +21,7 @@ public class Scrap {
     @JoinColumn(name="user_id", nullable = false)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;

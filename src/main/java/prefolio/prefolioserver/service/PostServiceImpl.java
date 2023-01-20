@@ -9,21 +9,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 import prefolio.prefolioserver.domain.*;
-import prefolio.prefolioserver.domain.constant.ActTag;
-import prefolio.prefolioserver.domain.constant.PartTag;
-import prefolio.prefolioserver.domain.constant.SortBy;
-import prefolio.prefolioserver.dto.CountDTO;
-import prefolio.prefolioserver.dto.MainPostDTO;
-import prefolio.prefolioserver.dto.PostDTO;
-import prefolio.prefolioserver.dto.UserDTO;
+import prefolio.prefolioserver.domain.constant.*;
+import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.query.PostSpecification;
-import prefolio.prefolioserver.repository.LikeRepository;
-import prefolio.prefolioserver.repository.PostRepository;
-import prefolio.prefolioserver.repository.ScrapRepository;
-import prefolio.prefolioserver.repository.UserRepository;
+import prefolio.prefolioserver.query.ScrapSpecification;
+import prefolio.prefolioserver.repository.*;
 import java.util.*;
 
 import static prefolio.prefolioserver.error.ErrorCode.*;
@@ -109,7 +102,7 @@ public class PostServiceImpl implements PostService{
         if (strTag == null || strTag == "") {
             return tagList;
         }
-        // 태크 있을 때 파싱
+        // 태그 있을 때 파싱
         String[] splitTag = strTag.split(",");
         for (String t : splitTag) {
             tagList.add(t);
@@ -214,44 +207,67 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<CardPostResponseDTO> findScrapByUserId(UserDetailsImpl authUser) {
-        User user = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
-//        List<Scrap> scraps = scrapRepository.findAllByUserId(user.getId())
-//                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
-        List<Scrap> scraps = Optional.ofNullable(scrapRepository.findAllByUserId(user.getId()))
-                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
-
-        List<CardPostResponseDTO> cardPostResponseDTOList = new ArrayList<>();
-
-        for(Scrap scrap : scraps){
-            String pTag = scrap.getPost().getPartTag();
-            String aTag = scrap.getPost().getActTag();
-            CardPostResponseDTO dto = new CardPostResponseDTO(scrap, parseTag(pTag), parseTag(aTag));
-            cardPostResponseDTOList.add(dto);
-        }
-
-        return cardPostResponseDTOList;
-    }
-
-    @Override
-    public List<CardPostResponseDTO> findPostByUserId(Long userId) {
+    public CardPostResponseDTO findPostByUserId(
+            Long userId, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        List<Post> posts = Optional.ofNullable(postRepository.findAllByUserId(userId))
+        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+
+        Specification<Post> spec = (root, query, criteriaBuilder) -> null;
+
+        if (partTag!=null){
+            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        }
+        if (actTag!=null){
+            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+        }
+        spec = spec.and(PostSpecification.equalUserId(userId));
+        Page<Post> findPosts = Optional.ofNullable(postRepository.findAll(spec, pageRequest))
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
-        List<CardPostResponseDTO> cardPostResponseDTOList = new ArrayList<>();
+        List<CardPostDTO> cardPostsList = new ArrayList<>();
 
-        for(Post post : posts){
+        for(Post post : findPosts){
             String pTag = post.getPartTag();
             String aTag = post.getActTag();
-            CardPostResponseDTO dto = new CardPostResponseDTO(post, parseTag(pTag), parseTag(aTag));
-            cardPostResponseDTOList.add(dto);
+            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag));
+            cardPostsList.add(dto);
         }
 
-        return cardPostResponseDTOList;
+        return new CardPostResponseDTO(cardPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+    }
+
+    @Override
+    public CardPostResponseDTO findScrapByUserId(
+            UserDetailsImpl authUser, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        
+        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+        
+        Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
+
+        if (partTag!=null){
+            spec = spec.and(ScrapSpecification.likePostPartTag(partTag.getPartTag()));
+        }
+        if (actTag!=null){
+            spec = spec.and(ScrapSpecification.likePostActTag(actTag.getActTag()));
+        }
+        spec = spec.and(ScrapSpecification.equalUserId(user));
+
+        Page<Scrap> findScraps = Optional.ofNullable(scrapRepository.findAll(spec, pageRequest))
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+
+        List<CardPostDTO> cardScrapsDTOList = new ArrayList<>();
+
+        for(Scrap scrap : findScraps){
+            String pTag = scrap.getPost().getPartTag();
+            String aTag = scrap.getPost().getActTag();
+            CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag));
+            cardScrapsDTOList.add(dto);
+        }
+
+        return new CardPostResponseDTO(cardScrapsDTOList, findScraps.getTotalPages(), findScraps.getTotalElements());
     }
 }
