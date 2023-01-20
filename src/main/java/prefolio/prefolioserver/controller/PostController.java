@@ -142,7 +142,7 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = CardPostResponseDTO.class)
                     )
             )
     })
@@ -167,7 +167,7 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = GetScrapResponseDTO.class)
+                            schema = @Schema(implementation = CardPostResponseDTO.class)
                     )
             )
     })
