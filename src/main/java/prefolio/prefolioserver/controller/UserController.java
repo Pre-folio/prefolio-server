@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
@@ -38,7 +37,7 @@ public class UserController {
                     responseCode = "200",
                     description = "저장 성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = JoinUserResponseDTO.class)
                     )
             )
     })
@@ -61,14 +60,14 @@ public class UserController {
                     responseCode = "200",
                     description = "닉네임 사용 가능",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = CheckUserResponseDTO.class)
                     )
             ),
             @ApiResponse(
                     responseCode = "201",
                     description = "닉네임 중복",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = CheckUserResponseDTO.class)
                     )
             )
     })
@@ -88,7 +87,7 @@ public class UserController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = GetUserInfoResponseDTO.class)
                     )
             )
     })
