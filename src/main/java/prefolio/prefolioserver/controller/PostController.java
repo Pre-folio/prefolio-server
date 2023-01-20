@@ -18,7 +18,6 @@ import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
 
-import java.util.List;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
@@ -149,9 +148,13 @@ public class PostController {
     })
     @GetMapping("/{userId}")
     @ResponseBody
-    public CommonResponseDTO<List<CardPostResponseDTO>> findPostByUserId(
-            @PathVariable(name = "userId") Long userId) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(userId));
+    public CommonResponseDTO<CardPostResponseDTO> findPostByUserId(
+            @PathVariable(name = "userId") Long userId,
+            @RequestParam(name = "partTag", required = false) PartTag partTag,
+            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "pageNum") Integer pageNum,
+            @RequestParam(name = "limit") Integer limit) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(userId, partTag, actTag, pageNum, limit));
     }
 
     @Operation(
@@ -170,9 +173,13 @@ public class PostController {
     })
     @GetMapping("/scraps")
     @ResponseBody
-    public CommonResponseDTO<List<CardPostResponseDTO>> findScrapByUserId(
-            @AuthenticationPrincipal UserDetailsImpl authUser) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.findScrapByUserId(authUser));
+    public CommonResponseDTO<CardPostResponseDTO> findScrapByUserId(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "partTag", required = false) PartTag partTag,
+            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "pageNum") Integer pageNum,
+            @RequestParam(name = "limit") Integer limit) {
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findScrapByUserId(authUser, partTag, actTag, pageNum, limit));
     }
 
     @Operation(
