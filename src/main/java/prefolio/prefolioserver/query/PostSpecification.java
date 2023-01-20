@@ -2,6 +2,7 @@ package prefolio.prefolioserver.query;
 
 import org.springframework.data.jpa.domain.Specification;
 import prefolio.prefolioserver.domain.Post;
+import prefolio.prefolioserver.domain.User;
 
 public class PostSpecification {
 
@@ -21,7 +22,7 @@ public class PostSpecification {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("contents"), '%' + searchWord + '%');
     }
 
-    public static Specification<Post> equalUserId(Long userId) {
-        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("userId"), userId);
+    public static Specification<Post> equalUser(User user) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user"), user);
     }
 }

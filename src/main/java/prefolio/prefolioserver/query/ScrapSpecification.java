@@ -8,7 +8,7 @@ import prefolio.prefolioserver.domain.User;
 
 public class ScrapSpecification {
 
-    public static Specification<Scrap> equalUserId(User user) {
+    public static Specification<Scrap> equalUser(User user) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user"), user);
     }
 

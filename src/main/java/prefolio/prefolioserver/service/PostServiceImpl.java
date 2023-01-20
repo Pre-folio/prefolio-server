@@ -222,7 +222,7 @@ public class PostServiceImpl implements PostService{
         if (actTag!=null){
             spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
         }
-        spec = spec.and(PostSpecification.equalUserId(userId));
+        spec = spec.and(PostSpecification.equalUser(user));
         Page<Post> findPosts = Optional.ofNullable(postRepository.findAll(spec, pageRequest))
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
@@ -254,7 +254,7 @@ public class PostServiceImpl implements PostService{
         if (actTag!=null){
             spec = spec.and(ScrapSpecification.likePostActTag(actTag.getActTag()));
         }
-        spec = spec.and(ScrapSpecification.equalUserId(user));
+        spec = spec.and(ScrapSpecification.equalUser(user));
 
         Page<Scrap> findScraps = Optional.ofNullable(scrapRepository.findAll(spec, pageRequest))
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
