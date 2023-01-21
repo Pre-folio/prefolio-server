@@ -56,7 +56,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(SwaggerPatterns).permitAll()
-                .requestMatchers("/kakao/**").permitAll()
+                .requestMatchers("/kakao/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
