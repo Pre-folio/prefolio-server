@@ -31,6 +31,7 @@ public class AWSS3Config {
         AmazonS3 s3Builder = AmazonS3ClientBuilder.standard()
                 .withRegion(region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentialsProvider()))
+                .withPathStyleAccessEnabled(true)
                 .build();
         return s3Builder;
     }

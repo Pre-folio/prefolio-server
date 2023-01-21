@@ -39,9 +39,6 @@ public class SourceServiceImpl implements SourceService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        if (filePath.equals("image") || filePath.equals("thumbnail")){
-            String fileName = filePath + "/" + user.getId() + UUID.randomUUID();
-        }
         String fileName = filePath + "/" + user.getId() + UUID.randomUUID();
 
         Date expiration = new Date();
