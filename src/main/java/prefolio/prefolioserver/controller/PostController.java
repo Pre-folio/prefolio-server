@@ -37,7 +37,7 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = MainPostResponseDTO.class)
                     ))
     })
     @GetMapping("/all")
@@ -66,7 +66,7 @@ public class PostController {
                     responseCode = "200",
                     description = "조회 성공",
                     content = @Content(
-                            schema = @Schema(implementation = MainPostDTO.class)
+                            schema = @Schema(implementation = MainPostResponseDTO.class)
                     )
             )
     })
@@ -96,7 +96,7 @@ public class PostController {
                     responseCode = "200",
                     description = "글 생성 성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = AddPostResponseDTO.class)
                     )
             )
     })

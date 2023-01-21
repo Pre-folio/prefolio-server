@@ -27,7 +27,7 @@ public class KakaoController {
                     responseCode = "200",
                     description = "kakao 로그인 성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = KakaoLoginResponseDTO.class)
                     )
             )
     })
