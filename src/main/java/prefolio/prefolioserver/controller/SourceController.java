@@ -33,7 +33,7 @@ public class SourceController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
-                            schema = @Schema(implementation = CommonResponseDTO.class)
+                            schema = @Schema(implementation = GetPathResponseDTO.class)
                     )
             )
     })
