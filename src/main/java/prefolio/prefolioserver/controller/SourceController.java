@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import prefolio.prefolioserver.domain.constant.Path;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
+import prefolio.prefolioserver.dto.response.GetPathResponseDTO;
 import prefolio.prefolioserver.service.SourceService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
 
@@ -37,11 +39,10 @@ public class SourceController {
     })
     @GetMapping("/url")
     @ResponseBody
-    public CommonResponseDTO<String> createURL(
+    public CommonResponseDTO<GetPathResponseDTO> createURL(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            String filePath
-    ) {
-        //user nickname 파일 이름으로?
-        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL(authUser, filePath));
+            @RequestParam(name = "path") Path path
+            ) {
+        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL(authUser, path));
     }
 }

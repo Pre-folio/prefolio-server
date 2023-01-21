@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.domain.User;
+import prefolio.prefolioserver.domain.constant.Path;
+import prefolio.prefolioserver.dto.response.GetPathResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.UserRepository;
 
@@ -35,11 +37,10 @@ public class SourceServiceImpl implements SourceService{
     AmazonS3 amazonS3;
 
     @Override
-    public String createURL(UserDetailsImpl authUser, String filePath) {
+    public GetPathResponseDTO createURL(UserDetailsImpl authUser, Path path) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-
-        String fileName = filePath + "/" + user.getId() + UUID.randomUUID();
+        String fileName = path.getPath() + "/" + user.getId() + UUID.randomUUID();
 
         Date expiration = new Date();
         long expTimeMillis = expiration.getTime();
@@ -56,6 +57,6 @@ public class SourceServiceImpl implements SourceService{
 
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
-        return url.toExternalForm();
+        return new GetPathResponseDTO(url);
     }
 }
