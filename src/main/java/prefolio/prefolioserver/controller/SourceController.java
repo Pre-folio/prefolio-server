@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
@@ -24,7 +23,7 @@ public class SourceController {
 
     @Operation(
             summary = "presigned_url",
-            description = "presigned URL 발급 메서드입니다.",
+            description = "presigned URL 발급 메서드입니다. 프로필 이미지: profile, 게시글 이미지: image, 썸네일: thumbs",
             security = {@SecurityRequirement(name = "jwtAuth")}
     )
     @ApiResponses(value = {
