@@ -63,10 +63,13 @@ public class KakaoServiceImpl implements KakaoService {
         // JWT 토큰 리턴
         String jwtToken = usersAuthorizationInput(user);
 
+        // 회원여부 닉네임으로 확인
+        Boolean isMember = checkIsMember(user);
+
         // 로그인 처리
         Authentication authentication = getAuthentication(jwtToken);
 
-        return new KakaoLoginResponseDTO(jwtToken);
+        return new KakaoLoginResponseDTO(user.getId(), jwtToken, isMember);
     }
 
     // 인가코드로 accessToken 요청
@@ -150,6 +153,15 @@ public class KakaoServiceImpl implements KakaoService {
             userRepository.save(user);
         }
         return user;
+    }
+
+    // 회원 여부 확인
+    private Boolean checkIsMember(User user) {
+        user.getNickname();
+        if(user.getNickname() == null) {
+            return true;
+        }
+        return false;
     }
 
     // JWT 토큰 리턴
