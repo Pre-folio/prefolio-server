@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
-import prefolio.prefolioserver.service.JwtTokenServiceImpl;
 import prefolio.prefolioserver.service.KakaoService;
 
 @Slf4j
