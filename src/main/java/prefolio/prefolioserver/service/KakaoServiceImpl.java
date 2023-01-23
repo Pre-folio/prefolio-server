@@ -157,8 +157,7 @@ public class KakaoServiceImpl implements KakaoService {
 
     // 회원 여부 확인
     private Boolean checkIsMember(User user) {
-        user.getNickname();
-        if(user.getNickname() == null) {
+        if(user.getNickname() != null) {
             return true;
         }
         return false;
