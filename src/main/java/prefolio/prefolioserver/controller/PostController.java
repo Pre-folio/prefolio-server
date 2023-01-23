@@ -179,7 +179,7 @@ public class PostController {
             @RequestParam(name = "actTag", required = false) ActTag actTag,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.findScrapByUserId(authUser, partTag, actTag, pageNum, limit));
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findMyScrap(authUser, partTag, actTag, pageNum, limit));
     }
 
     @Operation(

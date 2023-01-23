@@ -6,7 +6,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import prefolio.prefolioserver.domain.User;
+import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.UserRepository;
+
+import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -19,14 +22,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetailsImpl loadUserByUsername(String id) throws UsernameNotFoundException {
         User findUser = userRepository.findById(Long.parseLong(id))
-                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        if(findUser != null) {
-            return UserDetailsImpl.builder()
-                    .email(findUser.getEmail())
-                    .build();
-        }
-        return null;
+        return UserDetailsImpl.builder()
+                .email(findUser.getEmail())
+                .build();
+
     }
 
 }

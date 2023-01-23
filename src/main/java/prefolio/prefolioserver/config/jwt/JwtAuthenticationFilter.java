@@ -10,15 +10,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
-import prefolio.prefolioserver.service.JwtTokenServiceImpl;
+import prefolio.prefolioserver.error.CustomException;
+import prefolio.prefolioserver.service.JwtTokenService;
 
 import java.io.IOException;
+
+import static prefolio.prefolioserver.error.ErrorCode.INVALID_ACCESS_TOKEN;
 
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-    private final JwtTokenServiceImpl jwtTokenService;
+    private final JwtTokenService jwtTokenService;
 
     @Override
     public void doFilter(
@@ -32,7 +35,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 Authentication authentication = jwtTokenService.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } else {
-                throw new IOException("유효하지 않은 토큰입니다.");
+                throw new CustomException(INVALID_ACCESS_TOKEN);
             }
         }
         filterChain.doFilter(request, response);
