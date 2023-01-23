@@ -44,6 +44,9 @@ public class Post {
     private Integer contribution;
 
     @Column
+    private String task;
+
+    @Column
     private String tools;
 
     @Column(name = "part_tag")
@@ -93,6 +96,7 @@ public class Post {
             String startDate,
             String endDate,
             Integer contribution,
+            String task,
             String tools,
             String partTag,
             String actTag,
@@ -111,6 +115,7 @@ public class Post {
         this.startDate = startDate;
         this.endDate = endDate;
         this.contribution = contribution;
+        this.task = task;
         this.tools = tools;
         this.partTag = partTag;
         this.actTag = actTag;

@@ -122,6 +122,7 @@ public class PostServiceImpl implements PostService{
                 .startDate(addPostRequest.getStartDate())
                 .endDate(addPostRequest.getEndDate())
                 .contribution(addPostRequest.getContribution())
+                .task(addPostRequest.getTask())
                 .tools(addPostRequest.getTools())
                 .partTag(addPostRequest.getPartTag())
                 .actTag(addPostRequest.getActTag())

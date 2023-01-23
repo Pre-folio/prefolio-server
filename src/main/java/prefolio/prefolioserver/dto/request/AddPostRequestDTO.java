@@ -17,6 +17,7 @@ public class AddPostRequestDTO {
     private String startDate;
     private String endDate;
     private Integer contribution;
+    private String task;
     private String tools;
     private String partTag;
     private String actTag;
@@ -28,6 +29,7 @@ public class AddPostRequestDTO {
         this.startDate = post.getStartDate();
         this.endDate = post.getEndDate();
         this.contribution = post.getContribution();
+        this.task = post.getTask();
         this.tools = post.getTools();
         this.partTag = post.getPartTag();
         this.actTag = post.getActTag();
