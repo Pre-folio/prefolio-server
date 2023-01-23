@@ -43,9 +43,8 @@ public class JwtTokenService {
                     .setSigningKey(Base64.getEncoder().encodeToString(("" + JWT_SECRET).getBytes(
                             StandardCharsets.UTF_8))).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            System.out.println("in validateToken exception");
-            throw new CustomException(INVALID_ACCESS_TOKEN);
+        } catch (CustomException e) {
+            throw new CustomException(e.getErrorCode());
         }
     }
 
