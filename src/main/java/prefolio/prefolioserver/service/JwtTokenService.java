@@ -44,6 +44,7 @@ public class JwtTokenService {
                             StandardCharsets.UTF_8))).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
+            System.out.println("in validateToken exception");
             throw new CustomException(INVALID_ACCESS_TOKEN);
         }
     }
