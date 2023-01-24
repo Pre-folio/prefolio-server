@@ -21,9 +21,11 @@ public class PostDTO {
     private String startDate;
     private String endDate;
     private Integer contribution;
+    private String task;
     private String tools;
     private String partTag;
     private String actTag;
+    private String contents;
     private Integer hits;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
@@ -34,9 +36,11 @@ public class PostDTO {
         this.startDate = post.getStartDate();
         this.endDate = post.getEndDate();
         this.contribution = post.getContribution();
+        this.task = post.getTask();
         this.tools = post.getTools();
         this.partTag = post.getPartTag();
         this.actTag = post.getActTag();
+        this.contents = post.getContents();
         this.hits = post.getHits();
         this.createdAt = post.getCreatedAt();
     }

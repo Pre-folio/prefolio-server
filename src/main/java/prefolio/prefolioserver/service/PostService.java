@@ -142,7 +142,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         PostDTO postDTO = new PostDTO(post);
-        CountDTO countDTO = new CountDTO(post.getHits(), post.getLikeList().size(), post.getScrapList().size());
+        CountDTO countDTO = new CountDTO(post.getLikeList().size(), post.getScrapList().size());
         UserDTO userDTO = new UserDTO(user);
 
         Boolean isLiked = false;
