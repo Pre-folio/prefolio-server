@@ -23,7 +23,7 @@ public class PostDTO {
     private String endDate;
     private Integer contribution;
     private String task;
-    private String tools;
+    private List<String> tools;
     private List<String> partTag;
     private List<String> actTag;
     private String contents;
@@ -31,14 +31,14 @@ public class PostDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
-    public PostDTO(Post post, List<String> partTag, List<String>actTag) {
+    public PostDTO(Post post, List<String> tools, List<String> partTag, List<String>actTag) {
         this.thumbnail = post.getThumbnail();
         this.title = post.getTitle();
         this.startDate = post.getStartDate();
         this.endDate = post.getEndDate();
         this.contribution = post.getContribution();
         this.task = post.getTask();
-        this.tools = post.getTools();
+        this.tools = tools;
         this.partTag = partTag;
         this.actTag = actTag;
         this.contents = post.getContents();
