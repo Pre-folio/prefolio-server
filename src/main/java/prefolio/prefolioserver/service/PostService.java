@@ -141,7 +141,7 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PostDTO postDTO = new PostDTO(post);
+        PostDTO postDTO = new PostDTO(post, parseTag(post.getPartTag()), parseTag(post.getActTag()));
         CountDTO countDTO = new CountDTO(post.getLikeList().size(), post.getScrapList().size());
         UserDTO userDTO = new UserDTO(user);
 
