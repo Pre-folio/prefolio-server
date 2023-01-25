@@ -6,7 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import prefolio.prefolioserver.error.ErrorCode;
-import static prefolio.prefolioserver.error.ErrorResponse.setResponse;
+import prefolio.prefolioserver.error.ErrorResponse;
 
 import java.io.IOException;
 
@@ -22,5 +22,11 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     ) throws IOException {
         ErrorCode errorCode = ErrorCode.FORBIDDEN_USER;
         setResponse(response, errorCode);
+    }
+
+    public void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        response.setContentType("application/json;charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.getWriter().print(ErrorResponse.jsonOf(errorCode));
     }
 }

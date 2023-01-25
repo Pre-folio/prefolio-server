@@ -40,10 +40,4 @@ public class ErrorResponse {
 
         return jsonObject;
     }
-
-    public static void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().print(ErrorResponse.jsonOf(errorCode));
-    }
 }
