@@ -162,11 +162,19 @@ public class PostService{
     }
 
 
-    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked) {
+    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        // 좋아요 유무 확인
+        Boolean isLiked = false;
+        Optional<Like> dbLike = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        if (dbLike.isPresent()) {
+            isLiked = true;
+        }
+
         // 좋아요 누름
         if (isLiked == Boolean.TRUE) {
             Like like = Like.builder().user(user)
@@ -184,11 +192,19 @@ public class PostService{
     }
 
 
-    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped) {
+    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        // 스크랩 유무 확인
+        Boolean isScrapped = false;
+        Optional<Scrap> dbScrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        if (dbScrap.isPresent()) {
+            isScrapped = true;
+        }
+
         // 스크랩 누름
         if (isScrapped == Boolean.TRUE) {
             Scrap scrap = Scrap.builder().user(user)
