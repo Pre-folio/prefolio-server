@@ -22,6 +22,7 @@ public class CardPostDTO {
     private String title;
     private List<String> partTag;
     private List<String> actTag;
+    private Integer hits;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
@@ -31,6 +32,7 @@ public class CardPostDTO {
         this.title = scrap.getPost().getTitle();
         this.partTag = partTag;
         this.actTag = actTag;
+        this.hits = scrap.getPost().getHits();
         this.createdAt = scrap.getPost().getCreatedAt();
     }
 
@@ -40,6 +42,7 @@ public class CardPostDTO {
         this.title = post.getTitle();
         this.partTag = partTag;
         this.actTag = actTag;
+        this.hits = post.getHits();
         this.createdAt = post.getCreatedAt();
     }
 
