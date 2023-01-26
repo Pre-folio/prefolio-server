@@ -10,12 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CountDTO {
 
-    private int hits;
     private int likes;
     private int scraps;
 
-    public CountDTO(int hits, int likes, int scraps) {
-        this.hits = hits;
+    public CountDTO(int likes, int scraps) {
         this.likes = likes;
         this.scraps = scraps;
     }

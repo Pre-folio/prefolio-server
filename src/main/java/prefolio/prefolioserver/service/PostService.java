@@ -141,15 +141,18 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PostDTO postDTO = new PostDTO(post);
-        CountDTO countDTO = new CountDTO(post.getHits(), post.getLikeList().size(), post.getScrapList().size());
+        post.setHits(post.getHits() + 1);   // 조회수 증가
+        Post savedPost = postRepository.saveAndFlush(post);
+        PostDTO postDTO = new PostDTO(
+                savedPost, parseTag(savedPost.getTools()), parseTag(savedPost.getPartTag()), parseTag(savedPost.getActTag()));
+        CountDTO countDTO = new CountDTO(savedPost.getLikeList().size(), savedPost.getScrapList().size());
         UserDTO userDTO = new UserDTO(user);
 
         Boolean isLiked = false;
         Boolean isScrapped = false;
 
-        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
-        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
+        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
 
         if(like.isPresent()) {
             isLiked = true;
