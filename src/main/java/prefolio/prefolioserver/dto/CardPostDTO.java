@@ -1,5 +1,6 @@
 package prefolio.prefolioserver.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.Post;
 import prefolio.prefolioserver.domain.Scrap;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -20,6 +22,8 @@ public class CardPostDTO {
     private String title;
     private List<String> partTag;
     private List<String> actTag;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
+    private Date createdAt;
 
     public CardPostDTO(Scrap scrap, List<String> partTag, List<String> actTag) {
         this.postId = scrap.getPost().getId();
@@ -27,6 +31,7 @@ public class CardPostDTO {
         this.title = scrap.getPost().getTitle();
         this.partTag = partTag;
         this.actTag = actTag;
+        this.createdAt = scrap.getPost().getCreatedAt();
     }
 
     public CardPostDTO(Post post, List<String> partTag, List<String> actTag) {
@@ -35,6 +40,7 @@ public class CardPostDTO {
         this.title = post.getTitle();
         this.partTag = partTag;
         this.actTag = actTag;
+        this.createdAt = post.getCreatedAt();
     }
 
 }
