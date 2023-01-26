@@ -87,6 +87,28 @@ public class UserController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
+                            schema = @Schema(implementation = JoinUserResponseDTO.class)
+                    )
+            )
+    })
+    @GetMapping("/token")
+    @ResponseBody
+    public CommonResponseDTO<JoinUserResponseDTO> getUserInfo(
+            @AuthenticationPrincipal UserDetailsImpl authUser
+    ) {
+        return CommonResponseDTO.onSuccess("유저 아이디", userService.getUserId(authUser));
+    }
+
+    @Operation(
+            summary = "유저 정보",
+            description = "유저 정보 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공",
+                    content = @Content(
                             schema = @Schema(implementation = GetUserInfoResponseDTO.class)
                     )
             )

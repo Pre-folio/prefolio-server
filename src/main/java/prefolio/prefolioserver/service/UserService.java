@@ -54,6 +54,11 @@ public class UserService {
         return new CheckUserResponseDTO(true);
     }
 
+    public JoinUserResponseDTO getUserId(UserDetailsImpl authUser) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        return new JoinUserResponseDTO(user.getId());
+    }
 
     public GetUserInfoResponseDTO getUserInfo(Long userId){
         User user = userRepository.findById(userId)
