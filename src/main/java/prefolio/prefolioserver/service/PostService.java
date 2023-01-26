@@ -172,21 +172,20 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 좋아요 유무 확인
-        Boolean isLiked = false;
+        Boolean isLiked = true;
         Optional<Like> dbLike = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
-        if (dbLike.isPresent()) {
-            isLiked = true;
+        if (dbLike.isEmpty()) {
+            isLiked = false;
         }
 
         // 좋아요 누름
-        if (isLiked == Boolean.TRUE) {
+        if (isLiked == false) {
             Like like = Like.builder().user(user)
                     .post(post)
                     .build();
             likeRepository.save(like);
-        } else { // 좋아요 취소
-            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            likeRepository.delete(like);
+        } else if (isLiked == true) { // 좋아요 취소
+            likeRepository.delete(dbLike.get());
         }
         Long likes = likeRepository.countByPostId(postId);
         post.setLikes(post.getLikeList().size());
@@ -202,26 +201,25 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 스크랩 유무 확인
-        Boolean isScrapped = false;
+        Boolean isScrapped = true;
         Optional<Scrap> dbScrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
-        if (dbScrap.isPresent()) {
-            isScrapped = true;
+        if (dbScrap.isEmpty()) {
+            isScrapped = false;
         }
 
         // 스크랩 누름
-        if (isScrapped == Boolean.TRUE) {
+        if (isScrapped == false) {
             Scrap scrap = Scrap.builder().user(user)
                     .post(post)
                     .build();
             scrapRepository.save(scrap);
-        } else { // 스크랩 취소
-            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            scrapRepository.delete(scrap);
+        } else if (isScrapped == true) { // 스크랩 취소
+            scrapRepository.delete(dbScrap.get());
         }
         Long scraps = scrapRepository.countByPostId(postId);
         post.setScraps(post.getScrapList().size());
         postRepository.save(post);
-        return new ClickScrapResponseDTO(scraps, isScrapped);
+        return new ClickScrapResponseDTO(scraps, !isScrapped);
     }
 
 
