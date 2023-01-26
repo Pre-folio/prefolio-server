@@ -31,7 +31,7 @@ public class WebSecurityConfig {
             "/swagger-resources/**",
             "/swagger-ui/**",
             "/api-docs/**",
-            "/webjars/**"
+            "/webjars/**",
     };
     // 인증 실패 또는 인증헤더가 전달받지 못했을 때 핸들러
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -83,7 +83,8 @@ public class WebSecurityConfig {
                         "http://localhost:3000",
                         "https://api.prefolio.net",
                         "https://prefolio.net",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "https://prefolio-client.vercel.app"
                 )
         );
         configuration.setAllowedHeaders(Arrays.asList("*"));

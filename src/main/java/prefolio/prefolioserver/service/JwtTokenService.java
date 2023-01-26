@@ -1,10 +1,9 @@
 package prefolio.prefolioserver.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +17,7 @@ import java.util.Date;
 
 import static prefolio.prefolioserver.error.ErrorCode.INVALID_ACCESS_TOKEN;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtTokenService {
@@ -29,8 +29,8 @@ public class JwtTokenService {
 
     public String getToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if(bearerToken != null) {
-            String accessToken = bearerToken.substring(bearerToken.lastIndexOf(" ")+1);
+        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            String accessToken = bearerToken.substring("Bearer ".length());
             return accessToken;
         }
         return bearerToken;
@@ -43,9 +43,16 @@ public class JwtTokenService {
                     .setSigningKey(Base64.getEncoder().encodeToString(("" + JWT_SECRET).getBytes(
                             StandardCharsets.UTF_8))).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (CustomException e) {
-            throw new CustomException(e.getErrorCode());
+        } catch (SignatureException | MalformedJwtException ex) {
+            log.error("잘못된 JWT 서명입니다");
+        } catch (ExpiredJwtException ex) {
+            log.error("만료된 JWT 토큰입니다");
+        } catch (UnsupportedJwtException ex) {
+            log.error("지원하지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT 토큰이 비어있습니다");
         }
+        return false;
     }
 
 

@@ -141,15 +141,18 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PostDTO postDTO = new PostDTO(post);
-        CountDTO countDTO = new CountDTO(post.getHits(), post.getLikeList().size(), post.getScrapList().size());
+        post.setHits(post.getHits() + 1);   // 조회수 증가
+        Post savedPost = postRepository.saveAndFlush(post);
+        PostDTO postDTO = new PostDTO(
+                savedPost, parseTag(savedPost.getTools()), parseTag(savedPost.getPartTag()), parseTag(savedPost.getActTag()));
+        CountDTO countDTO = new CountDTO(savedPost.getLikeList().size(), savedPost.getScrapList().size());
         UserDTO userDTO = new UserDTO(user);
 
         Boolean isLiked = false;
         Boolean isScrapped = false;
 
-        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
-        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
+        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
 
         if(like.isPresent()) {
             isLiked = true;
@@ -162,20 +165,27 @@ public class PostService{
     }
 
 
-    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId, Boolean isLiked) {
+    public ClickLikeResponseDTO clickLike(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        // 좋아요 유무 확인
+        Boolean isLiked = true;
+        Optional<Like> dbLike = likeRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        if (dbLike.isEmpty()) {
+            isLiked = false;
+        }
+
         // 좋아요 누름
-        if (isLiked == Boolean.TRUE) {
+        if (isLiked == false) {
             Like like = Like.builder().user(user)
                     .post(post)
                     .build();
             likeRepository.save(like);
-        } else { // 좋아요 취소
-            Like like = likeRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            likeRepository.delete(like);
+        } else if (isLiked == true) { // 좋아요 취소
+            likeRepository.delete(dbLike.get());
         }
         Long likes = likeRepository.countByPostId(postId);
         post.setLikes(post.getLikeList().size());
@@ -184,25 +194,32 @@ public class PostService{
     }
 
 
-    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId, Boolean isScrapped) {
+    public ClickScrapResponseDTO clickScrap(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        // 스크랩 유무 확인
+        Boolean isScrapped = true;
+        Optional<Scrap> dbScrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
+        if (dbScrap.isEmpty()) {
+            isScrapped = false;
+        }
+
         // 스크랩 누름
-        if (isScrapped == Boolean.TRUE) {
+        if (isScrapped == false) {
             Scrap scrap = Scrap.builder().user(user)
                     .post(post)
                     .build();
             scrapRepository.save(scrap);
-        } else { // 스크랩 취소
-            Scrap scrap = scrapRepository.findByUserIdAndPostId(user.getId(), postId).get();
-            scrapRepository.delete(scrap);
+        } else if (isScrapped == true) { // 스크랩 취소
+            scrapRepository.delete(dbScrap.get());
         }
         Long scraps = scrapRepository.countByPostId(postId);
         post.setScraps(post.getScrapList().size());
         postRepository.save(post);
-        return new ClickScrapResponseDTO(scraps, isScrapped);
+        return new ClickScrapResponseDTO(scraps, !isScrapped);
     }
 
 
