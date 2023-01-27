@@ -144,8 +144,7 @@ public class KakaoService{
     private User registerUserIfNeed(KakaoUserInfoDTO userInfo) {
         // DB에 중복된 이메일 있는지 확인
         String kakaoEmail = userInfo.getEmail();
-        User user = userRepository.findByEmail(kakaoEmail)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        User user = userRepository.findByEmail(kakaoEmail).get();
 
         // DB에 없을 시 DB에 추가
         if (user == null) {
