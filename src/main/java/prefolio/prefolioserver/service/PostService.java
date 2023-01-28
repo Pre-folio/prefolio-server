@@ -228,7 +228,7 @@ public class PostService{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
 
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
@@ -258,7 +258,7 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         
-        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
         
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
