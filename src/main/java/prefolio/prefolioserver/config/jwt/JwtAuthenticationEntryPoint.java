@@ -32,6 +32,18 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         else if(exception.equals(ErrorCode.INVALID_ACCESS_TOKEN.getCode())) {
             setResponse(response, ErrorCode.INVALID_ACCESS_TOKEN);
         }
+        //잘못된 서명
+        else if(exception.equals(ErrorCode.INVALID_SIGNATURE.getCode())) {
+            setResponse(response, ErrorCode.INVALID_SIGNATURE);
+        }
+        //토큰 만료된 경우
+        else if(exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
+            setResponse(response, ErrorCode.EXPIRED_TOKEN);
+        }
+        //지원되지 않는 토큰인 경우
+        else if(exception.equals(ErrorCode.UNSUPPORTED_TOKEN.getCode())) {
+            setResponse(response, ErrorCode.UNSUPPORTED_TOKEN);
+        }
 //        //잘못된 타입의 토큰인 경우
 //        else if(exception.equals(ErrorCode.INVALID_AUTH_TOKEN.getCode())) {
 //            setResponse(response, ErrorCode.INVALID_AUTH_TOKEN);
@@ -39,18 +51,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 //        //DB에 정보가 없는 토큰을 사용했울 때
 //        else if(exception.equals(ErrorCode.INVALID_USER_TOKEN.getCode())) {
 //            setResponse(response, ErrorCode.INVALID_USER_TOKEN);
-//        }
-//        //잘못된 서명
-//        else if(exception.equals(ErrorCode.INVALID_SIGNATURE.getCode())) {
-//            setResponse(response, ErrorCode.INVALID_SIGNATURE);
-//        }
-//        //토큰 만료된 경우
-//        else if(exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
-//            setResponse(response, ErrorCode.EXPIRED_TOKEN);
-//        }
-//        //지원되지 않는 토큰인 경우
-//        else if(exception.equals(ErrorCode.UNSUPPORTED_TOKEN.getCode())) {
-//            setResponse(response, ErrorCode.UNSUPPORTED_TOKEN);
 //        }
 //        else {
 //            setResponse(response, ErrorCode.FORBIDDEN_USER);
