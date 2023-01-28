@@ -148,16 +148,14 @@ public class KakaoService{
         String kakaoEmail = userInfo.getEmail();
         Optional<User> user = userRepository.findByEmail(kakaoEmail);
 
-        User newUser = new User();
-
         if (user.isEmpty()) {
             // DB에 정보 등록
-            newUser = User.builder().email(kakaoEmail)
+            User newUser = User.builder().email(kakaoEmail)
                     .build();
             userRepository.save(newUser);
         }
 
-        return newUser;
+        return user.get();
     }
 
     // 회원 여부 확인
