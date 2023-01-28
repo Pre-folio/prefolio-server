@@ -169,8 +169,11 @@ public class KakaoService{
     // JWT 토큰 리턴
     private String usersAuthorizationInput(User user) {
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
-        String token = generateJwtToken(userDetails);
-        return token;
+        String accessToken = generateJwtAccessToken(userDetails);
+        String refreshToken = generateJwtRefreshToken(userDetails);
+        user.setRefreshToken(refreshToken);
+        userRepository.save(user);
+        return accessToken;
     }
 
     // 로그인 처리
@@ -187,11 +190,23 @@ public class KakaoService{
     }
 
 
-    public String generateJwtToken(UserDetailsImpl userDetails) {
+    public String generateJwtAccessToken(UserDetailsImpl userDetails) {
         User user = userRepository.findByEmail(userDetails.getEmail())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 1);  // 만료시간 1분
+        cal.add(Calendar.HOUR, 1);  // 만료시간 1시간
+
+        final Date issuedAt = new Date();
+        final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
+
+        return buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
+    }
+
+    public String generateJwtRefreshToken(UserDetailsImpl userDetails) {
+        User user = userRepository.findByEmail(userDetails.getEmail())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 14);  // 만료일 14일
 
         final Date issuedAt = new Date();
         final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
