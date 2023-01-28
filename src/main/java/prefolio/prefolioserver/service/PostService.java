@@ -16,6 +16,8 @@ import prefolio.prefolioserver.query.PostSpecification;
 import prefolio.prefolioserver.query.ScrapSpecification;
 import prefolio.prefolioserver.repository.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static prefolio.prefolioserver.error.ErrorCode.*;
 
@@ -230,8 +232,10 @@ public class PostService{
 
         // 스크랩 누름
         if (isScrapped == false) {
-            Scrap scrap = Scrap.builder().user(user)
+            Scrap scrap = Scrap.builder()
+                    .user(user)
                     .post(post)
+                    .createdAt(new Date())
                     .build();
             scrapRepository.save(scrap);
         } else if (isScrapped == true) { // 스크랩 취소
@@ -279,7 +283,7 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
@@ -301,8 +305,6 @@ public class PostService{
             CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag));
             cardScrapsDTOList.add(dto);
         }
-
-        cardScrapsDTOList.sort(Collections.reverseOrder());
 
         return new CardPostResponseDTO(cardScrapsDTOList, findScraps.getTotalPages(), findScraps.getTotalElements());
     }
