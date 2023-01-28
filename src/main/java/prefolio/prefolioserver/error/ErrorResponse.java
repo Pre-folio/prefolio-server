@@ -1,13 +1,19 @@
 package prefolio.prefolioserver.error;
 
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -17,6 +23,7 @@ public class ErrorResponse {
     private final String error;
     private final String code;
     private final String message;
+    private final List<ErrorField> errors;
 
     public static ResponseEntity<ErrorResponse> toResponseEntity(ErrorCode errorCode) {
         return ResponseEntity
@@ -26,6 +33,7 @@ public class ErrorResponse {
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.getCode())
                         .message(errorCode.getDetail())
+                        .errors(List.of())
                         .build()
                 );
     }
@@ -39,5 +47,35 @@ public class ErrorResponse {
         jsonObject.put("message", errorCode.getDetail());
 
         return jsonObject;
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ErrorField {
+        private String field;
+
+        private String value;
+
+        private String reason;
+
+        public static List<ErrorField> of(BindingResult bindingResult) {
+            try {
+                List<ErrorField> errorFields =
+                        bindingResult.getAllErrors().stream().map(error ->
+                        {
+                            FieldError fieldError = (FieldError) error;
+
+                            return new ErrorField(
+                                    fieldError.getField(),
+                                    Objects.toString(fieldError.getRejectedValue()),
+                                    fieldError.getDefaultMessage());
+                        }).collect(Collectors.toList());
+                return errorFields;
+            } catch (Exception e) {
+                System.out.println("e = " + e);
+                return Arrays.asList();
+            }
+        }
     }
 }
