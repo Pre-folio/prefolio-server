@@ -199,10 +199,9 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<ClickLikeResponseDTO> clickLike(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @PathVariable(name = "postId") Long postId,
-            @RequestParam(name = "isLiked") Boolean isLiked
+            @PathVariable(name = "postId") Long postId
     ) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(authUser, postId, isLiked));
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(authUser, postId));
     }
 
     @Operation(
@@ -223,9 +222,8 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<ClickScrapResponseDTO> clickScrap(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @PathVariable(name = "postId") Long postId,
-            @RequestParam(name = "isScrapped") Boolean isScrapped
+            @PathVariable(name = "postId") Long postId
     ) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId, isScrapped));
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId));
     }
 }

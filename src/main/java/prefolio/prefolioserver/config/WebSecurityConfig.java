@@ -83,7 +83,9 @@ public class WebSecurityConfig {
                         "http://localhost:3000",
                         "https://api.prefolio.net",
                         "https://prefolio.net",
-                        "http://localhost:8080"
+                        "http://localhost:8080",
+                        "https://prefolio-client.vercel.app",
+                        "http://43.200.11.160:3000"
                 )
         );
         configuration.setAllowedHeaders(Arrays.asList("*"));

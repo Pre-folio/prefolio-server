@@ -20,6 +20,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import prefolio.prefolioserver.domain.User;
+import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.dto.KakaoUserInfoDTO;
 import prefolio.prefolioserver.error.CustomException;
@@ -29,6 +30,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 import static prefolio.prefolioserver.error.ErrorCode.*;
 
@@ -144,17 +146,16 @@ public class KakaoService{
     private User registerUserIfNeed(KakaoUserInfoDTO userInfo) {
         // DB에 중복된 이메일 있는지 확인
         String kakaoEmail = userInfo.getEmail();
-        User user = userRepository.findByEmail(kakaoEmail)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Optional<User> user = userRepository.findByEmail(kakaoEmail);
 
-        // DB에 없을 시 DB에 추가
-        if (user == null) {
+        if (user.isEmpty()) {
             // DB에 정보 등록
-            user = User.builder().email(kakaoEmail)
+            User newUser = User.builder().email(kakaoEmail)
                             .build();
-            userRepository.save(user);
+            userRepository.save(newUser);
         }
-        return user;
+
+        return user.get();
     }
 
     // 회원 여부 확인
