@@ -134,6 +134,16 @@ public class PostService{
         return new AddPostResponseDTO(savedPost);
     }
 
+    public AddPostResponseDTO updatePost(UserDetailsImpl authUser, Long postId, AddPostRequestDTO addPostRequest) {
+        User findUser = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+
+        findPost.update(addPostRequest);
+
+        return new AddPostResponseDTO(findPost);
+    }
 
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)

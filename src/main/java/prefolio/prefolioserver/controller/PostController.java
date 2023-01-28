@@ -110,6 +110,30 @@ public class PostController {
     }
 
     @Operation(
+            summary = "글 수정",
+            description = "글 수정 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "글 수정 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = AddPostResponseDTO.class)
+                    )
+            )
+    })
+    @PutMapping("/post/{postId}")
+    @ResponseBody
+    public CommonResponseDTO<AddPostResponseDTO> updatePost(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam Long postId,
+            @RequestBody AddPostRequestDTO addPostRequest
+    ) {
+        return CommonResponseDTO.onSuccess("글 수정 성공", postService.updatePost(authUser, postId, addPostRequest));
+    }
+
+    @Operation(
             summary = "게시글 조회",
             description = "게시글 한 개 조회 메서드입니다.",
             security = {@SecurityRequirement(name = "jwtAuth")}

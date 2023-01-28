@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -44,6 +45,19 @@ public class ErrorResponse {
         jsonObject.put("success", false);
         jsonObject.put("status", errorCode.getHttpStatus().value());
         jsonObject.put("code", errorCode.getCode());
+        jsonObject.put("message", errorCode.getDetail());
+
+        return jsonObject;
+    }
+
+    public static JSONObject jsonOf(ErrorCode errorCode, CustomException exception) {
+        //BindingResult bindingResult = exception.getBindingResult();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("timestamp", LocalDateTime.now());
+        jsonObject.put("success", false);
+        jsonObject.put("status", errorCode.getHttpStatus().value());
+        jsonObject.put("code", errorCode.getCode());
+        jsonObject.put("errors", exception.getStackTrace());
         jsonObject.put("message", errorCode.getDetail());
 
         return jsonObject;
