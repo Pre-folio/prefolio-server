@@ -10,11 +10,11 @@ import prefolio.prefolioserver.domain.Post;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddPostResponseDTO {
+public class PostIdResponseDTO {
 
     private Long postId;
 
-    public AddPostResponseDTO(Post post) {
+    public PostIdResponseDTO(Post post) {
         this.postId = post.getId();
     }
 }

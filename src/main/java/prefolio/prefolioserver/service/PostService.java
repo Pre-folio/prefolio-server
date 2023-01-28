@@ -109,7 +109,7 @@ public class PostService{
     }
 
 
-    public AddPostResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostRequest) {
+    public PostIdResponseDTO savePost(UserDetailsImpl authUser, AddPostRequestDTO addPostRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -131,25 +131,35 @@ public class PostService{
                 .createdAt(new Date())
                 .build();
         Post savedPost = postRepository.saveAndFlush(post);
-        return new AddPostResponseDTO(savedPost);
+        return new PostIdResponseDTO(savedPost);
     }
 
-    public AddPostResponseDTO updatePost(UserDetailsImpl authUser, Long postId, AddPostRequestDTO addPostRequest) {
+    public PostIdResponseDTO updatePost(UserDetailsImpl authUser, Long postId, AddPostRequestDTO addPostRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Post findPost = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+        Post findPost = postRepository.findByUserIdAndPostId(findUser.getId(), postId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.update(addPostRequest);
 
-        return new AddPostResponseDTO(findPost);
+        return new PostIdResponseDTO(findPost);
+    }
+
+    public PostIdResponseDTO deletePost(UserDetailsImpl authUser, Long postId) {
+        User findUser = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Post findPost = postRepository.findByUserIdAndPostId(findUser.getId(), postId)
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+        findPost.setDeletedAt(new Date());
+
+        return new PostIdResponseDTO(findPost);
     }
 
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        // 글 작성자 정보
-        User user = userRepository.findById(post.getUser().getId())
+        User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         post.setHits(post.getHits() + 1);   // 조회수 증가

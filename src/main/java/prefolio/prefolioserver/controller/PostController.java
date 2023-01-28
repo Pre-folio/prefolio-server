@@ -96,13 +96,13 @@ public class PostController {
                     responseCode = "200",
                     description = "글 생성 성공",
                     content = @Content(
-                            schema = @Schema(implementation = AddPostResponseDTO.class)
+                            schema = @Schema(implementation = PostIdResponseDTO.class)
                     )
             )
     })
     @PostMapping("/post")
     @ResponseBody
-    public CommonResponseDTO<AddPostResponseDTO> addPost(
+    public CommonResponseDTO<PostIdResponseDTO> addPost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
@@ -119,18 +119,40 @@ public class PostController {
                     responseCode = "200",
                     description = "글 수정 성공",
                     content = @Content(
-                            schema = @Schema(implementation = AddPostResponseDTO.class)
+                            schema = @Schema(implementation = PostIdResponseDTO.class)
                     )
             )
     })
     @PutMapping("/post/{postId}")
     @ResponseBody
-    public CommonResponseDTO<AddPostResponseDTO> updatePost(
+    public CommonResponseDTO<PostIdResponseDTO> updatePost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestParam Long postId,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
         return CommonResponseDTO.onSuccess("글 수정 성공", postService.updatePost(authUser, postId, addPostRequest));
+    }
+    @Operation(
+            summary = "글 삭제",
+            description = "글 삭제 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "삭제 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = PostIdResponseDTO.class)
+                    )
+            )
+    })
+    @DeleteMapping("/post/{postId}")
+    @ResponseBody
+    public CommonResponseDTO<PostIdResponseDTO> deletePost(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "postId") Long postId
+    ) {
+        return CommonResponseDTO.onSuccess("글 삭제 성공", postService.deletePost(authUser, postId));
     }
 
     @Operation(
