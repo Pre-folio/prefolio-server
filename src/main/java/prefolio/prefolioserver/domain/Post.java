@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -126,5 +127,18 @@ public class Post {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
+    }
+    public void update(AddPostRequestDTO addPostRequestDTO) {
+        this.thumbnail = addPostRequestDTO.getThumbnail();
+        this.title = addPostRequestDTO.getTitle();
+        this.startDate = addPostRequestDTO.getStartDate();
+        this.endDate = addPostRequestDTO.getEndDate();
+        this.contribution = addPostRequestDTO.getContribution();
+        this.task = addPostRequestDTO.getTask();
+        this.tools = addPostRequestDTO.getTools();
+        this.partTag = addPostRequestDTO.getPartTag();
+        this.actTag = addPostRequestDTO.getActTag();
+        this.contents = addPostRequestDTO.getContents();
+        this.updatedAt = new Date();
     }
 }
