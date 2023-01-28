@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import prefolio.prefolioserver.error.CustomException;
+import prefolio.prefolioserver.error.ErrorCode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -37,7 +38,7 @@ public class JwtTokenService {
     }
 
 
-    public Boolean validateToken(String token) {
+    public Boolean validateToken(HttpServletRequest request, String token) {
         try {
             Jws<Claims> claims = Jwts.parser()
                     .setSigningKey(Base64.getEncoder().encodeToString(("" + JWT_SECRET).getBytes(
@@ -45,12 +46,16 @@ public class JwtTokenService {
             return !claims.getBody().getExpiration().before(new Date());
         } catch (SignatureException | MalformedJwtException ex) {
             log.error("잘못된 JWT 서명입니다");
+            request.setAttribute("exception", ErrorCode.INVALID_SIGNATURE.getCode());
         } catch (ExpiredJwtException ex) {
             log.error("만료된 JWT 토큰입니다");
+            request.setAttribute("exception", ErrorCode.EXPIRED_TOKEN.getCode());
         } catch (UnsupportedJwtException ex) {
             log.error("지원하지 않는 JWT 토큰입니다.");
+            request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN.getCode());
         } catch (IllegalArgumentException ex) {
             log.error("JWT 토큰이 비어있습니다");
+            request.setAttribute("exception", ErrorCode.NO_TOKEN.getCode());
         }
         return false;
     }
