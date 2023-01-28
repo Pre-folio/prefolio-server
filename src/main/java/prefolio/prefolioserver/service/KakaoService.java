@@ -191,7 +191,7 @@ public class KakaoService{
         User user = userRepository.findByEmail(userDetails.getEmail())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 1);  // 만료일 1일
+        cal.add(Calendar.MINUTE, 1);  // 만료시간 1분
 
         final Date issuedAt = new Date();
         final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());

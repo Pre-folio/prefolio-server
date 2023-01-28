@@ -40,8 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        if (StringUtils.isNotBlank(token) && jwtTokenService.validateToken(token)) {
-            System.out.println("jwtTokenService = " + jwtTokenService.validateToken(token));
+        if (StringUtils.isNotBlank(token) && jwtTokenService.validateToken(request, token)) {
             Authentication authentication = jwtTokenService.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else {
