@@ -55,6 +55,7 @@ public class JwtTokenService {
             request.setAttribute("exception", ErrorCode.UNSUPPORTED_TOKEN.getCode());
         } catch (IllegalArgumentException ex) {
             log.error("JWT 토큰이 비어있습니다");
+            request.setAttribute("exception", ErrorCode.NO_TOKEN.getCode());
         }
         return false;
     }
