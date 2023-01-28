@@ -278,9 +278,9 @@ public class PostService{
             UserDetailsImpl authUser, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        
-        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
-        
+
+        PageRequest pageRequest = PageRequest.of(pageNum, limit);
+
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
         if (partTag!=null){
@@ -301,6 +301,8 @@ public class PostService{
             CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag));
             cardScrapsDTOList.add(dto);
         }
+
+        cardScrapsDTOList.sort(Collections.reverseOrder());
 
         return new CardPostResponseDTO(cardScrapsDTOList, findScraps.getTotalPages(), findScraps.getTotalElements());
     }
