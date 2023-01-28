@@ -137,7 +137,7 @@ public class PostService{
     public PostIdResponseDTO updatePost(UserDetailsImpl authUser, Long postId, AddPostRequestDTO addPostRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Post findPost = postRepository.findByUserIdAndPostId(findUser.getId(), postId)
+        Post findPost = postRepository.findByIdAndUserId(postId, findUser.getId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.update(addPostRequest);
@@ -148,7 +148,7 @@ public class PostService{
     public PostIdResponseDTO deletePost(UserDetailsImpl authUser, Long postId) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Post findPost = postRepository.findByUserIdAndPostId(findUser.getId(), postId)
+        Post findPost = postRepository.findByIdAndUserId(postId, findUser.getId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.setDeletedAt(new Date());
