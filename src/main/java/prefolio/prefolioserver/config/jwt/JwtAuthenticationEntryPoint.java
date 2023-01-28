@@ -25,7 +25,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     ) throws IOException {
         String exception = (String)request.getAttribute("exception");
 
-        if(exception == null || exception.equals(ErrorCode.NO_TOKEN.getCode())) {
+        if(exception.equals(ErrorCode.NO_TOKEN.getCode())) {
             setResponse(response, ErrorCode.NO_TOKEN);
         }
         //유효하지 않은 토큰인 경우

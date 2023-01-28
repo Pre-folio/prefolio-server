@@ -78,8 +78,8 @@ public class UserController {
     }
 
     @Operation(
-            summary = "유저 정보",
-            description = "유저 정보 메서드입니다.",
+            summary = "유저 아이디",
+            description = "유저 아이디 조회 메서드입니다.",
             security = {@SecurityRequirement(name = "jwtAuth")}
     )
     @ApiResponses(value = {
