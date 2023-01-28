@@ -138,7 +138,8 @@ public class PostService{
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        User user = userRepository.findByEmail(authUser.getUsername())
+        // 글 작성자 정보
+        User user = userRepository.findById(post.getUser().getId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         post.setHits(post.getHits() + 1);   // 조회수 증가
