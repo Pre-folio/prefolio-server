@@ -152,10 +152,9 @@ public class KakaoService{
             // DB에 정보 등록
             User newUser = User.builder().email(kakaoEmail)
                     .build();
-            userRepository.save(newUser);
         }
 
-        return user.get();
+        return userRepository.findByEmail(kakaoEmail).get();
     }
 
     // 회원 여부 확인
