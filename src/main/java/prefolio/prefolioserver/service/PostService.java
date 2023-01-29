@@ -45,8 +45,8 @@ public class PostService{
 
         if (partTag != null)  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
-        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
-            spec = spec.and(PostSpecification.likePartTag(user.getType()));
+//        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
+//            spec = spec.and(PostSpecification.likePartTag(user.getType()));
         if (actTag != null)
             spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
 
@@ -78,8 +78,8 @@ public class PostService{
                 .or(PostSpecification.likeContents(searchWord));
         if (partTag != null)  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
-        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
-            spec = spec.and(PostSpecification.likePartTag(user.getType()));
+//        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
+//            spec = spec.and(PostSpecification.likePartTag(user.getType()));
         if (actTag != null)
             spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
 
