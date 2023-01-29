@@ -7,13 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.domain.constant.Path;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.response.GetPathResponseDTO;
 import prefolio.prefolioserver.service.SourceService;
-import prefolio.prefolioserver.service.UserDetailsImpl;
 
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
@@ -40,9 +38,9 @@ public class SourceController {
     @GetMapping("/url")
     @ResponseBody
     public CommonResponseDTO<GetPathResponseDTO> createURL(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "userId") Long userId,
             @RequestParam(name = "path") Path path
             ) {
-        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL(authUser, path));
+        return CommonResponseDTO.onSuccess("Presigned URL", sourceService.createURL(userId, path));
     }
 }
