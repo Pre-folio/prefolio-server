@@ -160,8 +160,8 @@ public class PostService{
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        User user = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        User user = userRepository.findByEmail(post.getUser().getEmail())
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
         post.setHits(post.getHits() + 1);   // 조회수 증가
         Post savedPost = postRepository.saveAndFlush(post);
