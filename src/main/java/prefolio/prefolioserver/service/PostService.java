@@ -16,8 +16,6 @@ import prefolio.prefolioserver.query.PostSpecification;
 import prefolio.prefolioserver.query.ScrapSpecification;
 import prefolio.prefolioserver.repository.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static prefolio.prefolioserver.error.ErrorCode.*;
 
@@ -44,6 +42,7 @@ public class PostService{
 
         // 쿼리
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
+
         if (partTag != null)  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
         else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
@@ -53,7 +52,7 @@ public class PostService{
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
         List<MainPostDTO> mainPostsList = new ArrayList<>();
-        for (Post p : findPosts.getContent()) {
+        for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
             MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
@@ -86,7 +85,7 @@ public class PostService{
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
         List<MainPostDTO> mainPostsList = new ArrayList<>();
-        for (Post p : findPosts.getContent()) {
+        for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
             MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
