@@ -57,7 +57,6 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(SwaggerPatterns).permitAll()
                 .requestMatchers("/kakao/login").permitAll()
-                .requestMatchers("/settings").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
@@ -86,7 +85,8 @@ public class WebSecurityConfig {
                         "https://prefolio.net",
                         "http://localhost:8080",
                         "https://prefolio-client.vercel.app",
-                        "http://43.200.11.160:3000"
+                        "http://43.200.11.160:3000",
+                        "https://s3.ap-northeast-2.amazonaws.com/prefolio.net"
                 )
         );
         configuration.setAllowedHeaders(Arrays.asList("*"));
