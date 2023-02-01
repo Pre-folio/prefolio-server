@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLUpdate;
+import org.hibernate.annotations.Where;
+import org.springframework.transaction.annotation.Transactional;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 
 import java.util.Date;
@@ -18,6 +22,8 @@ import java.util.List;
 @Setter
 @Table(name = "Post")
 @NoArgsConstructor
+@Where(clause = "deleted_at IS NULL")
+@SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
 public class Post {
 
     @Id
