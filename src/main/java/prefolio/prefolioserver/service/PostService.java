@@ -96,7 +96,7 @@ public class PostService{
     public List<String> parseTag(String strTag) {
         List<String> tagList = new ArrayList<>();
         // 태그 없을 때
-        if (strTag == null || strTag == "") {
+        if (strTag == null || strTag.equals("")) {
             return tagList;
         }
         // 태그 있을 때 파싱
@@ -221,7 +221,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 스크랩 유무 확인
-        Boolean isScrapped = true;
+        boolean isScrapped = true;
         Optional<Scrap> dbScrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
         if (dbScrap.isEmpty()) {
             isScrapped = false;
@@ -276,7 +276,7 @@ public class PostService{
     }
 
     public CardPostResponseDTO findMyScrap(
-            UserDetailsImpl authUser, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
+            UserDetailsImpl authUser, String partTagList, String actTagList, Integer pageNum, Integer limit) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -284,11 +284,11 @@ public class PostService{
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTag!=null){
-            spec = spec.and(ScrapSpecification.likePostPartTag(partTag.getPartTag()));
+        if (partTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostPartTag(parseTag(partTagList)));
         }
-        if (actTag!=null){
-            spec = spec.and(ScrapSpecification.likePostActTag(actTag.getActTag()));
+        if (actTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostActTag(parseTag(actTagList)));
         }
         spec = spec.and(ScrapSpecification.equalUser(user));
 
