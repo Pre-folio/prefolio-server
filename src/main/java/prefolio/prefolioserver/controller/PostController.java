@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
+
+import java.util.List;
 
 
 @RestController
@@ -43,16 +46,15 @@ public class PostController {
     @GetMapping("/all")
     @ResponseBody
     public CommonResponseDTO<MainPostResponseDTO> getAllPosts(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestParam(name = "sortBy") SortBy sortBy,
-            @RequestParam(name = "partTag", required = false) PartTag partTag,
-            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "partTagList", required = false) String partTagList,
+            @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit
             ) {
         return CommonResponseDTO.onSuccess(
                 "메인피드 게시물 조회 성공",
-                postService.getAllPosts(authUser, sortBy, partTag, actTag, pageNum, limit)
+                postService.getAllPosts(sortBy, partTagList, actTagList, pageNum, limit)
         );
     }
 
@@ -75,15 +77,15 @@ public class PostController {
     public CommonResponseDTO<MainPostResponseDTO> getSearchPosts(
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestParam(name = "sortBy") SortBy sortBy,
-            @RequestParam(name = "partTag", required = false) PartTag partTag,
-            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "partTagList", required = false) String partTagList,
+            @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit,
             @RequestParam(name = "searchWord") String searchWord
     ) {
         return CommonResponseDTO.onSuccess(
                 "검색 결과 게시물 조회 성공",
-                postService.getSearchPosts(authUser, sortBy, partTag, actTag, pageNum, limit, searchWord));
+                postService.getSearchPosts(authUser, sortBy, partTagList, actTagList, pageNum, limit, searchWord));
     }
 
     @Operation(
@@ -196,11 +198,11 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<CardPostResponseDTO> findPostByUserId(
             @PathVariable(name = "userId") Long userId,
-            @RequestParam(name = "partTag", required = false) PartTag partTag,
-            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "partTagList", required = false) String partTagList,
+            @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(userId, partTag, actTag, pageNum, limit));
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(userId, partTagList, actTagList, pageNum, limit));
     }
 
     @Operation(
@@ -221,8 +223,8 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<CardPostResponseDTO> findScrapByUserId(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam(name = "partTag", required = false) PartTag partTag,
-            @RequestParam(name = "actTag", required = false) ActTag actTag,
+            @RequestParam(name = "partTagList", required = false) PartTag partTag,
+            @RequestParam(name = "actTagList", required = false) ActTag actTag,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit) {
         return CommonResponseDTO.onSuccess("SUCCESS", postService.findMyScrap(authUser, partTag, actTag, pageNum, limit));
