@@ -11,10 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
-import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
-import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
+import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
 import prefolio.prefolioserver.service.UserDetailsImpl;
 import prefolio.prefolioserver.service.UserService;
 
@@ -37,17 +37,40 @@ public class UserController {
                     responseCode = "200",
                     description = "저장 성공",
                     content = @Content(
-                            schema = @Schema(implementation = JoinUserResponseDTO.class)
+                            schema = @Schema(implementation = UserInfoResponseDTO.class)
                     )
             )
     })
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<JoinUserResponseDTO> joinUser(
+    public CommonResponseDTO<UserInfoResponseDTO> updateUser(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestBody JoinUserRequestDTO joinUserRequest
+            @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.joinUser(authUser, joinUserRequest));
+        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.setUserInfo(authUser, UserInfoRequest));
+    }
+
+    @Operation(
+            summary = "유저 정보 수정",
+            description = "유저 정보 수정 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "수정 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                    )
+            )
+    })
+    @PutMapping("/join")
+    @ResponseBody
+    public CommonResponseDTO<UserInfoResponseDTO> setUserInfo(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestBody UserInfoRequestDTO UserInfoRequest
+    ) {
+        return CommonResponseDTO.onSuccess("유저 정보 수정 성공", userService.setUserInfo(authUser, UserInfoRequest));
     }
 
     @Operation(
@@ -87,13 +110,13 @@ public class UserController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
-                            schema = @Schema(implementation = JoinUserResponseDTO.class)
+                            schema = @Schema(implementation = UserInfoResponseDTO.class)
                     )
             )
     })
     @GetMapping("/token")
     @ResponseBody
-    public CommonResponseDTO<JoinUserResponseDTO> getUserInfo(
+    public CommonResponseDTO<UserInfoResponseDTO> getUserInfo(
             @AuthenticationPrincipal UserDetailsImpl authUser
     ) {
         return CommonResponseDTO.onSuccess("유저 아이디", userService.getUserId(authUser));

@@ -129,7 +129,7 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> updatePost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam Long postId,
+            @PathVariable Long postId,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
         return CommonResponseDTO.onSuccess("글 수정 성공", postService.updatePost(authUser, postId, addPostRequest));
@@ -152,7 +152,7 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> deletePost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam(name = "postId") Long postId
+            @PathVariable Long postId
     ) {
         return CommonResponseDTO.onSuccess("글 삭제 성공", postService.deletePost(authUser, postId));
     }
