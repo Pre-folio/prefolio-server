@@ -6,20 +6,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.constant.ActTag;
-import prefolio.prefolioserver.domain.constant.PartTag;
 import prefolio.prefolioserver.domain.constant.SortBy;
 import prefolio.prefolioserver.dto.*;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
-
-import java.util.List;
 
 
 @RestController
@@ -129,7 +124,7 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> updatePost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam Long postId,
+            @PathVariable Long postId,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
         return CommonResponseDTO.onSuccess("글 수정 성공", postService.updatePost(authUser, postId, addPostRequest));
@@ -152,7 +147,7 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> deletePost(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam(name = "postId") Long postId
+            @PathVariable Long postId
     ) {
         return CommonResponseDTO.onSuccess("글 삭제 성공", postService.deletePost(authUser, postId));
     }
@@ -223,11 +218,11 @@ public class PostController {
     @ResponseBody
     public CommonResponseDTO<CardPostResponseDTO> findScrapByUserId(
             @AuthenticationPrincipal UserDetailsImpl authUser,
-            @RequestParam(name = "partTagList", required = false) PartTag partTag,
-            @RequestParam(name = "actTagList", required = false) ActTag actTag,
+            @RequestParam(name = "partTagList", required = false) String partTagList,
+            @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit) {
-        return CommonResponseDTO.onSuccess("SUCCESS", postService.findMyScrap(authUser, partTag, actTag, pageNum, limit));
+        return CommonResponseDTO.onSuccess("SUCCESS", postService.findMyScrap(authUser, partTagList, actTagList, pageNum, limit));
     }
 
     @Operation(

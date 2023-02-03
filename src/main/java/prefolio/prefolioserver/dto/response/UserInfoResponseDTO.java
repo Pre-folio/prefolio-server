@@ -10,8 +10,8 @@ import prefolio.prefolioserver.domain.User;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinUserResponseDTO {
+public class UserInfoResponseDTO {
         private Long userId;
 
-        public JoinUserResponseDTO(User user) {this.userId = user.getId();}
+        public UserInfoResponseDTO(User user) {this.userId = user.getId();}
 }
