@@ -43,6 +43,8 @@ public class PostService{
 
         if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
+//        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
+//            spec = spec.and(PostSpecification.likePartTag(user.getType()));
         if (actTagList != null && actTagList != "")
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
@@ -138,7 +140,6 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.update(addPostRequest);
-        postRepository.save(findPost);
 
         return new PostIdResponseDTO(findPost);
     }
@@ -147,9 +148,9 @@ public class PostService{
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Post findPost = postRepository.findByIdAndUserId(postId, findUser.getId())
-                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        postRepository.deleteById(findPost.getId());
+        findPost.setDeletedAt(new Date());
 
         return new PostIdResponseDTO(findPost);
     }
@@ -220,7 +221,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 스크랩 유무 확인
-        boolean isScrapped = true;
+        Boolean isScrapped = true;
         Optional<Scrap> dbScrap = scrapRepository.findByUserIdAndPostId(user.getId(), post.getId());
         if (dbScrap.isEmpty()) {
             isScrapped = false;
