@@ -41,9 +41,9 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTagList != null)  // 쿼리에 partTag 들어왔을 때
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
-        if (actTagList != null)
+        if (actTagList != null && actTagList != "")
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
@@ -72,11 +72,11 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = PostSpecification.likeTitle(searchWord)  // 검색
                 .or(PostSpecification.likeContents(searchWord));
-        if (partTagList != null)  // 쿼리에 partTag 들어왔을 때
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
 //        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
 //            spec = spec.and(PostSpecification.likePartTag(user.getType()));
-        if (actTagList != null)
+        if (actTagList != null && actTagList != "")
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
@@ -253,10 +253,10 @@ public class PostService{
 
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTagList!=null){
+        if (partTagList != null && partTagList != ""){
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
         }
-        if (actTagList!=null){
+        if (actTagList != null && actTagList != ""){
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
         }
         spec = spec.and(PostSpecification.equalUser(user));
