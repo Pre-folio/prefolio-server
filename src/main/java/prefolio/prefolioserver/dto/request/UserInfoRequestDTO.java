@@ -10,7 +10,7 @@ import prefolio.prefolioserver.domain.User;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JoinUserRequestDTO {
+public class UserInfoRequestDTO {
 
         private String type;
 
@@ -22,7 +22,7 @@ public class JoinUserRequestDTO {
 
 
         /* Dto -> Entity */
-        public JoinUserRequestDTO (User user) {
+        public UserInfoRequestDTO (User user) {
             this.type = user.getType();
             this.nickname = user.getNickname();
             this.profileImage = user.getProfileImage();

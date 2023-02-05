@@ -5,10 +5,10 @@ import org.springframework.stereotype.Service;
 
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
-import prefolio.prefolioserver.dto.request.JoinUserRequestDTO;
+import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
-import prefolio.prefolioserver.dto.response.JoinUserResponseDTO;
+import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
@@ -29,21 +29,20 @@ public class UserService {
     private final LikeRepository likeRepository;
 
 
-    public JoinUserResponseDTO joinUser(UserDetailsImpl authUser, JoinUserRequestDTO joinUserRequest) {
+    public UserInfoResponseDTO setUserInfo(UserDetailsImpl authUser, UserInfoRequestDTO UserInfoRequest) {
 
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        findUser.setType(joinUserRequest.getType());
-        findUser.setNickname(joinUserRequest.getNickname());
-        findUser.setProfileImage(joinUserRequest.getProfileImage());
-        findUser.setGrade(joinUserRequest.getGrade());
+        findUser.setType(UserInfoRequest.getType());
+        findUser.setNickname(UserInfoRequest.getNickname());
+        findUser.setProfileImage(UserInfoRequest.getProfileImage());
+        findUser.setGrade(UserInfoRequest.getGrade());
         findUser.setCreatedAt(new Date());
 
         User savedUser = userRepository.saveAndFlush(findUser);
-        return new JoinUserResponseDTO(savedUser);
+        return new UserInfoResponseDTO(savedUser);
     }
-
 
     public CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest) {
 
@@ -54,10 +53,10 @@ public class UserService {
         return new CheckUserResponseDTO(true);
     }
 
-    public JoinUserResponseDTO getUserId(UserDetailsImpl authUser) {
+    public UserInfoResponseDTO getUserId(UserDetailsImpl authUser) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        return new JoinUserResponseDTO(user.getId());
+        return new UserInfoResponseDTO(user.getId());
     }
 
     public GetUserInfoResponseDTO getUserInfo(Long userId){

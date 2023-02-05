@@ -31,11 +31,9 @@ public class PostService{
 
 
     public MainPostResponseDTO getAllPosts(
-            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
-            ActTag actTag, Integer pageNum, Integer limit
+            SortBy sortBy, String partTagList,
+            String actTagList, Integer pageNum, Integer limit
     ) {
-        User user = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 페이지 요청 정보
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(sortBy.getSortBy()).descending());
@@ -43,12 +41,12 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTag != null)  // 쿼리에 partTag 들어왔을 때
-            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
+            spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
 //        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
 //            spec = spec.and(PostSpecification.likePartTag(user.getType()));
-        if (actTag != null)
-            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+        if (actTagList != null && actTagList != "")
+            spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
         List<MainPostDTO> mainPostsList = new ArrayList<>();
@@ -64,8 +62,8 @@ public class PostService{
 
 
     public MainPostResponseDTO getSearchPosts(
-            UserDetailsImpl authUser, SortBy sortBy, PartTag partTag,
-            ActTag actTag, Integer pageNum, Integer limit, String searchWord
+            UserDetailsImpl authUser, SortBy sortBy, String partTagList,
+            String actTagList, Integer pageNum, Integer limit, String searchWord
     ) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
@@ -76,12 +74,12 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = PostSpecification.likeTitle(searchWord)  // 검색
                 .or(PostSpecification.likeContents(searchWord));
-        if (partTag != null)  // 쿼리에 partTag 들어왔을 때
-            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
+            spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
 //        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
 //            spec = spec.and(PostSpecification.likePartTag(user.getType()));
-        if (actTag != null)
-            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+        if (actTagList != null && actTagList != "")
+            spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
         List<MainPostDTO> mainPostsList = new ArrayList<>();
@@ -98,7 +96,7 @@ public class PostService{
     public List<String> parseTag(String strTag) {
         List<String> tagList = new ArrayList<>();
         // 태그 없을 때
-        if (strTag == null || strTag == "") {
+        if (strTag == null || strTag.equals("")) {
             return tagList;
         }
         // 태그 있을 때 파싱
@@ -249,7 +247,7 @@ public class PostService{
 
 
     public CardPostResponseDTO findPostByUserId(
-            Long userId, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
+            Long userId, String partTagList, String actTagList, Integer pageNum, Integer limit) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -257,11 +255,11 @@ public class PostService{
 
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTag!=null){
-            spec = spec.and(PostSpecification.likePartTag(partTag.getPartTag()));
+        if (partTagList != null && partTagList != ""){
+            spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
         }
-        if (actTag!=null){
-            spec = spec.and(PostSpecification.likeActTag(actTag.getActTag()));
+        if (actTagList != null && actTagList != ""){
+            spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
         }
         spec = spec.and(PostSpecification.equalUser(user));
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
@@ -279,7 +277,7 @@ public class PostService{
     }
 
     public CardPostResponseDTO findMyScrap(
-            UserDetailsImpl authUser, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
+            UserDetailsImpl authUser, String partTagList, String actTagList, Integer pageNum, Integer limit) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -287,11 +285,11 @@ public class PostService{
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTag!=null){
-            spec = spec.and(ScrapSpecification.likePostPartTag(partTag.getPartTag()));
+        if (partTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostPartTag(parseTag(partTagList)));
         }
-        if (actTag!=null){
-            spec = spec.and(ScrapSpecification.likePostActTag(actTag.getActTag()));
+        if (actTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostActTag(parseTag(actTagList)));
         }
         spec = spec.and(ScrapSpecification.equalUser(user));
 
