@@ -142,6 +142,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.update(addPostRequest);
+        postRepository.save(findPost);
 
         return new PostIdResponseDTO(findPost);
     }
@@ -150,9 +151,9 @@ public class PostService{
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Post findPost = postRepository.findByIdAndUserId(postId, findUser.getId())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
-        findPost.setDeletedAt(new Date());
+        postRepository.deleteById(findPost.getId());
 
         return new PostIdResponseDTO(findPost);
     }
