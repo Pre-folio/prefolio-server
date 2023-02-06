@@ -134,10 +134,12 @@ public class KakaoService{
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-
+            System.out.printf("jsonNode: %s", jsonNode);
             String email = jsonNode.get("kakao_account").get("email").asText();
+            System.out.printf("email: %s", email);
             return new KakaoUserInfoDTO(email);
         } catch (Exception e) {
+            System.out.println(e.toString());
             throw new CustomException(INVALID_USER_TOKEN);
         }
     }
