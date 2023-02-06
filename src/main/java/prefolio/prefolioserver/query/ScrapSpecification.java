@@ -22,7 +22,7 @@ public class ScrapSpecification {
             for (String partTag : partTagList) {
                 predicates.add(cb.like(join.get("partTag"), '%' + partTag + '%'));
             }
-            return cb.or(predicates.toArray(predicates.toArray(new Predicate[0])));
+            return cb.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         };
     }
 
@@ -33,7 +33,7 @@ public class ScrapSpecification {
             for (String actTag : actTagList) {
                 predicates.add(cb.like(join.get("actTag"), '%' + actTag + '%'));
             }
-            return cb.or(predicates.toArray(predicates.toArray(new Predicate[0])));
+            return cb.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         };
     }
 }

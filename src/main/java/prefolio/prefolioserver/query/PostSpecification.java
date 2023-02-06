@@ -21,7 +21,7 @@ public class PostSpecification {
             for (String partTag : partTagList) {
                 predicates.add(criteriaBuilder.like(root.get("partTag"), '%' + partTag + '%'));
             }
-            return criteriaBuilder.or(predicates.toArray(predicates.toArray(new Predicate[0])));
+            return criteriaBuilder.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         });
     }
 
@@ -31,7 +31,7 @@ public class PostSpecification {
             for (String actTag : actTagList) {
                 predicates.add(criteriaBuilder.like(root.get("actTag"), '%' + actTag + '%'));
             }
-            return criteriaBuilder.or(predicates.toArray(predicates.toArray(new Predicate[0])));
+            return criteriaBuilder.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         });
     }
 
