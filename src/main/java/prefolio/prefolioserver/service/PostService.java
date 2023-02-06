@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import prefolio.prefolioserver.annotation.AuthUser;
 import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.domain.constant.*;
 import prefolio.prefolioserver.dto.*;
@@ -31,9 +32,11 @@ public class PostService{
 
 
     public MainPostResponseDTO getAllPosts(
-            SortBy sortBy, String partTagList,
+            UserDetailsImpl authUser, SortBy sortBy, String partTagList,
             String actTagList, Integer pageNum, Integer limit
     ) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 페이지 요청 정보
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(sortBy.getSortBy()).descending());
@@ -53,7 +56,8 @@ public class PostService{
         for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
             mainPostsList.add(mainPostDTO);
         }
 
@@ -86,7 +90,8 @@ public class PostService{
         for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
             mainPostsList.add(mainPostDTO);
         }
 
@@ -247,7 +252,12 @@ public class PostService{
 
 
     public CardPostResponseDTO findPostByUserId(
-            Long userId, String partTagList, String actTagList, Integer pageNum, Integer limit) {
+            UserDetailsImpl authUser, Long userId, String partTagList,
+            String actTagList, Integer pageNum, Integer limit) {
+
+        User me = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -269,7 +279,8 @@ public class PostService{
         for(Post post : findPosts){
             String pTag = post.getPartTag();
             String aTag = post.getActTag();
-            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(me.getId(), post.getId()) != 0;
+            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag), isScrapped);
             cardPostsList.add(dto);
         }
 
@@ -281,7 +292,7 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("id").ascending());
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("id").descending());
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
@@ -300,7 +311,8 @@ public class PostService{
         for(Scrap scrap : findScraps){
             String pTag = scrap.getPost().getPartTag();
             String aTag = scrap.getPost().getActTag();
-            CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = true;
+            CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag), isScrapped);
             cardScrapsDTOList.add(dto);
         }
 
