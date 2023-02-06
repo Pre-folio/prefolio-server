@@ -19,16 +19,18 @@ public class MainPostDTO {
     private List<String> partTag;
     private List<String> actTag;
     private Integer hits;
+    private Boolean isScrapped;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
-    public MainPostDTO(Post post, List<String> partTag, List<String> actTag) {
+    public MainPostDTO(Post post, List<String> partTag, List<String> actTag, Boolean isScrapped) {
         this.id = post.getId();
         this.thumbnail = post.getThumbnail();
         this.title = post.getTitle();
         this.partTag = partTag;
         this.actTag = actTag;
         this.hits = post.getHits();
+        this.isScrapped = isScrapped;
         this.createdAt = post.getCreatedAt();
     }
 }
