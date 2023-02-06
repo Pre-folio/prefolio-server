@@ -128,7 +128,7 @@ public class KakaoService{
                 kakaoTokenRequest,
                 String.class
         );
-
+        System.out.printf("response: %s", response);
         // responseBody 정보 꺼내기
         String responseBody = response.getBody();
         try {
