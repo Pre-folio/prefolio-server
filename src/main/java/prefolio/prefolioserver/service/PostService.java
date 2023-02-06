@@ -152,6 +152,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
         postRepository.deleteById(findPost.getId());
+        scrapRepository.deleteByPostId(findPost.getId());
 
         return new PostIdResponseDTO(findPost);
     }
@@ -233,7 +234,6 @@ public class PostService{
             Scrap scrap = Scrap.builder()
                     .user(user)
                     .post(post)
-                    .createdAt(new Date())
                     .build();
             scrapRepository.save(scrap);
         } else if (isScrapped == true) { // 스크랩 취소
@@ -281,7 +281,7 @@ public class PostService{
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("id").ascending());
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
