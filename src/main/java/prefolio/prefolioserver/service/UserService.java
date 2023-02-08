@@ -44,10 +44,11 @@ public class UserService {
         return new UserInfoResponseDTO(savedUser);
     }
 
-    public CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest) {
-
-        Optional<User> user = userRepository.findByNickname(checkUserRequest.getNickname());
-        if (user.isEmpty()) {
+    public CheckUserResponseDTO findUserByNickname(UserDetailsImpl authUser, CheckUserRequestDTO checkUserRequest) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+        Optional<User> findUser = userRepository.findByNickname(checkUserRequest.getNickname());
+        if (findUser.isEmpty() || findUser.get().getId() == user.getId()) {
             return new CheckUserResponseDTO(false);
         }
         return new CheckUserResponseDTO(true);
@@ -65,7 +66,7 @@ public class UserService {
 
         Optional<Long> countScrap = scrapRepository.countByUserId(userId);
         Optional<Long> countLike = likeRepository.countByUserId(userId);
-        //조건문 추가
+
         if(countScrap.isEmpty() && countLike.isEmpty())
             return new GetUserInfoResponseDTO(user,0L,0L);
 

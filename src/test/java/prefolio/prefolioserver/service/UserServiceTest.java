@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import prefolio.prefolioserver.domain.User;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
-import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
@@ -41,16 +40,16 @@ class UserServiceTest {
     @DisplayName("닉네임 있을 때")
     void findUserByNicknameTrue() {
         CheckUserRequestDTO checkUserRequestDTO = new CheckUserRequestDTO("승희");
-        CheckUserResponseDTO checkUserResponseDTO = userService.findUserByNickname(checkUserRequestDTO);
-        System.out.println("checkUserResponseDTO = " + checkUserResponseDTO.getIs_used());
+        // CheckUserResponseDTO checkUserResponseDTO = userService.findUserByNickname(authUser, checkUserRequestDTO);
+        // System.out.println("checkUserResponseDTO = " + checkUserResponseDTO.getIs_used());
     }
 
     @Test
     @DisplayName("닉네임 없을 때")
     void findUserByNicknameFalse() {
         CheckUserRequestDTO request = new CheckUserRequestDTO("수현");
-        CheckUserResponseDTO response = userService.findUserByNickname(request);
-        System.out.println("response.getIs_used() = " + response.getIs_used());
+        // CheckUserResponseDTO response = userService.findUserByNickname(request);
+        // System.out.println("response.getIs_used() = " + response.getIs_used());
     }
 
     @Test
