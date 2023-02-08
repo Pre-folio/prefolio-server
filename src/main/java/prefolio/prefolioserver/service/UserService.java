@@ -67,9 +67,9 @@ public class UserService {
         Optional<Long> countScrap = scrapRepository.countByUserId(userId);
         Optional<Long> countLike = likeRepository.countByUserId(userId);
 
-        if(countScrap.isEmpty() && countLike.isEmpty())
-            return new GetUserInfoResponseDTO(user,0L,0L);
+        Long scrapNum = countScrap.isEmpty()? 0L : countScrap.get();
+        Long likeNum = countLike.isEmpty()? 0L : countLike.get();
 
-    return new GetUserInfoResponseDTO(user, countScrap.get(), countLike.get());
+        return new GetUserInfoResponseDTO(user, scrapNum, likeNum);
     }
 }
