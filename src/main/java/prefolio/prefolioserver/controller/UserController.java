@@ -96,8 +96,11 @@ public class UserController {
     })
     @PostMapping("/nickname")
     @ResponseBody
-    public CommonResponseDTO<CheckUserResponseDTO> checkUser(@RequestBody CheckUserRequestDTO checkUserRequest) {
-        return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(checkUserRequest));
+    public CommonResponseDTO<CheckUserResponseDTO> checkUser(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestBody CheckUserRequestDTO checkUserRequest
+    ) {
+        return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(authUser, checkUserRequest));
     }
 
     @Operation(
