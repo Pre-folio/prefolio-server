@@ -20,7 +20,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.dto.KakaoUserInfoDTO;
 import prefolio.prefolioserver.error.CustomException;
@@ -128,18 +127,14 @@ public class KakaoService{
                 kakaoTokenRequest,
                 String.class
         );
-        System.out.printf("response: %s", response);
         // responseBody 정보 꺼내기
         String responseBody = response.getBody();
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            System.out.printf("jsonNode: %s", jsonNode);
             String email = jsonNode.get("kakao_account").get("email").asText();
-            System.out.printf("email: %s", email);
             return new KakaoUserInfoDTO(email);
         } catch (Exception e) {
-            System.out.println(e.toString());
             throw new CustomException(INVALID_USER_TOKEN);
         }
     }
