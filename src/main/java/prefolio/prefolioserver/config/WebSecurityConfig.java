@@ -84,6 +84,7 @@ public class WebSecurityConfig {
                         "http://localhost:3000",
                         "https://api.prefolio.net",
                         "https://prefolio.net",
+                        "https://pre-folio.com",
                         "http://localhost:8080",
                         "https://prefolio-client.vercel.app",
                         "http://43.200.11.160:3000",

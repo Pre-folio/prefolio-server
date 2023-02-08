@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import prefolio.prefolioserver.annotation.AuthUser;
 import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.domain.constant.*;
 import prefolio.prefolioserver.dto.*;
@@ -31,9 +32,11 @@ public class PostService{
 
 
     public MainPostResponseDTO getAllPosts(
-            SortBy sortBy, String partTagList,
+            UserDetailsImpl authUser, SortBy sortBy, String partTagList,
             String actTagList, Integer pageNum, Integer limit
     ) {
+        User user = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         // 페이지 요청 정보
         PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by(sortBy.getSortBy()).descending());
@@ -41,11 +44,11 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTagList != null)  // 쿼리에 partTag 들어왔을 때
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
 //        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
 //            spec = spec.and(PostSpecification.likePartTag(user.getType()));
-        if (actTagList != null)
+        if (actTagList != null && actTagList != "")
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
@@ -53,7 +56,8 @@ public class PostService{
         for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
             mainPostsList.add(mainPostDTO);
         }
 
@@ -74,11 +78,11 @@ public class PostService{
         // 쿼리
         Specification<Post> spec = PostSpecification.likeTitle(searchWord)  // 검색
                 .or(PostSpecification.likeContents(searchWord));
-        if (partTagList != null)  // 쿼리에 partTag 들어왔을 때
+        if (partTagList != null && partTagList != "")  // 쿼리에 partTag 들어왔을 때
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
 //        else if (partTag == null)  // 쿼리에 partTag 없으면 로그인 유저 part 정보로 쿼리
 //            spec = spec.and(PostSpecification.likePartTag(user.getType()));
-        if (actTagList != null)
+        if (actTagList != null && actTagList != "")
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
 
         Page<Post> findPosts = postRepository.findAll(spec, pageRequest);
@@ -86,7 +90,8 @@ public class PostService{
         for (Post p : findPosts) {
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
             mainPostsList.add(mainPostDTO);
         }
 
@@ -96,7 +101,7 @@ public class PostService{
     public List<String> parseTag(String strTag) {
         List<String> tagList = new ArrayList<>();
         // 태그 없을 때
-        if (strTag == null || strTag == "") {
+        if (strTag == null || strTag.equals("")) {
             return tagList;
         }
         // 태그 있을 때 파싱
@@ -140,6 +145,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
         findPost.update(addPostRequest);
+        postRepository.save(findPost);
 
         return new PostIdResponseDTO(findPost);
     }
@@ -148,9 +154,10 @@ public class PostService{
         User findUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Post findPost = postRepository.findByIdAndUserId(postId, findUser.getId())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
-        findPost.setDeletedAt(new Date());
+        postRepository.deleteById(findPost.getId());
+        scrapRepository.deleteByPostId(findPost.getId());
 
         return new PostIdResponseDTO(findPost);
     }
@@ -232,7 +239,6 @@ public class PostService{
             Scrap scrap = Scrap.builder()
                     .user(user)
                     .post(post)
-                    .createdAt(new Date())
                     .build();
             scrapRepository.save(scrap);
         } else if (isScrapped == true) { // 스크랩 취소
@@ -246,7 +252,12 @@ public class PostService{
 
 
     public CardPostResponseDTO findPostByUserId(
-            Long userId, String partTagList, String actTagList, Integer pageNum, Integer limit) {
+            UserDetailsImpl authUser, Long userId, String partTagList,
+            String actTagList, Integer pageNum, Integer limit) {
+
+        User me = userRepository.findByEmail(authUser.getUsername())
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
@@ -254,10 +265,10 @@ public class PostService{
 
         Specification<Post> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTagList!=null){
+        if (partTagList != null && partTagList != ""){
             spec = spec.and(PostSpecification.likePartTag(parseTag(partTagList)));
         }
-        if (actTagList!=null){
+        if (actTagList != null && actTagList != ""){
             spec = spec.and(PostSpecification.likeActTag(parseTag(actTagList)));
         }
         spec = spec.and(PostSpecification.equalUser(user));
@@ -268,7 +279,8 @@ public class PostService{
         for(Post post : findPosts){
             String pTag = post.getPartTag();
             String aTag = post.getActTag();
-            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = scrapRepository.countByUserIdAndPostId(me.getId(), post.getId()) != 0;
+            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag), isScrapped);
             cardPostsList.add(dto);
         }
 
@@ -276,19 +288,19 @@ public class PostService{
     }
 
     public CardPostResponseDTO findMyScrap(
-            UserDetailsImpl authUser, PartTag partTag, ActTag actTag, Integer pageNum, Integer limit) {
+            UserDetailsImpl authUser, String partTagList, String actTagList, Integer pageNum, Integer limit) {
         User user = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PageRequest.of(pageNum, limit, Sort.by("id").descending());
 
         Specification<Scrap> spec = (root, query, criteriaBuilder) -> null;
 
-        if (partTag!=null){
-            spec = spec.and(ScrapSpecification.likePostPartTag(partTag.getPartTag()));
+        if (partTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostPartTag(parseTag(partTagList)));
         }
-        if (actTag!=null){
-            spec = spec.and(ScrapSpecification.likePostActTag(actTag.getActTag()));
+        if (actTagList!=null){
+            spec = spec.and(ScrapSpecification.likePostActTag(parseTag(actTagList)));
         }
         spec = spec.and(ScrapSpecification.equalUser(user));
 
@@ -299,7 +311,8 @@ public class PostService{
         for(Scrap scrap : findScraps){
             String pTag = scrap.getPost().getPartTag();
             String aTag = scrap.getPost().getActTag();
-            CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag));
+            Boolean isScrapped = true;
+            CardPostDTO dto = new CardPostDTO(scrap, parseTag(pTag), parseTag(aTag), isScrapped);
             cardScrapsDTOList.add(dto);
         }
 
