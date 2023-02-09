@@ -167,7 +167,9 @@ public class PostService{
     public GetPostResponseDTO findPostById(UserDetailsImpl authUser, Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(POST_NOT_FOUND));
-        User user = userRepository.findByEmail(post.getUser().getEmail())
+        User postUser = userRepository.findByEmail(post.getUser().getEmail())
+                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+        User loginUser = userRepository.findByEmail(authUser.getUsername())
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
         post.setHits(post.getHits() + 1);   // 조회수 증가
@@ -175,13 +177,13 @@ public class PostService{
         PostDTO postDTO = new PostDTO(
                 savedPost, parseTag(savedPost.getTools()), parseTag(savedPost.getPartTag()), parseTag(savedPost.getActTag()));
         CountDTO countDTO = new CountDTO(savedPost.getLikeList().size(), savedPost.getScrapList().size());
-        UserDTO userDTO = new UserDTO(user);
+        UserDTO userDTO = new UserDTO(postUser);
 
         Boolean isLiked = false;
         Boolean isScrapped = false;
 
-        Optional<Like> like = likeRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
-        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(user.getId(), savedPost.getId());
+        Optional<Like> like = likeRepository.findByUserIdAndPostId(loginUser.getId(), savedPost.getId());
+        Optional<Scrap> scrap = scrapRepository.findByUserIdAndPostId(loginUser.getId(), savedPost.getId());
 
         if(like.isPresent()) {
             isLiked = true;
