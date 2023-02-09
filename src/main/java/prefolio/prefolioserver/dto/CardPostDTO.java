@@ -24,6 +24,7 @@ public class CardPostDTO {
     private List<String> actTag;
     private Integer hits;
     private Boolean isScrapped;
+    private Boolean isMine;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
@@ -38,7 +39,7 @@ public class CardPostDTO {
         this.createdAt = scrap.getPost().getCreatedAt();
     }
 
-    public CardPostDTO(Post post, List<String> partTag, List<String> actTag,  Boolean isScrapped) {
+    public CardPostDTO(Post post, List<String> partTag, List<String> actTag,  Boolean isScrapped, Boolean isMine) {
         this.postId = post.getId();
         this.thumbnail = post.getThumbnail();
         this.title = post.getTitle();
@@ -47,6 +48,7 @@ public class CardPostDTO {
         this.hits = post.getHits();
         this.isScrapped = isScrapped;
         this.createdAt = post.getCreatedAt();
+        this.isMine = isMine;
     }
 
 }
