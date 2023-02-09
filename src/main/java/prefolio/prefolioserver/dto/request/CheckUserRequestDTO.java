@@ -12,11 +12,11 @@ import prefolio.prefolioserver.domain.User;
 @AllArgsConstructor
 public class CheckUserRequestDTO {
 
+    private Long userId;
+    private String nickname;
 
-        private String nickname;
 
-
-        public CheckUserRequestDTO (User user) {
-            this.nickname = user.getNickname();
-        }
+    public CheckUserRequestDTO(User user) {
+        this.nickname = user.getNickname();
+    }
 }

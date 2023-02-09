@@ -52,11 +52,11 @@ public class UserService {
         return new UserInfoResponseDTO(savedUser);
     }
 
-    public CheckUserResponseDTO findUserByNickname(UserDetailsImpl authUser, CheckUserRequestDTO checkUserRequest) {
-        User user = userRepository.findByEmail(authUser.getUsername())
+    public CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest) {
+        User user = userRepository.findById(checkUserRequest.getUserId())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Optional<User> findUser = userRepository.findByNickname(checkUserRequest.getNickname());
-        if (findUser.isEmpty() || findUser.get().getId() == user.getId()) {
+        if (findUser.isEmpty() || Objects.equals(findUser.get().getId(), checkUserRequest.getUserId())) {
             return new CheckUserResponseDTO(false);
         }
         return new CheckUserResponseDTO(true);
