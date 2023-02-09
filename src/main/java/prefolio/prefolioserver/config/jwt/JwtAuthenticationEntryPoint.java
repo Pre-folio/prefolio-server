@@ -11,9 +11,10 @@ import prefolio.prefolioserver.error.ErrorResponse;
 import java.io.IOException;
 
 
-
-/** 인증되지 않았을 경우(비로그인) AuthenticationEntryPoint 부분에서 AuthenticationException 발생시키면서
- * 비로그인 상태에서 인증 실패 시, AuthenticationEntryPoint로 핸들링되어 이곳에서 처리 */
+/**
+ * 인증되지 않았을 경우(비로그인) AuthenticationEntryPoint 부분에서 AuthenticationException 발생시키면서
+ * 비로그인 상태에서 인증 실패 시, AuthenticationEntryPoint로 핸들링되어 이곳에서 처리
+ */
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -23,9 +24,11 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             HttpServletResponse response,
             AuthenticationException e
     ) throws IOException {
-        String exception = (String)request.getAttribute("exception");
+        String exception = (String) request.getAttribute("exception");
 
-        if(exception == null || exception.equals(ErrorCode.NO_TOKEN.getCode())) {
+        if (exception == null) {
+            setResponse(response, ErrorCode._INTERNAL_SERVER_ERROR);
+        } else if (exception.equals(ErrorCode.NO_TOKEN.getCode())) {
             setResponse(response, ErrorCode.NO_TOKEN);
         }
 //        //유효하지 않은 토큰인 경우
@@ -33,15 +36,15 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 //            setResponse(response, ErrorCode.INVALID_ACCESS_TOKEN);
 //        }
         //잘못된 서명
-        else if(exception.equals(ErrorCode.INVALID_SIGNATURE.getCode())) {
+        else if (exception.equals(ErrorCode.INVALID_SIGNATURE.getCode())) {
             setResponse(response, ErrorCode.INVALID_SIGNATURE);
         }
         //토큰 만료된 경우
-        else if(exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
+        else if (exception.equals(ErrorCode.EXPIRED_TOKEN.getCode())) {
             setResponse(response, ErrorCode.EXPIRED_TOKEN);
         }
         //지원되지 않는 토큰인 경우
-        else if(exception.equals(ErrorCode.UNSUPPORTED_TOKEN.getCode())) {
+        else if (exception.equals(ErrorCode.UNSUPPORTED_TOKEN.getCode())) {
             setResponse(response, ErrorCode.UNSUPPORTED_TOKEN);
         }
 //        //잘못된 타입의 토큰인 경우
@@ -58,7 +61,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     }
 
     /**
-     *  스프링 시큐리티 예외 커스텀 함수
+     * 스프링 시큐리티 예외 커스텀 함수
      */
     public void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
