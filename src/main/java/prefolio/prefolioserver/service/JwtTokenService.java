@@ -43,7 +43,7 @@ public class JwtTokenService {
                     .setSigningKey(Base64.getEncoder().encodeToString(("" + JWT_SECRET).getBytes(
                             StandardCharsets.UTF_8))).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (SignatureException | MalformedJwtException ex) {
+        } catch (SignatureException ex) {
             log.error("잘못된 JWT 서명입니다");
             request.setAttribute("exception", ErrorCode.INVALID_SIGNATURE.getCode());
         } catch (ExpiredJwtException ex) {
