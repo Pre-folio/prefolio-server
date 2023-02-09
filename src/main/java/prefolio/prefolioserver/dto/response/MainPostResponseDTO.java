@@ -12,11 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 public class MainPostResponseDTO {
 
+    private Long userId;
     private List<MainPostDTO> posts;
     private Integer totalPages;
     private Long totalResults;
 
-    public MainPostResponseDTO(List<MainPostDTO> posts, Integer totalPages, Long totalResults) {
+    public MainPostResponseDTO(Long userId, List<MainPostDTO> posts, Integer totalPages, Long totalResults) {
+        this.userId = userId;
         this.posts = posts;
         this.totalPages = totalPages;
         this.totalResults = totalResults;

@@ -61,7 +61,7 @@ public class PostService{
             mainPostsList.add(mainPostDTO);
         }
 
-        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+        return new MainPostResponseDTO(user.getId(), mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
     }
 
 
@@ -95,7 +95,7 @@ public class PostService{
             mainPostsList.add(mainPostDTO);
         }
 
-        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+        return new MainPostResponseDTO(user.getId(), mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
     }
 
     public List<String> parseTag(String strTag) {
