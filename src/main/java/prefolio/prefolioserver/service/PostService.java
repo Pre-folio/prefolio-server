@@ -57,11 +57,12 @@ public class PostService{
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
             Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
+            Boolean isMine = Objects.equals(p.getUser().getId(), user.getId());
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped, isMine);
             mainPostsList.add(mainPostDTO);
         }
 
-        return new MainPostResponseDTO(user.getId(), mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
     }
 
 
@@ -91,11 +92,12 @@ public class PostService{
             String pTag = p.getPartTag();
             String aTag = p.getActTag();
             Boolean isScrapped = scrapRepository.countByUserIdAndPostId(user.getId(), p.getId()) != 0;
-            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped);
+            Boolean isMine = Objects.equals(p.getUser().getId(), user.getId());
+            MainPostDTO mainPostDTO = new MainPostDTO(p, parseTag(pTag), parseTag(aTag), isScrapped, isMine);
             mainPostsList.add(mainPostDTO);
         }
 
-        return new MainPostResponseDTO(user.getId(), mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
+        return new MainPostResponseDTO(mainPostsList, findPosts.getTotalPages(), findPosts.getTotalElements());
     }
 
     public List<String> parseTag(String strTag) {
@@ -280,7 +282,8 @@ public class PostService{
             String pTag = post.getPartTag();
             String aTag = post.getActTag();
             Boolean isScrapped = scrapRepository.countByUserIdAndPostId(me.getId(), post.getId()) != 0;
-            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag), isScrapped);
+            Boolean isMine = true;
+            CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag), isScrapped, isMine);
             cardPostsList.add(dto);
         }
 
