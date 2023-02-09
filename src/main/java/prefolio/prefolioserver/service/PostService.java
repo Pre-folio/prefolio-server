@@ -284,7 +284,7 @@ public class PostService{
             String pTag = post.getPartTag();
             String aTag = post.getActTag();
             Boolean isScrapped = scrapRepository.countByUserIdAndPostId(me.getId(), post.getId()) != 0;
-            Boolean isMine = true;
+            Boolean isMine = me==user;
             CardPostDTO dto = new CardPostDTO(post, parseTag(pTag), parseTag(aTag), isScrapped, isMine);
             cardPostsList.add(dto);
         }
