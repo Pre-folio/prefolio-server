@@ -26,10 +26,7 @@ import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 import static prefolio.prefolioserver.error.ErrorCode.*;
 
@@ -64,15 +61,15 @@ public class KakaoService{
         User user = registerUserIfNeed(userInfo);
 
         // JWT 토큰 리턴
-        String jwtToken = usersAuthorizationInput(user);
+        List<String> jwtToken = usersAuthorizationInput(user);
 
         // 회원여부 닉네임으로 확인
         Boolean isMember = checkIsMember(user);
 
         // 로그인 처리
-        Authentication authentication = getAuthentication(jwtToken);
+        Authentication authentication = getAuthentication(jwtToken.get(0));
 
-        return new KakaoLoginResponseDTO(user.getId(), jwtToken, isMember);
+        return new KakaoLoginResponseDTO(user.getId(), jwtToken.get(0), jwtToken.get(1), isMember);
     }
 
     // 인가코드로 accessToken 요청
@@ -164,17 +161,22 @@ public class KakaoService{
     }
 
     // JWT 토큰 리턴
-    private String usersAuthorizationInput(User user) {
+    private List<String> usersAuthorizationInput(User user) {
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
         String accessToken = generateJwtAccessToken(userDetails);
         String refreshToken = generateJwtRefreshToken(userDetails);
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
-        return accessToken;
+
+        List<String> token = new ArrayList<>();
+        token.add(accessToken);
+        token.add(refreshToken);
+
+        return token;
     }
 
     // 로그인 처리
-    private Authentication getAuthentication(String token) {
+    public Authentication getAuthentication(String token) {
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(
                 jwtTokenService.getUserIdFromJwtToken(token)));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -191,7 +193,7 @@ public class KakaoService{
         User user = userRepository.findByEmail(userDetails.getEmail())
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, 1);  // 만료시간 1시간
+        cal.add(Calendar.HOUR, 3);  // 만료시간 1시간
 
         final Date issuedAt = new Date();
         final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
@@ -211,7 +213,7 @@ public class KakaoService{
         return buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
     }
 
-    private String buildAccessToken(Long id, Date issuedAt, Date accessTokenExpiresIn) {
+    public String buildAccessToken(Long id, Date issuedAt, Date accessTokenExpiresIn) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setSubject(id.toString())

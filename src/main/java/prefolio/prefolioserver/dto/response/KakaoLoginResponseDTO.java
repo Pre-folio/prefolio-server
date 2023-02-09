@@ -11,11 +11,13 @@ public class KakaoLoginResponseDTO {
 
     private Long userId;
     private String accessToken;
+    private String refreshToken;
     private Boolean isMember;
 
-    public KakaoLoginResponseDTO(Long userId, String accessToken, Boolean isMember) {
+    public KakaoLoginResponseDTO(Long userId, String accessToken, String refreshToken, Boolean isMember) {
         this.userId = userId;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.isMember = isMember;
     }
 }

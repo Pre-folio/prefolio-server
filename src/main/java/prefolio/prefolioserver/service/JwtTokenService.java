@@ -28,7 +28,7 @@ public class JwtTokenService {
     private String JWT_SECRET;
 
 
-    public String getToken(HttpServletRequest request) {
+    public String getAccessToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
             String accessToken = bearerToken.substring("Bearer ".length());
@@ -36,7 +36,6 @@ public class JwtTokenService {
         }
         return bearerToken;
     }
-
 
     public Boolean validateToken(HttpServletRequest request, String token) {
         try {
