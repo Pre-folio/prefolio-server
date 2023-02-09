@@ -57,6 +57,7 @@ public class WebSecurityConfig {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(SwaggerPatterns).permitAll()
                 .requestMatchers("/kakao/login").permitAll()
+                .requestMatchers("/user/refresh/{userId}").permitAll()
                 .requestMatchers("/source/url").permitAll()
                 .anyRequest().authenticated()
                 .and()

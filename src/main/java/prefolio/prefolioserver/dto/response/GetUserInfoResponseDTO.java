@@ -17,10 +17,7 @@ public class GetUserInfoResponseDTO {
     private String nickname;
     private String profileImage;
     private Integer grade;
-    private String refreshToken;
-
     private Long countScrap;
-
     private Long countLike;
 
 
@@ -31,7 +28,6 @@ public class GetUserInfoResponseDTO {
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
         this.grade = user.getGrade();
-        this.refreshToken = user.getRefreshToken();
         this.countScrap = countScrap;
         this.countLike = countLike;
     }

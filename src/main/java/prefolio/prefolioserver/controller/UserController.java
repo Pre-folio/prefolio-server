@@ -11,9 +11,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
+import prefolio.prefolioserver.dto.request.TokenRequestDTO;
 import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
 import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
+import prefolio.prefolioserver.dto.response.TokenResponseDTO;
 import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
 import prefolio.prefolioserver.service.UserDetailsImpl;
 import prefolio.prefolioserver.service.UserService;
@@ -145,5 +147,26 @@ public class UserController {
             @PathVariable(name = "userId") Long userId
     ) {
         return CommonResponseDTO.onSuccess("유저 정보", userService.getUserInfo(userId));
+    }
+    @Operation(
+            summary = "토큰 재발급",
+            description = "토큰 재발급 메서드입니다."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "성공",
+                    content = @Content(
+                            schema = @Schema(implementation = TokenResponseDTO.class)
+                    )
+            )
+    })
+    @PostMapping("/refresh/{userId}")
+    @ResponseBody
+    public CommonResponseDTO<TokenResponseDTO> getNewToken(
+            @RequestBody TokenRequestDTO refreshToken,
+            @PathVariable(name = "userId") Long userId
+    ) {
+        return CommonResponseDTO.onSuccess("토큰 재발급", userService.getNewToken(refreshToken, userId));
     }
 }
