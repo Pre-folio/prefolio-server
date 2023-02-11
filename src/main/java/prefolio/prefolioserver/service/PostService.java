@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.annotation.AuthUser;
 import prefolio.prefolioserver.domain.*;
 import prefolio.prefolioserver.domain.constant.*;
 import prefolio.prefolioserver.dto.*;
@@ -159,6 +158,7 @@ public class PostService{
                 .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
 
         postRepository.deleteById(findPost.getId());
+        likeRepository.deleteByPostId(findPost.getId());
         scrapRepository.deleteByPostId(findPost.getId());
 
         return new PostIdResponseDTO(findPost);

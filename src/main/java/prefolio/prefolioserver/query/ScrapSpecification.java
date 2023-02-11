@@ -36,4 +36,11 @@ public class ScrapSpecification {
             return cb.and(predicates.toArray(predicates.toArray(new Predicate[0])));
         };
     }
+
+    public static Specification<Scrap> likeCount(User user) {
+        return (root, query, cb) -> {
+            Join<Scrap, Post> join = root.join("post", JoinType.INNER);
+            return cb.equal(join.get("user"), user);
+        };
+    }
 }
