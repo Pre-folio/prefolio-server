@@ -52,6 +52,12 @@ public class User {
     @JsonManagedReference
     private List<Scrap> scrapList;
 
+    @Column(name = "social")
+    private String social;
+
+    @Column(name = "rating")
+    private String rating;
+
     @Column(name = "created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
     private Date createdAt;
@@ -60,9 +66,6 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
     private Date updatedAt;
 
-    @Column(name = "deleted_at")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    private Date deletedAt;
 
     @Builder
     public User(
@@ -73,9 +76,10 @@ public class User {
             String profileImage,
             Integer grade,
             String refreshToken,
+            String social,
+            String rating,
             Date createdAt,
-            Date updatedAt,
-            Date deletedAt
+            Date updatedAt
     ) {
         this.id = id;
         this.email = email;
@@ -84,8 +88,9 @@ public class User {
         this.profileImage = profileImage;
         this.grade = grade;
         this.refreshToken = refreshToken;
+        this.social = social;
+        this.rating = rating;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
     }
 }
