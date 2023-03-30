@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "Scrap")
+@Table(name = "Scraps")
 @NoArgsConstructor
 public class Scrap {
 
