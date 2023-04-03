@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "Posts")
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
-@SQLDelete(sql = "UPDATE post SET deleted_at = CURRENT_TIMESTAMP where id = ?")
+@SQLDelete(sql = "UPDATE posts SET deleted_at = CURRENT_TIMESTAMP where id = ?")
 public class Post {
 
     @Id
