@@ -1,11 +1,15 @@
-# PRE:FOLIO-SERVER
+
+<img src="https://s3.ap-northeast-2.amazonaws.com/prefolio.net-image/default/banner0.jpg" width=100%>
 
 
-<img width="1300" alt="스크린샷 2023-02-13 오전 12 08 46" src="https://user-images.githubusercontent.com/74910760/218319201-5d029b2b-871e-45c4-9978-7a0d70a79ff9.png">
+# [PRE:FOLIO](https://pre-folio.com)<img src="https://user-images.githubusercontent.com/103591752/218816673-e1721062-9683-4810-b523-76666d6ec0e5.png" align=left width=100>
 
+> 대학생이라면 이용해야 하는 IT 스펙 저장소, Prepare Your Portfolio! • <b>백엔드</b> 레포지토리
+
+<br>
 
 ## Main Feature
-<img src="https://file.notion.so/f/s/a25bd352-0745-4f92-9c43-31e7b79dd0b9/Untitled.png?id=b47a76fc-3734-4e08-9516-26734bdbbe0b&table=block&spaceId=fa556f95-307b-42dc-91a8-7bd80f3ba0f0&expirationTimestamp=1681729583450&signature=gRG1HcTIEiYsUg56N3oqCip9QdP_a3m7-I1O92NMtiQ&downloadName=Untitled.png">
+<img src="https://user-images.githubusercontent.com/103591752/218819044-a53eb271-280f-4216-a8a3-3225c8a9a84a.png">
 
 ## Skills
 <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> <img src="https://img.shields.io/badge/spring%20boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white"> <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
