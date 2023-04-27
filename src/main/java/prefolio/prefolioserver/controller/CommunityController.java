@@ -11,8 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.domain.constant.SortBy;
 import prefolio.prefolioserver.dto.*;
+import prefolio.prefolioserver.dto.request.AddCommentRequestDTO;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.dto.response.*;
+import prefolio.prefolioserver.service.CommentService;
 import prefolio.prefolioserver.service.PostService;
 import prefolio.prefolioserver.service.UserDetailsImpl;
 
@@ -21,9 +23,10 @@ import prefolio.prefolioserver.service.UserDetailsImpl;
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/posts")
 @RequiredArgsConstructor
-public class PostController {
+public class CommunityController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @Operation(
             summary = "메인피드 게시물 조회",
@@ -270,5 +273,100 @@ public class PostController {
             @PathVariable(name = "postId") Long postId
     ) {
         return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId));
+    }
+
+    @Operation(
+            summary = "댓글 조회",
+            description = "댓글 조회 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "댓글 조회 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = CommentResponseDTO.class)
+                    ))
+    })
+    @GetMapping("/comment/{postId}")
+    @ResponseBody
+    public CommonResponseDTO<CommentResponseDTO> getComments(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestParam(name = "pageNum") Integer pageNum,
+            @RequestParam(name = "limit") Integer limit
+    ) {
+        return CommonResponseDTO.onSuccess(
+                "댓글 조회 성공",
+                commentService.getComments(authUser, pageNum, limit)
+        );
+    }
+
+    @Operation(
+            summary = "댓글 작성",
+            description = "댓글 작성 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "댓글 생성 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = CommentIdResponseDTO.class)
+                    )
+            )
+    })
+    @PostMapping("/comment")
+    @ResponseBody
+    public CommonResponseDTO<CommentIdResponseDTO> addPost(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @RequestBody AddCommentRequestDTO addCommentRequest
+    ) {
+        return CommonResponseDTO.onSuccess("댓글 생성 성공", commentService.saveComment(authUser, addCommentRequest));
+    }
+
+    @Operation(
+            summary = "댓글 수정",
+            description = "댓글 수정 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "댓글 수정 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = CommentIdResponseDTO.class)
+                    )
+            )
+    })
+    @PutMapping("/comment/{commentId}")
+    @ResponseBody
+    public CommonResponseDTO<CommentIdResponseDTO> updateComment(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable Long commentId,
+            @RequestBody AddCommentRequestDTO addCommentRequest
+    ) {
+        return CommonResponseDTO.onSuccess("댓글 수정 성공", commentService.updateComment(authUser, commentId, addCommentRequest));
+    }
+    @Operation(
+            summary = "댓글 삭제",
+            description = "댓글 삭제 메서드입니다.",
+            security = {@SecurityRequirement(name = "jwtAuth")}
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "삭제 성공",
+                    content = @Content(
+                            schema = @Schema(implementation = PostIdResponseDTO.class)
+                    )
+            )
+    })
+    @DeleteMapping("/comment/{commentId}")
+    @ResponseBody
+    public CommonResponseDTO<CommentIdResponseDTO> deleteComment(
+            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @PathVariable Long commentId
+    ) {
+        return CommonResponseDTO.onSuccess("댓글 삭제 성공", commentService.deleteComment(authUser, commentId));
     }
 }

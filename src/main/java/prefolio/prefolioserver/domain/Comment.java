@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import prefolio.prefolioserver.dto.request.AddCommentRequestDTO;
 import prefolio.prefolioserver.dto.request.AddPostRequestDTO;
 
 import java.util.Date;
@@ -70,8 +71,8 @@ public class Comment {
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
     }
-//    public void update(AddPostRequestDTO addPostRequestDTO) {
-//        this.contents =
-//        this.updatedAt = new Date();
-//    }
+    public void update(AddCommentRequestDTO addCommentRequestDTO) {
+        this.contents = addCommentRequestDTO.getContents();
+        this.updatedAt = new Date();
+    }
 }
