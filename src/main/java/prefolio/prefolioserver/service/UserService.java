@@ -36,6 +36,7 @@ public class UserService {
     private final ScrapRepository scrapRepository;
     private final LikeRepository likeRepository;
     private final KakaoService kakaoService;
+    private final JwtTokenService jwtTokenService;
 
 
     public UserInfoResponseDTO setUserInfo(UserDetailsImpl authUser, UserInfoRequestDTO UserInfoRequest) {
@@ -99,9 +100,9 @@ public class UserService {
             final Date issuedAt = new Date();
             final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
 
-            String accessToken = kakaoService.buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
+            String accessToken = jwtTokenService.buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
 
-            kakaoService.getAuthentication(accessToken);
+            jwtTokenService.getAuthentication(accessToken);
             return new TokenResponseDTO(accessToken);
         }
         else return new TokenResponseDTO("null");
