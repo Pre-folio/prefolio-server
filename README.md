@@ -4,7 +4,7 @@
 
 # [PRE:FOLIO](https://pre-folio.com)<img src="https://user-images.githubusercontent.com/103591752/218816673-e1721062-9683-4810-b523-76666d6ec0e5.png" align=left width=100>
 
-> 대학생이라면 이용해야 하는 IT 스펙 저장소, Prepare Your Portfolio! • <b> 백엔드 </b> 레포지토리
+> 대학생이라면 이용해야 하는 IT 스펙 저장소, Prepare Your Portfolio! • <b>백엔드</b> 레포지토리
 
 <br>
 
@@ -19,8 +19,7 @@
 
 ## Back-End Developers
 
-<div align="center"> 
-
+<div align="center">
 | <img width=200px src="https://github.com/chaeshee0908.png"/> | <img width=200px src="https://github.com/suhhyun524.png"/> |
 | :----------------------------------------------------------: | :----------------------------------------------------------: | 
 |                          채승희                               |                          최수현                               |

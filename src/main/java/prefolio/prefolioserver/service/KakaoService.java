@@ -36,7 +36,6 @@ import static prefolio.prefolioserver.error.ErrorCode.*;
 public class KakaoService{
 
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsService;
     private final JwtTokenService jwtTokenService;
 
     @Value("${kakao.key}")
@@ -61,13 +60,13 @@ public class KakaoService{
         User user = registerUserIfNeed(userInfo);
 
         // JWT 토큰 리턴
-        List<String> jwtToken = usersAuthorizationInput(user);
+        List<String> jwtToken = jwtTokenService.usersAuthorizationInput(user);
 
         // 회원여부 닉네임으로 확인
         Boolean isMember = checkIsMember(user);
 
         // 로그인 처리
-        Authentication authentication = getAuthentication(jwtToken.get(0));
+        Authentication authentication = jwtTokenService.getAuthentication(jwtToken.get(0));
 
         return new KakaoLoginResponseDTO(user.getId(), jwtToken.get(0), jwtToken.get(1), isMember);
     }
@@ -160,72 +159,4 @@ public class KakaoService{
         return false;
     }
 
-    // JWT 토큰 리턴
-    private List<String> usersAuthorizationInput(User user) {
-        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(user.getId()));
-        String accessToken = generateJwtAccessToken(userDetails);
-        String refreshToken = generateJwtRefreshToken(userDetails);
-        user.setRefreshToken(refreshToken);
-        userRepository.save(user);
-
-        List<String> token = new ArrayList<>();
-        token.add(accessToken);
-        token.add(refreshToken);
-
-        return token;
-    }
-
-    // 로그인 처리
-    public Authentication getAuthentication(String token) {
-        UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(String.valueOf(
-                jwtTokenService.getUserIdFromJwtToken(token)));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                "",
-                userDetails.getAuthorities()
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        return authentication;
-    }
-
-
-    public String generateJwtAccessToken(UserDetailsImpl userDetails) {
-        User user = userRepository.findByEmail(userDetails.getEmail())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, 3);  // 만료시간 1시간
-
-        final Date issuedAt = new Date();
-        final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
-
-        return buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
-    }
-
-    public String generateJwtRefreshToken(UserDetailsImpl userDetails) {
-        User user = userRepository.findByEmail(userDetails.getEmail())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 14);  // 만료일 14일
-
-        final Date issuedAt = new Date();
-        final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
-
-        return buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
-    }
-
-    public String buildAccessToken(Long id, Date issuedAt, Date accessTokenExpiresIn) {
-        return Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setSubject(id.toString())
-                .setIssuer("prefolio")
-                .setIssuedAt(issuedAt)
-                .setExpiration(accessTokenExpiresIn)
-                .claim("id", id)
-                .claim("roles", "USER")
-                .signWith(
-                        SignatureAlgorithm.HS256,
-                        Base64.getEncoder().encodeToString(("" + JWT_SECRET).getBytes(StandardCharsets.UTF_8))
-                )
-                .compact();
-    }
 }
