@@ -23,8 +23,7 @@ public class SourceController {
 
     @Operation(
             summary = "presigned_url",
-            description = "presigned URL 발급 메서드입니다. 프로필 이미지: profile, 게시글 이미지: image, 썸네일: thumbs",
-            security = {@SecurityRequirement(name = "jwtAuth")}
+            description = "presigned URL 발급 메서드입니다. 프로필 이미지: profile, 게시글 이미지: image, 썸네일: thumbs"
     )
     @ApiResponses(value = {
             @ApiResponse(

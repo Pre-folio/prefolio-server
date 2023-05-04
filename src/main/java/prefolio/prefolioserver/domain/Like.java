@@ -3,13 +3,12 @@ package prefolio.prefolioserver.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Builder;
-import lombok.Cleanup;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "prefoliodb.Like")
+@Table(name = "Likes")
 @NoArgsConstructor
 public class Like {
 

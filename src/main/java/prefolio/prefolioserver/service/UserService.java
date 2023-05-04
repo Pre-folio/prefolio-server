@@ -1,12 +1,12 @@
 package prefolio.prefolioserver.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import prefolio.prefolioserver.domain.Like;
+import prefolio.prefolioserver.domain.Scrap;
 import prefolio.prefolioserver.domain.User;
-import prefolio.prefolioserver.dto.CommonResponseDTO;
 import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.dto.request.TokenRequestDTO;
 import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
@@ -15,14 +15,14 @@ import prefolio.prefolioserver.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.dto.response.TokenResponseDTO;
 import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
 import prefolio.prefolioserver.error.CustomException;
+import prefolio.prefolioserver.query.LikeSpecification;
+import prefolio.prefolioserver.query.ScrapSpecification;
+import prefolio.prefolioserver.repository.PostRepository;
 import prefolio.prefolioserver.repository.UserRepository;
 import prefolio.prefolioserver.repository.ScrapRepository;
 import prefolio.prefolioserver.repository.LikeRepository;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 
@@ -32,6 +32,7 @@ import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final ScrapRepository scrapRepository;
     private final LikeRepository likeRepository;
     private final KakaoService kakaoService;
@@ -72,11 +73,17 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-        Optional<Long> countScrap = scrapRepository.countByUserId(userId);
-        Optional<Long> countLike = likeRepository.countByUserId(userId);
+        Specification<Like> likeSpec = (root, query, criteriaBuilder) -> null;
+        Specification<Scrap> scrapSpec = (root, query, criteriaBuilder) -> null;
 
-        Long scrapNum = countScrap.isEmpty() ? 0L : countScrap.get();
-        Long likeNum = countLike.isEmpty() ? 0L : countLike.get();
+        likeSpec = likeSpec.and(LikeSpecification.likeCount(user));
+        scrapSpec = scrapSpec.and(ScrapSpecification.likeCount(user));
+
+        List<Like> countLike = likeRepository.findAll(likeSpec);
+        Long likeNum = (long) countLike.size();
+
+        List<Scrap> countScrap = scrapRepository.findAll(scrapSpec);
+        Long scrapNum = (long) countScrap.size();
 
         return new GetUserInfoResponseDTO(user, scrapNum, likeNum);
     }

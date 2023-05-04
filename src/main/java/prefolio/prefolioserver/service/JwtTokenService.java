@@ -9,14 +9,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import prefolio.prefolioserver.error.CustomException;
 import prefolio.prefolioserver.error.ErrorCode;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-
-import static prefolio.prefolioserver.error.ErrorCode.INVALID_ACCESS_TOKEN;
 
 @Slf4j
 @Service
