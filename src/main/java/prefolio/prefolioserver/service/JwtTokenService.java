@@ -27,7 +27,6 @@ public class JwtTokenService {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final UserRepository userRepository;
-    private final JwtTokenService jwtTokenService;
     @Value("${jwt.secret}")
     private String JWT_SECRET;
 
