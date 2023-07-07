@@ -21,7 +21,7 @@ import prefolio.prefolioserver.global.jwt.JwtAuthenticationFilter;
 import java.util.Arrays;
 
 @EnableWebSecurity
-@Configuration(proxyBeanMethods = false)
+@Configuration(proxyBeanMethods = true)
 @ConditionalOnDefaultWebSecurity
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @RequiredArgsConstructor
