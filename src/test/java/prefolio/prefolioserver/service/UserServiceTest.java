@@ -5,13 +5,13 @@
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.transaction.annotation.Transactional;
-//import prefolio.prefolioserver.domain.User;
-//import prefolio.prefolioserver.dto.request.CheckUserRequestDTO;
-//import prefolio.prefolioserver.dto.request.UserInfoRequestDTO;
-//import prefolio.prefolioserver.dto.response.GetUserInfoResponseDTO;
-//import prefolio.prefolioserver.dto.response.UserInfoResponseDTO;
+//import prefolio.prefolioserver.domain.user.domain.User;
+//import prefolio.prefolioserver.domain.user.dto.request.CheckUserRequestDTO;
+//import prefolio.prefolioserver.domain.user.dto.request.UserInfoRequestDTO;
+//import prefolio.prefolioserver.domain.user.dto.response.GetUserInfoResponseDTO;
+//import prefolio.prefolioserver.domain.user.dto.response.UserInfoResponseDTO;
 //import prefolio.prefolioserver.error.CustomException;
-//import prefolio.prefolioserver.repository.UserRepository;
+//import prefolio.prefolioserver.domain.user.repository.UserRepository;
 //
 //import static prefolio.prefolioserver.error.ErrorCode.USER_NOT_FOUND;
 //
