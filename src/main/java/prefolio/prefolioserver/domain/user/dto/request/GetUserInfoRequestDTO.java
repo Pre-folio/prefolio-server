@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import prefolio.prefolioserver.domain.user.domain.Type;
 import prefolio.prefolioserver.domain.user.domain.User;
 
 @Getter
@@ -11,7 +12,7 @@ import prefolio.prefolioserver.domain.user.domain.User;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetUserInfoRequestDTO {
-    private String type;
+    private Type type;
 
     private String nickname;
 
