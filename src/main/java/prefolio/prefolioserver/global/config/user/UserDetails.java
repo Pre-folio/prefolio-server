@@ -1,26 +1,35 @@
-package prefolio.prefolioserver.domain.user.service;
+package prefolio.prefolioserver.global.config.user;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import prefolio.prefolioserver.domain.user.domain.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserDetailsImpl implements UserDetails {
+public class UserDetails implements org.springframework.security.core.userdetails.UserDetails {
 
     private String email;
+    private User user;
 
     @Builder
-    public UserDetailsImpl(String email) {
+    public UserDetails(String email) {
         this.email = email;
+    }
+
+    @Builder
+    public UserDetails(User user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        //add some
+
+        return new ArrayList<>();
     }
 
     @Override
