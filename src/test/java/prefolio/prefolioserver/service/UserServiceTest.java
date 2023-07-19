@@ -28,7 +28,7 @@
 //    @Test
 //    @Transactional
 //    void UserInfo() {
-//        User user = userRepository.findById(16L).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+//        User user = userRepository.findById(16L).orElseThrow(() -> UserNotFound.EXCEPTION);
 //        UserInfoRequestDTO request = new UserInfoRequestDTO("dev", "sss", "jsjlgejlg", 2);
 //        UserDetailsImpl authUser = userDetailsService.loadUserByUsername("16");
 //        UserInfoResponseDTO response = userService.setUserInfo(authUser, request);

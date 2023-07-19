@@ -2,6 +2,7 @@ package prefolio.prefolioserver.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import prefolio.prefolioserver.domain.post.domain.Like;
@@ -14,17 +15,16 @@ import prefolio.prefolioserver.domain.user.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.TokenResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.UserInfoResponseDTO;
-import prefolio.prefolioserver.global.error.CustomException;
+import prefolio.prefolioserver.domain.user.exception.UserNotFound;
+import prefolio.prefolioserver.global.config.user.UserDetails;
 import prefolio.prefolioserver.domain.post.query.LikeSpecification;
 import prefolio.prefolioserver.domain.post.query.ScrapSpecification;
 import prefolio.prefolioserver.domain.user.repository.UserRepository;
 import prefolio.prefolioserver.domain.post.repository.ScrapRepository;
 import prefolio.prefolioserver.domain.post.repository.LikeRepository;
+import prefolio.prefolioserver.global.config.jwt.TokenProvider;
 
 import java.util.*;
-
-import static prefolio.prefolioserver.global.error.ErrorCode.USER_NOT_FOUND;
-
 
 @Service
 @RequiredArgsConstructor
@@ -33,19 +33,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final ScrapRepository scrapRepository;
     private final LikeRepository likeRepository;
-    private final JwtTokenService jwtTokenService;
+    private final TokenProvider tokenProvider;
 
 
-    public UserInfoResponseDTO setUserInfo(UserDetailsImpl authUser, UserInfoRequestDTO UserInfoRequest) {
+    public UserInfoResponseDTO setUserInfo(UserDetails authUser, UserInfoRequestDTO userInfoRequest) {
 
         User findUser = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
-        findUser.setType(UserInfoRequest.getType());
-        findUser.setNickname(UserInfoRequest.getNickname());
-        findUser.setProfileImage(UserInfoRequest.getProfileImage());
-        findUser.setGrade(UserInfoRequest.getGrade());
-        findUser.setCreatedAt(new Date());
+
+        findUser.updateInfo(userInfoRequest);
 
         User savedUser = userRepository.saveAndFlush(findUser);
         return new UserInfoResponseDTO(savedUser);
@@ -53,7 +50,7 @@ public class UserService {
 
     public CheckUserResponseDTO findUserByNickname(CheckUserRequestDTO checkUserRequest) {
         User user = userRepository.findById(checkUserRequest.getUserId())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
         Optional<User> findUser = userRepository.findByNickname(checkUserRequest.getNickname());
         if (findUser.isEmpty() || Objects.equals(findUser.get().getId(), checkUserRequest.getUserId())) {
             return new CheckUserResponseDTO(false);
@@ -61,15 +58,15 @@ public class UserService {
         return new CheckUserResponseDTO(true);
     }
 
-    public UserInfoResponseDTO getUserId(UserDetailsImpl authUser) {
+    public UserInfoResponseDTO getUserId(UserDetails authUser) {
         User user = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
         return new UserInfoResponseDTO(user.getId());
     }
 
     public GetUserInfoResponseDTO getUserInfo(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
         Specification<Like> likeSpec = (root, query, criteriaBuilder) -> null;
         Specification<Scrap> scrapSpec = (root, query, criteriaBuilder) -> null;
@@ -88,8 +85,9 @@ public class UserService {
 
     public TokenResponseDTO getNewToken(TokenRequestDTO refreshToken, Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
+        //레디스 로직 추가
         if (Objects.equals(user.getRefreshToken(), refreshToken.getRefreshToken())) {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.HOUR, 3);  // 만료시간 1시간
@@ -97,9 +95,9 @@ public class UserService {
             final Date issuedAt = new Date();
             final Date accessTokenExpiresIn = new Date(cal.getTimeInMillis());
 
-            String accessToken = jwtTokenService.buildAccessToken(user.getId(), issuedAt, accessTokenExpiresIn);
+            Authentication authentication = tokenProvider.usersAuthorizationInput(user);
+            String accessToken = tokenProvider.generateJwtAccessToken(user.getId(), authentication);
 
-            jwtTokenService.getAuthentication(accessToken);
             return new TokenResponseDTO(accessToken);
         }
         else return new TokenResponseDTO("null");

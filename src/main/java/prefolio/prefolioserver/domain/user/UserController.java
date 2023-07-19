@@ -17,7 +17,7 @@ import prefolio.prefolioserver.domain.user.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.TokenResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.UserInfoResponseDTO;
-import prefolio.prefolioserver.domain.user.service.UserDetailsImpl;
+import prefolio.prefolioserver.global.config.user.UserDetails;
 import prefolio.prefolioserver.domain.user.service.UserService;
 
 
@@ -46,7 +46,7 @@ public class UserController {
     @PostMapping("/join")
     @ResponseBody
     public CommonResponseDTO<UserInfoResponseDTO> updateUser(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
         return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.setUserInfo(authUser, UserInfoRequest));
@@ -69,7 +69,7 @@ public class UserController {
     @PutMapping("/join")
     @ResponseBody
     public CommonResponseDTO<UserInfoResponseDTO> setUserInfo(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
         return CommonResponseDTO.onSuccess("유저 정보 수정 성공", userService.setUserInfo(authUser, UserInfoRequest));
@@ -121,7 +121,7 @@ public class UserController {
     @GetMapping("/token")
     @ResponseBody
     public CommonResponseDTO<UserInfoResponseDTO> getUserInfo(
-            @AuthenticationPrincipal UserDetailsImpl authUser
+            @AuthenticationPrincipal UserDetails authUser
     ) {
         return CommonResponseDTO.onSuccess("유저 아이디", userService.getUserId(authUser));
     }
