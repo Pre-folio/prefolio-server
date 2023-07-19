@@ -3,13 +3,12 @@ package prefolio.prefolioserver.domain.user.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import prefolio.prefolioserver.domain.post.domain.Like;
 import prefolio.prefolioserver.domain.post.domain.Post;
 import prefolio.prefolioserver.domain.post.domain.Scrap;
+import prefolio.prefolioserver.domain.user.dto.request.UserInfoRequestDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -17,8 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "Users")
-@NoArgsConstructor
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -26,10 +24,12 @@ public class User {
     private Long id;
 
     @Column
+    @NotNull
     private String email;
 
     @Column
-    private String type;
+    @Enumerated
+    private Type type;
 
     @Column
     private String nickname;
@@ -74,7 +74,7 @@ public class User {
     public User(
             Long id,
             String email,
-            String type,
+            Type type,
             String nickname,
             String profileImage,
             Integer grade,
@@ -95,5 +95,13 @@ public class User {
         this.rating = rating;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public void updateInfo(UserInfoRequestDTO userInfoRequest){
+        this.type = userInfoRequest.getType();
+        this.nickname = userInfoRequest.getNickname();
+        this.profileImage = userInfoRequest.getProfileImage();
+        this.grade = userInfoRequest.getGrade();
+        this.createdAt = new Date();
     }
 }

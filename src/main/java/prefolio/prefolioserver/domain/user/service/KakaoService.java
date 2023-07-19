@@ -17,12 +17,12 @@ import org.springframework.web.client.RestTemplate;
 import prefolio.prefolioserver.domain.user.domain.User;
 import prefolio.prefolioserver.domain.user.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.KakaoUserInfoDTO;
-import prefolio.prefolioserver.global.error.CustomException;
+import prefolio.prefolioserver.domain.user.exception.MismatchCode;
 import prefolio.prefolioserver.domain.user.repository.UserRepository;
+import prefolio.prefolioserver.global.config.jwt.TokenProvider;
+import prefolio.prefolioserver.global.error.exception.TokenValidate;
 
 import java.util.*;
-
-import static prefolio.prefolioserver.global.error.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -30,16 +30,13 @@ import static prefolio.prefolioserver.global.error.ErrorCode.*;
 public class KakaoService{
 
     private final UserRepository userRepository;
-    private final JwtTokenService jwtTokenService;
+    private final TokenProvider tokenProvider;
 
     @Value("${kakao.key}")
     private String KAKAO_CLIENT_ID;
 
     @Value("${kakao.uri}")
     private String KAKAO_REDIRECT_URI;
-
-    @Value("${jwt.secret}")
-    private String JWT_SECRET;
 
 
     public KakaoLoginResponseDTO kakaoLogin(String code) {
@@ -53,16 +50,17 @@ public class KakaoService{
         // DB정보 확인 -> 없으면 DB에 저장
         User user = registerUserIfNeed(userInfo);
 
+        // 로그인 처리
         // JWT 토큰 리턴
-        List<String> jwtToken = jwtTokenService.usersAuthorizationInput(user);
+        final Authentication authentication = tokenProvider.userAuthorizationInput(user);
+
+        final String accessToken = tokenProvider.generateJwtAccessToken(user.getId(), authentication);
+        final String refreshToken = tokenProvider.generateJwtRefreshToken(user.getId(), authentication);
 
         // 회원여부 닉네임으로 확인
         Boolean isMember = checkIsMember(user);
 
-        // 로그인 처리
-        Authentication authentication = jwtTokenService.getAuthentication(jwtToken.get(0));
-
-        return new KakaoLoginResponseDTO(user.getId(), jwtToken.get(0), jwtToken.get(1), isMember);
+        return new KakaoLoginResponseDTO(user.getId(), accessToken, refreshToken, isMember);
     }
 
     // 인가코드로 accessToken 요청
@@ -96,7 +94,7 @@ public class KakaoService{
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             return jsonNode.get("access_token").asText();
         } catch (Exception e) {
-            throw new CustomException(MISMATCH_VERIFICATION_CODE);
+            throw MismatchCode.EXCEPTION;
         }
 
     }
@@ -125,7 +123,7 @@ public class KakaoService{
             String email = jsonNode.get("kakao_account").get("email").asText();
             return new KakaoUserInfoDTO(email);
         } catch (Exception e) {
-            throw new CustomException(INVALID_USER_TOKEN);
+            throw TokenValidate.EXCEPTION;
         }
     }
 

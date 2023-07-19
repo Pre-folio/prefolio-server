@@ -13,13 +13,14 @@ import prefolio.prefolioserver.domain.post.mapper.CommentMapper;
 import prefolio.prefolioserver.domain.post.repository.CommentRepository;
 import prefolio.prefolioserver.domain.user.domain.User;
 import prefolio.prefolioserver.domain.post.dto.CommentDTO;
+import prefolio.prefolioserver.domain.user.exception.DataNotFound;
+import prefolio.prefolioserver.domain.user.exception.UserNotFound;
 import prefolio.prefolioserver.domain.user.repository.UserRepository;
-import prefolio.prefolioserver.domain.user.service.UserDetailsImpl;
-import prefolio.prefolioserver.global.error.CustomException;
+import prefolio.prefolioserver.global.config.user.UserDetails;
 
 import java.util.*;
 
-import static prefolio.prefolioserver.global.error.ErrorCode.*;
+import static prefolio.prefolioserver.global.error.GlobalErrorCode.USER_NOT_FOUND;
 
 
 @Service
@@ -32,9 +33,9 @@ public class CommentService {
 
 
     @Transactional
-    public CommentIdResponseDTO saveComment(UserDetailsImpl authUser, AddCommentRequestDTO addCommentRequest) {
+    public CommentIdResponseDTO saveComment(UserDetails authUser, AddCommentRequestDTO addCommentRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
         // 댓글 생성
         Comment comment = Comment.of(findUser, addCommentRequest, new Date());
@@ -43,11 +44,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentIdResponseDTO updateComment(UserDetailsImpl authUser, Long commentId, AddCommentRequestDTO addCommentRequest) {
+    public CommentIdResponseDTO updateComment(UserDetails authUser, Long commentId, AddCommentRequestDTO addCommentRequest) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
         Comment findComment = commentRepository.findByIdAndUserId(commentId, findUser.getId())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
         findComment.update(addCommentRequest);
         commentRepository.save(findComment);
@@ -56,11 +57,11 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentIdResponseDTO deleteComment(UserDetailsImpl authUser, Long commentId) {
+    public CommentIdResponseDTO deleteComment(UserDetails authUser, Long commentId) {
         User findUser = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
         Comment findComment = commentRepository.findByIdAndUserId(commentId, findUser.getId())
-                .orElseThrow(() -> new CustomException(DATA_NOT_FOUND));
+                .orElseThrow(() -> DataNotFound.EXCEPTION);
 
         commentRepository.deleteById(findComment.getId());
 
@@ -69,10 +70,10 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDTO getComments(
-            UserDetailsImpl authUser, Integer pageNum, Integer limit
+            UserDetails authUser, Integer pageNum, Integer limit
     ) {
         User user = userRepository.findByEmail(authUser.getUsername())
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> UserNotFound.EXCEPTION);
 
         // 페이지 요청 정보
         PageRequest pageRequest = PageRequest.of(pageNum, limit);

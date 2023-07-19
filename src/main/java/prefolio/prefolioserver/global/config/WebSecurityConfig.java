@@ -14,9 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import prefolio.prefolioserver.global.jwt.JwtAccessDeniedHandler;
-import prefolio.prefolioserver.global.jwt.JwtAuthenticationEntryPoint;
-import prefolio.prefolioserver.global.jwt.JwtAuthenticationFilter;
+import prefolio.prefolioserver.global.config.jwt.JwtAccessDeniedHandler;
+import prefolio.prefolioserver.global.config.jwt.JwtAuthenticationEntryPoint;
+import prefolio.prefolioserver.global.config.jwt.JwtAuthenticationFilter;
 
 import java.util.Arrays;
 

@@ -1,4 +1,4 @@
-package prefolio.prefolioserver.global.jwt;
+package prefolio.prefolioserver.global.config.jwt;
 
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
@@ -10,7 +10,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import prefolio.prefolioserver.domain.user.service.JwtTokenService;
 
 import java.io.IOException;
 
@@ -18,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtTokenService jwtTokenService;
+    private final TokenProvider tokenProvider;
 
     @Override
     public void doFilterInternal(
@@ -26,18 +25,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws IOException, ServletException {
-        String token = jwtTokenService.getAccessToken(request);
+        String token = tokenProvider.getAccessToken(request);
         if (token == null) {
             filterChain.doFilter(request, response);
             return;
         }
-        if (StringUtils.isNotBlank(token) && jwtTokenService.validateToken(request, token)) {
-            Authentication authentication = jwtTokenService.getAuthentication(token);
+        if (StringUtils.isNotBlank(token) && tokenProvider.validateAccessToken(token)) {
+            Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
 
         filterChain.doFilter(request, response);
     }
-
-
 }

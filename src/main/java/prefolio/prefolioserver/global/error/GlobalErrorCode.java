@@ -1,15 +1,17 @@
-package prefolio.prefolioserver.domain.user.exception;
+package prefolio.prefolioserver.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import prefolio.prefolioserver.global.common.dto.ErrorReason;
 
 import static org.springframework.http.HttpStatus.*;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorCode {
+public enum GlobalErrorCode implements BaseErrorCode{
     /* 공통 에러 */
+    HTTP_MESSAGE_NOT_READABLE(BAD_REQUEST,"GLOBAL_400_1", "잘못된 형식의 값을 입력했습니다."),
     _INTERNAL_SERVER_ERROR(INTERNAL_SERVER_ERROR, "E000", "서버 에러, 관리자에게 문의 바랍니다"),
     _BAD_REQUEST(BAD_REQUEST, "E001", "잘못된 요청입니다"),
     _UNAUTHORIZED(UNAUTHORIZED, "E002", "권한이 없습니다"),
@@ -62,7 +64,12 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(CONFLICT, "D001", "데이터가 이미 존재합니다"),
     DATA_NOT_FOUND(NOT_FOUND, "D002", "데이터가 존재하지 않습니다");
 
-    private final HttpStatus httpStatus;
-    private final String code;
-    private final String detail;
+    private HttpStatus status;
+    private String code;
+    private String reason;
+
+    @Override
+    public ErrorReason getErrorReason() {
+        return ErrorReason.of(status.value(), code, reason);
+    }
 }
