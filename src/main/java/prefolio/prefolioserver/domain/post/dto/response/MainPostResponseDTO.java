@@ -8,7 +8,6 @@ import prefolio.prefolioserver.domain.post.dto.MainPostDTO;
 import java.util.List;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class MainPostResponseDTO {
 
@@ -16,9 +15,18 @@ public class MainPostResponseDTO {
     private Integer totalPages;
     private Long totalResults;
 
-    public MainPostResponseDTO(List<MainPostDTO> posts, Integer totalPages, Long totalResults) {
+    @Builder
+    private MainPostResponseDTO(List<MainPostDTO> posts, Integer totalPages, Long totalResults) {
         this.posts = posts;
         this.totalPages = totalPages;
         this.totalResults = totalResults;
+    }
+
+    public static MainPostResponseDTO of(List<MainPostDTO> posts, Integer totalPages, Long totalResults) {
+        return MainPostResponseDTO.builder()
+                .posts(posts)
+                .totalPages(totalPages)
+                .totalResults(totalResults)
+                .build();
     }
 }

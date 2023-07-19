@@ -1,7 +1,6 @@
 package prefolio.prefolioserver.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class CardPostDTO {
 
     private Long postId;
@@ -28,27 +25,43 @@ public class CardPostDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
-    public CardPostDTO(Scrap scrap, List<String> partTag, List<String> actTag,  Boolean isScrapped) {
-        this.postId = scrap.getPost().getId();
-        this.thumbnail = scrap.getPost().getThumbnail();
-        this.title = scrap.getPost().getTitle();
+    @Builder
+    private CardPostDTO(Long postId, String thumbnail, String title, List<String> partTag, List<String> actTag, Integer hits, Boolean isScrapped, Boolean isMine, Date createdAt) {
+        this.postId = postId;
+        this.thumbnail = thumbnail;
+        this.title = title;
         this.partTag = partTag;
         this.actTag = actTag;
-        this.hits = scrap.getPost().getHits();
+        this.hits = hits;
         this.isScrapped = isScrapped;
-        this.createdAt = scrap.getPost().getCreatedAt();
-    }
-
-    public CardPostDTO(Post post, List<String> partTag, List<String> actTag,  Boolean isScrapped, Boolean isMine) {
-        this.postId = post.getId();
-        this.thumbnail = post.getThumbnail();
-        this.title = post.getTitle();
-        this.partTag = partTag;
-        this.actTag = actTag;
-        this.hits = post.getHits();
-        this.isScrapped = isScrapped;
-        this.createdAt = post.getCreatedAt();
         this.isMine = isMine;
+        this.createdAt = createdAt;
     }
 
+    public static CardPostDTO scrapToDto(Scrap scrap, List<String> partTag, List<String> actTag, Boolean isScrapped) {
+        return CardPostDTO.builder()
+                .postId(scrap.getPost().getId())
+                .thumbnail(scrap.getPost().getThumbnail())
+                .title(scrap.getPost().getTitle())
+                .partTag(partTag)
+                .actTag(actTag)
+                .hits(scrap.getPost().getHits())
+                .isScrapped(isScrapped)
+                .createdAt(scrap.getPost().getCreatedAt())
+                .build();
+    }
+
+    public static CardPostDTO postToDto(Post post, List<String> partTag, List<String> actTag,  Boolean isScrapped, Boolean isMine) {
+        return CardPostDTO.builder()
+                .postId(post.getId())
+                .thumbnail(post.getThumbnail())
+                .title(post.getTitle())
+                .partTag(partTag)
+                .actTag(actTag)
+                .hits(post.getHits())
+                .isScrapped(isScrapped)
+                .createdAt(post.getCreatedAt())
+                .isMine(isMine)
+                .build();
+    }
 }

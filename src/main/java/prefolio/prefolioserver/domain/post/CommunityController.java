@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import prefolio.prefolioserver.domain.post.domain.SortBy;
@@ -18,7 +19,7 @@ import prefolio.prefolioserver.domain.post.service.CommentService;
 import prefolio.prefolioserver.domain.post.service.PostService;
 import prefolio.prefolioserver.domain.user.service.UserDetailsImpl;
 
-
+@Slf4j
 @RestController
 @SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("/posts")
@@ -50,7 +51,8 @@ public class CommunityController {
             @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit
-            ) {
+    ) {
+        log.info("메인피드 게시물 조회");
         return CommonResponseDTO.onSuccess(
                 "메인피드 게시물 조회 성공",
                 postService.getAllPosts(authUser, sortBy, partTagList, actTagList, pageNum, limit)
@@ -82,6 +84,7 @@ public class CommunityController {
             @RequestParam(name = "limit") Integer limit,
             @RequestParam(name = "searchWord") String searchWord
     ) {
+        log.info("검색 결과 조회");
         return CommonResponseDTO.onSuccess(
                 "검색 결과 게시물 조회 성공",
                 postService.getSearchPosts(authUser, sortBy, partTagList, actTagList, pageNum, limit, searchWord));
@@ -107,6 +110,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
+        log.info("글 작성");
         return CommonResponseDTO.onSuccess("글 생성 성공", postService.savePost(authUser, addPostRequest));
     }
 
@@ -131,6 +135,7 @@ public class CommunityController {
             @PathVariable Long postId,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
+        log.info("글 수정");
         return CommonResponseDTO.onSuccess("글 수정 성공", postService.updatePost(authUser, postId, addPostRequest));
     }
     @Operation(
@@ -153,6 +158,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable Long postId
     ) {
+        log.info("글 삭제");
         return CommonResponseDTO.onSuccess("글 삭제 성공", postService.deletePost(authUser, postId));
     }
 
@@ -176,6 +182,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable(name = "postId") Long postId
     ) {
+        log.info("게시글 조회");
         return CommonResponseDTO.onSuccess("게시글 조회 성공", postService.findPostById(authUser, postId));
     }
 
@@ -201,7 +208,9 @@ public class CommunityController {
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
-            @RequestParam(name = "limit") Integer limit) {
+            @RequestParam(name = "limit") Integer limit
+    ) {
+        log.info("유저 게시글 모두 조회");
         return CommonResponseDTO.onSuccess("SUCCESS", postService.findPostByUserId(authUser, userId, partTagList, actTagList, pageNum, limit));
     }
 
@@ -226,7 +235,9 @@ public class CommunityController {
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
-            @RequestParam(name = "limit") Integer limit) {
+            @RequestParam(name = "limit") Integer limit
+    ) {
+        log.info("스크랩한 게시글 모두 조회");
         return CommonResponseDTO.onSuccess("SUCCESS", postService.findMyScrap(authUser, partTagList, actTagList, pageNum, limit));
     }
 
@@ -249,6 +260,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable(name = "postId") Long postId
     ) {
+        log.info("좋아요 버튼 누르기");
         return CommonResponseDTO.onSuccess("SUCCESS", postService.clickLike(authUser, postId));
     }
 
@@ -272,6 +284,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable(name = "postId") Long postId
     ) {
+        log.info("스크랩 버튼 누르기");
         return CommonResponseDTO.onSuccess("SUCCESS", postService.clickScrap(authUser, postId));
     }
 
@@ -295,6 +308,7 @@ public class CommunityController {
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit
     ) {
+        log.info("댓글 조회");
         return CommonResponseDTO.onSuccess(
                 "댓글 조회 성공",
                 commentService.getComments(authUser, pageNum, limit)
@@ -321,6 +335,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @RequestBody AddCommentRequestDTO addCommentRequest
     ) {
+        log.info("댓글 작성");
         return CommonResponseDTO.onSuccess("댓글 생성 성공", commentService.saveComment(authUser, addCommentRequest));
     }
 
@@ -345,6 +360,7 @@ public class CommunityController {
             @PathVariable Long commentId,
             @RequestBody AddCommentRequestDTO addCommentRequest
     ) {
+        log.info("댓글 수정");
         return CommonResponseDTO.onSuccess("댓글 수정 성공", commentService.updateComment(authUser, commentId, addCommentRequest));
     }
     @Operation(
@@ -367,6 +383,7 @@ public class CommunityController {
             @AuthenticationPrincipal UserDetailsImpl authUser,
             @PathVariable Long commentId
     ) {
+        log.info("댓글 삭제");
         return CommonResponseDTO.onSuccess("댓글 삭제 성공", commentService.deleteComment(authUser, commentId));
     }
 }

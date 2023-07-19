@@ -5,15 +5,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class ClickScrapResponseDTO {
 
     private Long scraps;
     private Boolean isScrapped;
 
-    public ClickScrapResponseDTO(Long scraps, Boolean isScrapped) {
+    @Builder
+    private ClickScrapResponseDTO(Long scraps, Boolean isScrapped) {
         this.scraps = scraps;
         this.isScrapped = isScrapped;
+    }
+
+    public static ClickScrapResponseDTO of(Long scraps, Boolean isScrapped) {
+        return ClickScrapResponseDTO.builder()
+                .scraps(scraps)
+                .isScrapped(isScrapped)
+                .build();
     }
 }

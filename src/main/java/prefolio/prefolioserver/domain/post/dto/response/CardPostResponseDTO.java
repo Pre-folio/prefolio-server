@@ -8,7 +8,6 @@ import prefolio.prefolioserver.domain.post.dto.CardPostDTO;
 import java.util.List;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class CardPostResponseDTO {
 
@@ -19,9 +18,18 @@ public class CardPostResponseDTO {
     private Long totalResults;
 
 
-    public CardPostResponseDTO(List<CardPostDTO> cardPosts, Integer totalPages, Long totalResults) {
+    @Builder
+    private CardPostResponseDTO(List<CardPostDTO> cardPosts, Integer totalPages, Long totalResults) {
         this.cardPosts = cardPosts;
         this.totalPages = totalPages;
         this.totalResults = totalResults;
+    }
+
+    public static CardPostResponseDTO of(List<CardPostDTO> cardPosts, Integer totalPages, Long totalResults) {
+        return CardPostResponseDTO.builder()
+                .cardPosts(cardPosts)
+                .totalPages(totalPages)
+                .totalResults(totalResults)
+                .build();
     }
 }

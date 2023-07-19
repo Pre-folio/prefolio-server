@@ -29,9 +29,17 @@ public class Scrap {
     private Post post;
 
     @Builder
-    public Scrap(Long id, User user, Post post) {
+    private Scrap(Long id, User user, Post post) {
         this.id = id;
         this.user = user;
         this.post = post;
+    }
+
+    public static Scrap of(Long id, User user, Post post) {
+        return Scrap.builder()
+                .id(id)
+                .user(user)
+                .post(post)
+                .build();
     }
 }

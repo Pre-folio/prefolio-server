@@ -8,7 +8,6 @@ import prefolio.prefolioserver.domain.post.dto.CommentDTO;
 import java.util.List;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class CommentResponseDTO {
 
@@ -16,9 +15,18 @@ public class CommentResponseDTO {
     private Integer totalPages;
     private Long totalResults;
 
-    public CommentResponseDTO(List<CommentDTO> comments, Integer totalPages, Long totalResults) {
+    @Builder
+    private CommentResponseDTO(List<CommentDTO> comments, Integer totalPages, Long totalResults) {
         this.comments = comments;
         this.totalPages = totalPages;
         this.totalResults = totalResults;
+    }
+
+    public static CommentResponseDTO of(List<CommentDTO> comments, Integer totalPages, Long totalResults) {
+        return CommentResponseDTO.builder()
+                .comments(comments)
+                .totalPages(totalPages)
+                .totalResults(totalResults)
+                .build();
     }
 }

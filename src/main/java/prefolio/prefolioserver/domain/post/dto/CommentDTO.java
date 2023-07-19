@@ -1,7 +1,6 @@
 package prefolio.prefolioserver.domain.post.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +9,7 @@ import prefolio.prefolioserver.domain.post.domain.Comment;
 import java.util.Date;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class CommentDTO {
 
     private String nickname;
@@ -21,10 +18,20 @@ public class CommentDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
-    public CommentDTO(Comment comment){
-        this.nickname = comment.getUser().getNickname();
-        this.profileImage = comment.getUser().getProfileImage();
-        this.contents = comment.getContents();
-        this.createdAt = comment.getCreatedAt();
+    @Builder
+    private CommentDTO(String nickname, String profileImage, String contents, Date createdAt) {
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+        this.contents = contents;
+        this.createdAt = createdAt;
+    }
+
+    public static CommentDTO from(Comment comment){
+        return CommentDTO.builder()
+                .nickname(comment.getUser().getNickname())
+                .profileImage(comment.getUser().getProfileImage())
+                .contents(comment.getContents())
+                .createdAt(comment.getCreatedAt())
+                .build();
     }
 }

@@ -1,15 +1,12 @@
 package prefolio.prefolioserver.domain.post.dto.request;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.post.domain.Post;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class AddPostRequestDTO {
 
     private String thumbnail;
@@ -23,16 +20,32 @@ public class AddPostRequestDTO {
     private String actTag;
     private String contents;
 
-    public AddPostRequestDTO (Post post) {
-        this.thumbnail = post.getThumbnail();
-        this.title = post.getTitle();
-        this.startDate = post.getStartDate();
-        this.endDate = post.getEndDate();
-        this.contribution = post.getContribution();
-        this.task = post.getTask();
-        this.tools = post.getTools();
-        this.partTag = post.getPartTag();
-        this.actTag = post.getActTag();
-        this.contents = post.getContents();
+    @Builder
+    private AddPostRequestDTO(String thumbnail, String title, String startDate, String endDate, Integer contribution, String task, String tools, String partTag, String actTag, String contents) {
+        this.thumbnail = thumbnail;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.contribution = contribution;
+        this.task = task;
+        this.tools = tools;
+        this.partTag = partTag;
+        this.actTag = actTag;
+        this.contents = contents;
+    }
+
+    public static AddPostRequestDTO from(Post post) {
+        return AddPostRequestDTO.builder()
+                .thumbnail(post.getThumbnail())
+                .title(post.getTitle())
+                .startDate(post.getStartDate())
+                .endDate(post.getEndDate())
+                .contribution(post.getContribution())
+                .task(post.getTask())
+                .tools(post.getTools())
+                .partTag(post.getPartTag())
+                .actTag(post.getActTag())
+                .contents(post.getContents())
+                .build();
     }
 }

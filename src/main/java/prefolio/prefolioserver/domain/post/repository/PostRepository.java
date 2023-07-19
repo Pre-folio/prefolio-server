@@ -12,6 +12,5 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
     Page<Post> findAll(Specification<Post> spec, Pageable pageable);
     Optional<Post> findByIdAndUserId(Long id, Long userId);
-
     void deleteById(Long id);
 }
