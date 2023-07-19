@@ -17,7 +17,7 @@ import prefolio.prefolioserver.domain.post.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.domain.post.dto.response.*;
 import prefolio.prefolioserver.domain.post.service.CommentService;
 import prefolio.prefolioserver.domain.post.service.PostService;
-import prefolio.prefolioserver.domain.user.service.UserDetailsImpl;
+import prefolio.prefolioserver.global.config.user.UserDetails;
 
 @Slf4j
 @RestController
@@ -45,7 +45,7 @@ public class CommunityController {
     @GetMapping("/all")
     @ResponseBody
     public CommonResponseDTO<MainPostResponseDTO> getAllPosts(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestParam(name = "sortBy") SortBy sortBy,
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
@@ -76,7 +76,7 @@ public class CommunityController {
     @GetMapping("/search")
     @ResponseBody
     public CommonResponseDTO<MainPostResponseDTO> getSearchPosts(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestParam(name = "sortBy") SortBy sortBy,
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
@@ -107,7 +107,7 @@ public class CommunityController {
     @PostMapping("/post")
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> addPost(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
         log.info("글 작성");
@@ -131,7 +131,7 @@ public class CommunityController {
     @PutMapping("/post/{postId}")
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> updatePost(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable Long postId,
             @RequestBody AddPostRequestDTO addPostRequest
     ) {
@@ -155,7 +155,7 @@ public class CommunityController {
     @DeleteMapping("/post/{postId}")
     @ResponseBody
     public CommonResponseDTO<PostIdResponseDTO> deletePost(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable Long postId
     ) {
         log.info("글 삭제");
@@ -179,7 +179,7 @@ public class CommunityController {
     @GetMapping("/post/{postId}")
     @ResponseBody
     public CommonResponseDTO<GetPostResponseDTO> getPost(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable(name = "postId") Long postId
     ) {
         log.info("게시글 조회");
@@ -203,7 +203,7 @@ public class CommunityController {
     @GetMapping("/{userId}")
     @ResponseBody
     public CommonResponseDTO<CardPostResponseDTO> findPostByUserId(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable(name = "userId") Long userId,
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
@@ -231,7 +231,7 @@ public class CommunityController {
     @GetMapping("/scraps")
     @ResponseBody
     public CommonResponseDTO<CardPostResponseDTO> findScrapByUserId(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestParam(name = "partTagList", required = false) String partTagList,
             @RequestParam(name = "actTagList", required = false) String actTagList,
             @RequestParam(name = "pageNum") Integer pageNum,
@@ -257,7 +257,7 @@ public class CommunityController {
     @GetMapping("/likes/{postId}")
     @ResponseBody
     public CommonResponseDTO<ClickLikeResponseDTO> clickLike(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable(name = "postId") Long postId
     ) {
         log.info("좋아요 버튼 누르기");
@@ -281,7 +281,7 @@ public class CommunityController {
     @GetMapping("/scraps/{postId}")
     @ResponseBody
     public CommonResponseDTO<ClickScrapResponseDTO> clickScrap(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable(name = "postId") Long postId
     ) {
         log.info("스크랩 버튼 누르기");
@@ -304,7 +304,7 @@ public class CommunityController {
     @GetMapping("/comment/{postId}")
     @ResponseBody
     public CommonResponseDTO<CommentResponseDTO> getComments(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestParam(name = "pageNum") Integer pageNum,
             @RequestParam(name = "limit") Integer limit
     ) {
@@ -332,7 +332,7 @@ public class CommunityController {
     @PostMapping("/comment")
     @ResponseBody
     public CommonResponseDTO<CommentIdResponseDTO> addPost(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @RequestBody AddCommentRequestDTO addCommentRequest
     ) {
         log.info("댓글 작성");
@@ -356,7 +356,7 @@ public class CommunityController {
     @PutMapping("/comment/{commentId}")
     @ResponseBody
     public CommonResponseDTO<CommentIdResponseDTO> updateComment(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable Long commentId,
             @RequestBody AddCommentRequestDTO addCommentRequest
     ) {
@@ -380,7 +380,7 @@ public class CommunityController {
     @DeleteMapping("/comment/{commentId}")
     @ResponseBody
     public CommonResponseDTO<CommentIdResponseDTO> deleteComment(
-            @AuthenticationPrincipal UserDetailsImpl authUser,
+            @AuthenticationPrincipal UserDetails authUser,
             @PathVariable Long commentId
     ) {
         log.info("댓글 삭제");
