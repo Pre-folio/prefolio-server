@@ -13,6 +13,5 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long>, JpaSpecificationExecutor<Comment> {
     Page<Comment> findAll(Specification<Comment> spec, Pageable pageable);
     Optional<Comment> findByIdAndUserId(Long id, Long userId);
-
     void deleteById(Long id);
 }

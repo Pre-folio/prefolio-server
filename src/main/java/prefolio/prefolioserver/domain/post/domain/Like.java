@@ -28,9 +28,17 @@ public class Like {
     private Post post;
 
     @Builder
-    public Like(Long id, User user, Post post) {
+    private Like(Long id, User user, Post post) {
         this.id = id;
         this.user = user;
         this.post = post;
+    }
+
+    public static Like of(Long id, User user, Post post) {
+        return Like.builder()
+                .id(id)
+                .user(user)
+                .post(post)
+                .build();
     }
 }

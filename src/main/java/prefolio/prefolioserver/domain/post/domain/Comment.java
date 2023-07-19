@@ -16,7 +16,6 @@ import java.util.Date;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "Comments")
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
@@ -52,7 +51,7 @@ public class Comment {
     private Date deletedAt;
 
     @Builder
-    public Comment(
+    private Comment(
             Long id,
             User user,
             Post post,
@@ -69,6 +68,16 @@ public class Comment {
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
     }
+
+    public static Comment of(User user, AddCommentRequestDTO addCommentRequestDTO, Date createdAt) {
+        return Comment.builder()
+                .user(user)
+                .post(addCommentRequestDTO.getPost())
+                .contents(addCommentRequestDTO.getContents())
+                .createdAt(createdAt)
+                .build();
+    }
+
     public void update(AddCommentRequestDTO addCommentRequestDTO) {
         this.contents = addCommentRequestDTO.getContents();
         this.updatedAt = new Date();

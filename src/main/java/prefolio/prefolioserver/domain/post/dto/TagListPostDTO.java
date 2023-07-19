@@ -5,37 +5,31 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.post.domain.Post;
-import prefolio.prefolioserver.domain.user.domain.User;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class PostDTO {
-
+public class TagListPostDTO {
     private Long id;
-    private User user;
     private String thumbnail;
     private String title;
     private String startDate;
     private String endDate;
     private Integer contribution;
     private String task;
-    private String tools;
-    private String partTag;
-    private String actTag;
+    private List<String> tools;
+    private List<String> partTag;
+    private List<String> actTag;
     private String contents;
     private Integer hits;
-    private Integer likes;
-    private Integer scraps;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private Date createdAt;
 
     @Builder
-    private PostDTO(Long id, User user, String thumbnail, String title, String startDate, String endDate, Integer contribution, String task, String tools, String partTag, String actTag, String contents, Integer hits, Integer likes, Integer scraps, Date createdAt) {
+    private TagListPostDTO(Long id, String thumbnail, String title, String startDate, String endDate, Integer contribution, String task, List<String> tools, List<String> partTag, List<String> actTag, String contents, Integer hits, Date createdAt) {
         this.id = id;
-        this.user = user;
         this.thumbnail = thumbnail;
         this.title = title;
         this.startDate = startDate;
@@ -47,28 +41,23 @@ public class PostDTO {
         this.actTag = actTag;
         this.contents = contents;
         this.hits = hits;
-        this.likes = likes;
-        this.scraps = scraps;
         this.createdAt = createdAt;
     }
 
-    public static PostDTO entityToDto(Post post) {
-        return PostDTO.builder()
+    public static TagListPostDTO of(Post post, List<String> tools, List<String> partTag, List<String>actTag) {
+        return TagListPostDTO.builder()
                 .id(post.getId())
-                .user(post.getUser())
                 .thumbnail(post.getThumbnail())
                 .title(post.getTitle())
                 .startDate(post.getStartDate())
                 .endDate(post.getEndDate())
                 .contribution(post.getContribution())
                 .task(post.getTask())
-                .tools(post.getTools())
-                .partTag(post.getPartTag())
-                .actTag(post.getActTag())
+                .tools(tools)
+                .partTag(partTag)
+                .actTag(actTag)
                 .contents(post.getContents())
                 .hits(post.getHits())
-                .likes(post.getLikes())
-                .scraps(post.getScraps())
                 .createdAt(post.getCreatedAt())
                 .build();
     }

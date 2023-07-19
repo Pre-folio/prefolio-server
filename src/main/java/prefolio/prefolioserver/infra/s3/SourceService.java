@@ -47,6 +47,6 @@ public class SourceService{
 
         URL url = amazonS3.generatePresignedUrl(generatePresignedUrlRequest);
 
-        return new GetPathResponseDTO(url);
+        return GetPathResponseDTO.from(url);
     }
 }

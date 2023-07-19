@@ -13,7 +13,6 @@ import java.util.Optional;
 
 public interface ScrapRepository extends JpaRepository<Scrap, Long>, JpaSpecificationExecutor<Scrap> {
 
-
     Optional<Scrap> findByUserIdAndPostId(Long userId, Long postId);
     Long countByPostId(Long postId);
     Long countByUserIdAndPostId(Long userId, Long postId);
