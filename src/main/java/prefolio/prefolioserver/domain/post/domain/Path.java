@@ -1,5 +1,8 @@
 package prefolio.prefolioserver.domain.post.domain;
 
+import lombok.Getter;
+
+@Getter
 public enum Path {
     PROFILE("profile"),
     IMAGE("image"),
@@ -9,9 +12,5 @@ public enum Path {
 
     Path(String path) {
         this.path = path;
-    }
-
-    public String getPath() {
-        return this.path;
     }
 }

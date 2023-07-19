@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import prefolio.prefolioserver.domain.post.dto.PostDTO;
 import prefolio.prefolioserver.domain.post.dto.request.AddPostRequestDTO;
 import prefolio.prefolioserver.domain.user.domain.User;
 
@@ -18,7 +19,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "Posts")
 @NoArgsConstructor
 @Where(clause = "deleted_at IS NULL")
@@ -94,8 +94,7 @@ public class Post {
     private Date deletedAt;
 
     @Builder
-    public Post(
-            Long id,
+    private Post(
             User user,
             String thumbnail,
             String title,
@@ -114,7 +113,6 @@ public class Post {
             Date updatedAt,
             Date deletedAt
     ) {
-        this.id = id;
         this.user = user;
         this.thumbnail = thumbnail;
         this.title = title;
@@ -133,6 +131,28 @@ public class Post {
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
     }
+
+    // 정적 팩토리 메소드
+    public static Post of(User user, AddPostRequestDTO postDTO, Integer hits, Integer likes, Integer scraps, Date createdAt) {
+        return Post.builder()
+                .user(user)
+                .thumbnail(postDTO.getThumbnail())
+                .title(postDTO.getTitle())
+                .startDate(postDTO.getStartDate())
+                .endDate(postDTO.getEndDate())
+                .contribution(postDTO.getContribution())
+                .task(postDTO.getTask())
+                .tools(postDTO.getTools())
+                .partTag(postDTO.getPartTag())
+                .actTag(postDTO.getActTag())
+                .contents(postDTO.getContents())
+                .hits(hits)
+                .likes(likes)
+                .scraps(scraps)
+                .createdAt(createdAt)
+                .build();
+    }
+
     public void update(AddPostRequestDTO addPostRequestDTO) {
         this.thumbnail = addPostRequestDTO.getThumbnail();
         this.title = addPostRequestDTO.getTitle();
@@ -145,5 +165,20 @@ public class Post {
         this.actTag = addPostRequestDTO.getActTag();
         this.contents = addPostRequestDTO.getContents();
         this.updatedAt = new Date();
+    }
+
+    // 조회수 업데이트
+    public void updateHits(Integer hits) {
+        this.hits = hits;
+    }
+
+    // 좋아요 업데이트
+    public void updateLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    // 스크랩수 업데이트
+    public void updateScraps(Integer scraps) {
+        this.scraps = scraps;
     }
 }

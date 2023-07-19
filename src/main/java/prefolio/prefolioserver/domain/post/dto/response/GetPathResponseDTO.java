@@ -7,13 +7,17 @@ import lombok.NoArgsConstructor;
 import java.net.URL;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class GetPathResponseDTO {
 
     private URL url;
 
+    @Builder
+    private GetPathResponseDTO(URL url) {this.url = url;}
 
-    /* Entity -> Dto */
-    public GetPathResponseDTO(URL url) {this.url = url;}
+    public static GetPathResponseDTO from(URL url) {
+        return GetPathResponseDTO.builder()
+                .url(url)
+                .build();
+    }
 }

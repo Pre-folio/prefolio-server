@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class MainPostDTO {
 
     private Long id;
@@ -24,15 +22,29 @@ public class MainPostDTO {
     private Date createdAt;
     private Boolean isMine;
 
-    public MainPostDTO(Post post, List<String> partTag, List<String> actTag, Boolean isScrapped, Boolean isMine) {
-        this.id = post.getId();
-        this.thumbnail = post.getThumbnail();
-        this.title = post.getTitle();
+    @Builder
+    private MainPostDTO(Long id, String thumbnail, String title, List<String> partTag, List<String> actTag, Integer hits, Boolean isScrapped, Date createdAt, Boolean isMine) {
+        this.id = id;
+        this.thumbnail = thumbnail;
+        this.title = title;
         this.partTag = partTag;
         this.actTag = actTag;
-        this.hits = post.getHits();
+        this.hits = hits;
         this.isScrapped = isScrapped;
-        this.createdAt = post.getCreatedAt();
+        this.createdAt = createdAt;
         this.isMine = isMine;
+    }
+
+    public static MainPostDTO of(Post post, List<String> partTag, List<String> actTag, Boolean isScrapped, Boolean isMine) {
+        return MainPostDTO.builder()
+                .id(post.getId())
+                .thumbnail(post.getThumbnail())
+                .title(post.getTitle())
+                .partTag(partTag)
+                .actTag(actTag)
+                .hits(post.getHits())
+                .isScrapped(isScrapped)
+                .isMine(isMine)
+                .build();
     }
 }

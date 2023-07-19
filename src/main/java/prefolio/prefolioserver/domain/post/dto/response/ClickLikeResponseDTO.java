@@ -5,15 +5,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @NoArgsConstructor
 public class ClickLikeResponseDTO {
 
     private Long likes;
     private Boolean isLiked;
 
-    public ClickLikeResponseDTO(Long likes, Boolean isLiked) {
+    @Builder
+    private ClickLikeResponseDTO(Long likes, Boolean isLiked) {
         this.likes = likes;
         this.isLiked = isLiked;
+    }
+
+    public static ClickLikeResponseDTO of(Long likes, Boolean isLiked) {
+        return ClickLikeResponseDTO.builder()
+                .likes(likes)
+                .isLiked(isLiked)
+                .build();
     }
 }
