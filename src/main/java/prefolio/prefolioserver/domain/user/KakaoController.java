@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.post.dto.CommonResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.KakaoLoginResponseDTO;
 import prefolio.prefolioserver.domain.user.service.KakaoService;
 
@@ -32,10 +31,9 @@ public class KakaoController {
     })
     @GetMapping("/login")
     @ResponseBody
-    public CommonResponseDTO<KakaoLoginResponseDTO> kakaoLogin(
+    public KakaoLoginResponseDTO kakaoLogin(
             @RequestParam(name = "code") String code
     ) {
-        return CommonResponseDTO.onSuccess("kakao 로그인 성공", kakaoService.kakaoLogin(code));
+        return kakaoService.kakaoLogin(code);
     }
-
 }
