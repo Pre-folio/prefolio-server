@@ -1,16 +1,11 @@
 package prefolio.prefolioserver.domain.user.dto.response;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import prefolio.prefolioserver.domain.user.domain.Type;
 import prefolio.prefolioserver.domain.user.domain.User;
 
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class GetUserInfoResponseDTO {
 
     private Long userId;
@@ -18,18 +13,25 @@ public class GetUserInfoResponseDTO {
     private String nickname;
     private String profileImage;
     private Integer grade;
-    private Long countScrap;
     private Long countLike;
+    private Long countScrap;
 
-
-    /* Entity -> Dto */
-    public GetUserInfoResponseDTO(User user, Long countScrap, Long countLike) {
+    @Builder
+    public GetUserInfoResponseDTO(User user, Long countLike, Long countScrap) {
         this.userId = user.getId();
         this.type = user.getType();
         this.nickname = user.getNickname();
         this.profileImage = user.getProfileImage();
         this.grade = user.getGrade();
-        this.countScrap = countScrap;
         this.countLike = countLike;
+        this.countScrap = countScrap;
+    }
+
+    public static GetUserInfoResponseDTO of(User user, Long countLike, Long countScrap) {
+        return GetUserInfoResponseDTO.builder()
+                .user(user)
+                .countLike(countLike)
+                .countScrap(countScrap)
+                .build();
     }
 }

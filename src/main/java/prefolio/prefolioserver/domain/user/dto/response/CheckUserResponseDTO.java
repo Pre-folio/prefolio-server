@@ -2,16 +2,19 @@ package prefolio.prefolioserver.domain.user.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor
 public class CheckUserResponseDTO {
 
 
-    private Boolean is_used;
+    private Boolean isUsed;
 
-    public CheckUserResponseDTO(Boolean is_used) {this.is_used = is_used;}
+    @Builder
+    public CheckUserResponseDTO(Boolean isUsed) {this.isUsed = isUsed;}
 
+    public static CheckUserResponseDTO from(Boolean isUsed) {
+        return CheckUserResponseDTO.builder()
+                .isUsed(isUsed)
+                .build();
+    }
 }

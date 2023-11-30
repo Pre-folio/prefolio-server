@@ -15,7 +15,7 @@ import prefolio.prefolioserver.domain.user.dto.request.UserInfoRequestDTO;
 import prefolio.prefolioserver.domain.user.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.TokenResponseDTO;
-import prefolio.prefolioserver.domain.user.dto.response.UserInfoResponseDTO;
+import prefolio.prefolioserver.domain.user.dto.response.UserIdResponseDTO;
 import prefolio.prefolioserver.global.config.user.UserDetails;
 import prefolio.prefolioserver.domain.user.service.UserService;
 
@@ -38,13 +38,13 @@ public class UserController {
                     responseCode = "200",
                     description = "저장 성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @PostMapping("/join")
     @ResponseBody
-    public UserInfoResponseDTO updateUser(
+    public UserIdResponseDTO updateUser(
             @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
@@ -61,13 +61,13 @@ public class UserController {
                     responseCode = "200",
                     description = "수정 성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @PutMapping("/join")
     @ResponseBody
-    public UserInfoResponseDTO setUserInfo(
+    public UserIdResponseDTO setUserInfo(
             @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
@@ -113,13 +113,13 @@ public class UserController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @GetMapping("/token")
     @ResponseBody
-    public UserInfoResponseDTO getUserInfo(
+    public UserIdResponseDTO getUserInfo(
             @AuthenticationPrincipal UserDetails authUser
     ) {
         return userService.getUserId(authUser);
@@ -146,6 +146,7 @@ public class UserController {
     ) {
         return userService.getUserInfo(userId);
     }
+
     @Operation(
             summary = "토큰 재발급",
             description = "토큰 재발급 메서드입니다."
