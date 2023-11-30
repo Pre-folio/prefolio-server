@@ -9,14 +9,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import prefolio.prefolioserver.domain.post.dto.CommonResponseDTO;
 import prefolio.prefolioserver.domain.post.dto.request.TokenRequestDTO;
 import prefolio.prefolioserver.domain.user.dto.request.CheckUserRequestDTO;
 import prefolio.prefolioserver.domain.user.dto.request.UserInfoRequestDTO;
 import prefolio.prefolioserver.domain.user.dto.response.GetUserInfoResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.CheckUserResponseDTO;
 import prefolio.prefolioserver.domain.user.dto.response.TokenResponseDTO;
-import prefolio.prefolioserver.domain.user.dto.response.UserInfoResponseDTO;
+import prefolio.prefolioserver.domain.user.dto.response.UserIdResponseDTO;
 import prefolio.prefolioserver.global.config.user.UserDetails;
 import prefolio.prefolioserver.domain.user.service.UserService;
 
@@ -39,17 +38,17 @@ public class UserController {
                     responseCode = "200",
                     description = "저장 성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @PostMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<UserInfoResponseDTO> updateUser(
+    public UserIdResponseDTO updateUser(
             @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
-        return CommonResponseDTO.onSuccess("유저 정보 저장 성공", userService.setUserInfo(authUser, UserInfoRequest));
+        return userService.setUserInfo(authUser, UserInfoRequest);
     }
 
     @Operation(
@@ -62,17 +61,17 @@ public class UserController {
                     responseCode = "200",
                     description = "수정 성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @PutMapping("/join")
     @ResponseBody
-    public CommonResponseDTO<UserInfoResponseDTO> setUserInfo(
+    public UserIdResponseDTO setUserInfo(
             @AuthenticationPrincipal UserDetails authUser,
             @RequestBody UserInfoRequestDTO UserInfoRequest
     ) {
-        return CommonResponseDTO.onSuccess("유저 정보 수정 성공", userService.setUserInfo(authUser, UserInfoRequest));
+        return userService.setUserInfo(authUser, UserInfoRequest);
     }
 
     @Operation(
@@ -98,10 +97,10 @@ public class UserController {
     })
     @PostMapping("/nickname")
     @ResponseBody
-    public CommonResponseDTO<CheckUserResponseDTO> checkUser(
+    public CheckUserResponseDTO checkUser(
             @RequestBody CheckUserRequestDTO checkUserRequest
     ) {
-        return CommonResponseDTO.onSuccess("닉네임 확인", userService.findUserByNickname(checkUserRequest));
+        return userService.findUserByNickname(checkUserRequest);
     }
 
     @Operation(
@@ -114,16 +113,16 @@ public class UserController {
                     responseCode = "200",
                     description = "성공",
                     content = @Content(
-                            schema = @Schema(implementation = UserInfoResponseDTO.class)
+                            schema = @Schema(implementation = UserIdResponseDTO.class)
                     )
             )
     })
     @GetMapping("/token")
     @ResponseBody
-    public CommonResponseDTO<UserInfoResponseDTO> getUserInfo(
+    public UserIdResponseDTO getUserInfo(
             @AuthenticationPrincipal UserDetails authUser
     ) {
-        return CommonResponseDTO.onSuccess("유저 아이디", userService.getUserId(authUser));
+        return userService.getUserId(authUser);
     }
 
     @Operation(
@@ -142,11 +141,12 @@ public class UserController {
     })
     @GetMapping("/{userId}")
     @ResponseBody
-    public CommonResponseDTO<GetUserInfoResponseDTO> getUserInfo(
+    public GetUserInfoResponseDTO getUserInfo(
             @PathVariable(name = "userId") Long userId
     ) {
-        return CommonResponseDTO.onSuccess("유저 정보", userService.getUserInfo(userId));
+        return userService.getUserInfo(userId);
     }
+
     @Operation(
             summary = "토큰 재발급",
             description = "토큰 재발급 메서드입니다."
@@ -162,10 +162,10 @@ public class UserController {
     })
     @PostMapping("/refresh/{userId}")
     @ResponseBody
-    public CommonResponseDTO<TokenResponseDTO> getNewToken(
+    public TokenResponseDTO getNewToken(
             @RequestBody TokenRequestDTO refreshToken,
             @PathVariable(name = "userId") Long userId
     ) {
-        return CommonResponseDTO.onSuccess("토큰 재발급", userService.getNewToken(refreshToken, userId));
+        return userService.getNewToken(refreshToken, userId);
     }
 }
